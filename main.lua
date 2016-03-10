@@ -17,10 +17,17 @@ function love.keypressed(key, unicode)
 	gKeyPressed[key] = true
 	if (key == "escape") then os.exit(0) end
 	if (key == "space") then player:fire() end
+	if (key == "e") then player.rotation = player.rotation + math.pi end
 end
 
 function love.update( dt )
 	local s = 0
+
+	if (gKeyPressed.lshift) then
+		player.shield = true
+	else
+		player.shield = false
+	end
 
 	if (gKeyPressed.up) then
 		xAccel = 1 * dt * math.sin(player.rotation)
@@ -56,11 +63,7 @@ end
 function love.draw()
 	player:draw()
 
-	-- love.graphics.draw(bullet, player.x + 20 * -math.cos(player.rotation), player.y - 7 * math.sin(player.rotation), player.rotation, 1,1 , 3,3)
-
-	-- love.graphics.draw(bullet, player.x + 30 * -math.cos(player.rotation), player.y + 8 * math.sin(player.rotation), player.rotation, 1,1 , 3,3)
-	-- love.graphics.draw(bullet, player.x + 40 * -math.cos(player.rotation), player.y - 7 * math.sin(player.rotation), player.rotation, 1,1 , 3,3)
-	-- ship2:draw()
-    love.graphics.print(xAccel.." "..yAccel, 50, 50)
-	love.graphics.setBackgroundColor(0x30,0x30,0x30)
+	fps = love.timer.getFPS()
+    love.graphics.print(fps, 50, 50)
+	love.graphics.setBackgroundColor(0x70,0x70,0x70)
 end

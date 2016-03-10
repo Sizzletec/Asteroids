@@ -3,7 +3,7 @@ Bullet = {
 }
 Bullet.__index = Bullet
 
-function Bullet.new(x,y,rotation)
+function Bullet.new(x,y,rotation,vx,vy)
   local s = {}
   setmetatable(s, Bullet)
   s.x = x
@@ -39,9 +39,9 @@ function Bullet:update(dt)
 end
 
 function Bullet:draw()
-  if self.lifetime < 1 then
+  -- if self.lifetime < 1 then
     love.graphics.draw(self.image, self.x, self.y, self.rotation, 1,1 , 3,3)
-  end
+  -- end
 end
 
 return Bullet

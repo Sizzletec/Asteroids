@@ -15,6 +15,7 @@ function Ship.new(x,y,rotation,vx,vy)
   s.rotation = rotation or 0
   s.cannon = "left"
   s.engine = false
+  s.shield = false
   return s
 end
 
@@ -41,6 +42,9 @@ function Ship:update(dt)
 
   for i, bullet in pairs(self.bullets) do
     bullet:update(dt)
+    if bullet.lifetime > 1 then
+      table.remove(self.bullets, i)
+    end
   end
 end
 
@@ -76,6 +80,12 @@ function Ship:draw()
   end
 
 	love.graphics.draw(image, self.x, self.y, self.rotation, 1,1 , 16,16)
+
+  love.graphics.setColor(255, 255, 255)
+
+  if self.shield then
+    love.graphics.circle("line", self.x, self.y, 20)
+  end
 end
 
 return Ship
