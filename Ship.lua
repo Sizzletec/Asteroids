@@ -16,12 +16,28 @@ function Ship.new(x,y,rotation,vx,vy)
   s.cannon = "left"
   s.engine = false
   s.shield = false
+  s.alive = true
   return s
 end
 
 function Ship:update(dt)
+  if self.vx > 4 then 
+    self.vx = 4
+  elseif self.vx < -4 then
+    self.vx = -4
+  end
+
+  if self.vy > 4 then 
+    self.vy = 4
+  elseif self.vy < -4 then
+    self.vy = -4
+  end 
+
 	self.x = self.x + self.vx
 	self.y = self.y + self.vy
+
+
+
 
   if self.y > love.graphics.getHeight() then
     self.y = self.y - love.graphics.getHeight()
@@ -42,7 +58,8 @@ function Ship:update(dt)
 
   for i, bullet in pairs(self.bullets) do
     bullet:update(dt)
-    if bullet.lifetime > 1 then
+    hitWall = TiledMap_GetMapTile(math.floor(bullet.x/16),math.floor(bullet.y/16),1)
+    if bullet.lifetime > 1  or hitWall > 0 then
       table.remove(self.bullets, i)
     end
   end

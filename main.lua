@@ -12,7 +12,7 @@ players = {}
 gCamX,gCamY = 0,0
 
 function love.load()
-	love.window.setMode(960, 540, {resizable=false, highdpi=true})
+	love.window.setMode(960, 540, {fullscreen=false, resizable=false, highdpi=true})
 	player1 = Ship.new(100,100,math.pi/2,0,0)
 	player2 = Ship.new(1820,100,-math.pi/2,0,0)
 	player2.image = love.graphics.newImage('ship-red.png')
@@ -46,9 +46,40 @@ function love.keypressed(key, unicode)
 	if (key == "e") then player1.rotation = player1.rotation + math.pi end
 end
 
+function love.gamepadpressed(joystick, button)
+    if button == "a" then
+    	id, instanceid = joystick:getID()
+    	players[id]:fire()
+    end
+end
+
 function love.update( dt )
+	local joysticks = love.joystick.getJoysticks()
 	for i, player in pairs(players) do
 		local s = 0
+
+		joy = joysticks[i]
+		if joy then
+			
+			joyX = joy:getGamepadAxis("leftx")
+			throttle = joy:getGamepadAxis("triggerright")
+
+
+			if math.abs(joyX) > 0.5 then
+				player.rotation = player.rotation + (4 * dt * joyX)
+			end
+			
+			
+
+			if throttle > 0 then
+				xAccel = throttle * 5 * dt * math.sin(player.rotation)
+				yAccel = throttle * 5 * dt * -math.cos(player.rotation)
+
+				player.vx = player.vx + xAccel
+				player.vy = player.vy + yAccel
+
+			end
+		end
 
 		if (gKeyPressed.lshift) then
 			player.shield = true
@@ -113,12 +144,23 @@ end
 
 function love.draw()
 	TiledMap_DrawNearCam(gCamX,gCamY)
-	player1:draw()
-	player2:draw()
-	player3:draw()
-	player4:draw()
+	local joysticks = love.joystick.getJoysticks()
+
+	for i, player in pairs(players) do
+		if player.alive then
+			player:draw()
+		end
+
+		if joysticks[i] then
+			axis = joysticks[i]:getGamepadAxis("leftx")
+			love.graphics.print(player.vx .." " .. player.vy, 10, i * 20)
+		end
+	end
 
 	fps = love.timer.getFPS()
     love.graphics.print(fps, 50, 50)
 	love.graphics.setBackgroundColor(0x30,0x30,0x30)
+
+
+
 end
