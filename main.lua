@@ -13,13 +13,10 @@ gCamX,gCamY = 0,0
 
 function love.load()
 	love.window.setMode(960, 540, {fullscreen=false, resizable=false, highdpi=true})
-	player1 = Ship.new(100,100,math.pi/2,0,0)
-	player2 = Ship.new(1820,100,-math.pi/2,0,0)
-	player2.image = love.graphics.newImage('ship-red.png')
-	player3 = Ship.new(100,860,math.pi/2,0,0)
-	player3.image = love.graphics.newImage('ship-blue.png')
-	player4 = Ship.new(1820,860,-math.pi/2,0,0)
-	player4.image = love.graphics.newImage('ship-green.png')
+	player1 = Ship.new(0,100,100,math.pi/2,0,0)
+	player2 = Ship.new(1,1820,100,-math.pi/2,0,0)
+	player3 = Ship.new(2,100,860,math.pi/2,0,0)
+	player4 = Ship.new(3,1820,860,-math.pi/2,0,0)
 
 	table.insert(players, player1)
 	table.insert(players, player2)
@@ -27,7 +24,6 @@ function love.load()
 	table.insert(players, player4)
 
 	TiledMap_Load("arena.tmx",16)
-
 	gCamX,gCamY = 1920/2 ,1080/2
 end
 
@@ -139,6 +135,21 @@ function love.update( dt )
 			player.x = player.x - 5
 		end
 
+		for b, bullet in pairs(player.bullets) do
+			for p, otherPlayer in pairs(players) do
+				if player ~= otherPlayer then
+					xPow = math.pow(otherPlayer.x - bullet.x, 2)
+					yPow = math.pow(otherPlayer.y - bullet.y, 2)
+
+					dist = math.sqrt(xPow + yPow)
+
+					if dist < 20 then
+						table.remove(player.bullets, b)
+						otherPlayer.exploding = true
+					end
+				end
+		   end
+		end
 	end
 end
 

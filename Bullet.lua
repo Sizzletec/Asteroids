@@ -17,8 +17,8 @@ end
 
 function Bullet:update(dt)
   self.lifetime = self.lifetime + dt
-	self.x = self.x + self.vx
-	self.y = self.y + self.vy
+  self.x = self.x + self.vx
+  self.y = self.y + self.vy
 
   if self.y > love.graphics.getHeight() then
     self.y = self.y - love.graphics.getHeight()

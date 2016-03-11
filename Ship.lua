@@ -1,10 +1,9 @@
 Ship = {
-  image = love.graphics.newImage('ship.png'),
-  imageEngine = love.graphics.newImage('ship-engine.png')
+  image = love.graphics.newImage('ship-sprites.png'),
 }
 Ship.__index = Ship
 
-function Ship.new(x,y,rotation,vx,vy)
+function Ship.new(player,x,y,rotation,vx,vy)
   local s = {}
   setmetatable(s, Ship)
   s.x = x
@@ -17,11 +16,17 @@ function Ship.new(x,y,rotation,vx,vy)
   s.engine = false
   s.shield = false
   s.alive = true
+  s.exploding = false
+  s.explodingFrame = 0
+  s.player = player
   return s
 end
 
 function Ship:update(dt)
-  if self.vx > 4 then 
+  if self.exploding then
+    self.explodingFrame = self.explodingFrame + 8 * dt
+  end
+  if self.vx > 4 then
     self.vx = 4
   elseif self.vx < -4 then
     self.vx = -4
@@ -33,8 +38,8 @@ function Ship:update(dt)
     self.vy = -4
   end 
 
-	self.x = self.x + self.vx
-	self.y = self.y + self.vy
+  self.x = self.x + self.vx
+  self.y = self.y + self.vy
 
 
 
@@ -66,6 +71,7 @@ function Ship:update(dt)
 end
 
 function Ship:fire()
+  -- self.exploding = true
   if self.cannon == "right" then
     leftCannonOffsetX = self.x + (10 * math.sin(self.rotation)) + (8 * math.cos(self.rotation))
     leftCannonOffsetY = self.y + (10 * -math.cos(self.rotation)) + (8 * math.sin(self.rotation))
@@ -92,11 +98,22 @@ function Ship:draw()
 
   image = self.image
 
-  if self.engine then
-    image = self.imageEngine
+  if self.explodingFrame < 3 then
+    xFrame = 0
+    if self.engine then
+      xFrame = 1
+    end
+    top_left = love.graphics.newQuad(xFrame*32, self.player*32, 32, 32, image:getDimensions())
+    love.graphics.draw(image, top_left,self.x, self.y, self.rotation, 1,1 , 16,16)
+
   end
 
-	love.graphics.draw(image, self.x, self.y, self.rotation, 1,1 , 16,16)
+  if self.exploding then
+    top_left = love.graphics.newQuad(math.floor(self.explodingFrame)*32, 4*32, 32, 32, image:getDimensions())
+    love.graphics.draw(image, top_left,self.x, self.y, self.rotation, 1,1 , 16,16)
+  end
+
+
 
   love.graphics.setColor(255, 255, 255)
 
