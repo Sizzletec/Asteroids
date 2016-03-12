@@ -120,6 +120,7 @@ function TiledMap_DrawNearCam (camx,camy,fun_layercallback)
     camx,camy = floor(camx),floor(camy)
     local screen_w = love.graphics.getWidth()
     local screen_h = love.graphics.getHeight()
+    scaleFactor = width/1920
     local minx,maxx = floor((camx-screen_w/2)/kTileSize),ceil((camx+screen_w/2)/kTileSize)
     local miny,maxy = floor((camy-screen_h/2)/kTileSize),ceil((camy+screen_h/2)/kTileSize)
     for z = 1,#gMapLayers do 
@@ -138,7 +139,31 @@ function TiledMap_DrawNearCam (camx,camy,fun_layercallback)
     end
     end
 end
- 
+
+
+function TiledMap_AllAtCam (camx,camy,fun_layercallback)
+    camx,camy = floor(camx),floor(camy)
+    local screen_w = love.graphics.getWidth()
+    local screen_h = love.graphics.getHeight()
+    scaleFactor = width/1920
+    local minx,maxx = floor((camx-screen_w/2)/kTileSize),gMapLayers.width
+    local miny,maxy = floor((camy-screen_h/2)/kTileSize),gMapLayers.height
+    for z = 1,#gMapLayers do 
+  if (fun_layercallback) then fun_layercallback(z,gMapLayers[z]) end
+  if (TiledMap_IsLayerVisible(z)) then
+    for x = minx,maxx do
+    for y = miny,maxy do
+        local gfx = gTileGfx[TiledMap_GetMapTile(x,y,z)]
+        if (gfx) then
+            local sx = x*kTileSize - camx + screen_w/2
+            local sy = y*kTileSize - camy + screen_h/2
+            love.graphics.draw(gfx,sx,sy) -- x, y, r, sx, sy, ox, oy
+        end
+    end
+    end
+    end
+    end
+end
  
 -- ***** ***** ***** ***** ***** xml parser
  

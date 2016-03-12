@@ -2,6 +2,15 @@ love.filesystem.load("tiledmap.lua")()
 
 local Ship = require('Ship')
 local Bullet = require('Bullet')
+local socket = require "socket"
+
+local address, port = "localhost", 12345
+local updaterate = 1/30 -- how long to wait, in seconds, before requesting an update
+local t
+local userInput = false
+
+local serverRotation = 0
+
 
 gKeyPressed = {}
 yAccel = 0
@@ -16,11 +25,14 @@ explode = love.audio.newSource("death.wav", "static")
 
 
 function love.load()
+	udp = socket.udp()
+	udp:settimeout(0)
+	udp:setpeername(address, port)
 	
-	love.window.setMode(1920, 1080, {fullscreen=false, resizable=false, highdpi=true})
+	love.window.setMode(1920, 1080, {fullscreen=false, resizable=true, highdpi=true})
 	scale = love.window.getPixelScale()
 
-	love.window.setMode(1920/scale, 1080/scale,{fullscreen=true, resizable=false, highdpi=true})
+	-- love.window.setMode(1920/scale, 1080/scale,{fullscreen=true, resizable=false, highdpi=true})
 
 	TiledMap_Load("arena4.tmx",16)
 	player1 = Ship.new(0,100,100,math.pi/2,0,0)
@@ -33,6 +45,11 @@ function love.load()
 	table.insert(players, player3)
 	table.insert(players, player4)
 
+	for i, player in pairs(players) do
+		local dg = string.format("%s %s %f %f %f %f %f", i, 'at', player.x, player.y, player.vx, player.vy, player.rotation)
+		udp:send(dg)
+	end
+	t = 0
 end
 
 function love.keyreleased(key)
@@ -65,14 +82,16 @@ function love.update( dt )
 		local s = 0
 
 		joy = joysticks[i]
-		if joy then
-			
+		if joy then	
 			joyX = joy:getGamepadAxis("leftx")
 			throttle = joy:getGamepadAxis("triggerright")
 
 
 			if math.abs(joyX) > 0.5 then
 				player.rotation = player.rotation + (4 * dt * joyX)
+
+				userInput = true
+
 			end
 			
 			
@@ -83,6 +102,8 @@ function love.update( dt )
 
 				player.vx = player.vx + xAccel
 				player.vy = player.vy + yAccel
+
+				userInput = true
 
 			end
 		end
@@ -162,6 +183,57 @@ function love.update( dt )
 		   end
 		end
 	end
+
+	t = t + dt -- increase t by the deltatime
+
+	if t > updaterate then
+		-- if userInput then
+			for i, player in pairs(players) do
+				if i == 1 then
+					local dg = string.format("%s %s %f %f %f %f %f", i, 'at', player.x, player.y, player.vx, player.vy, player.rotation)
+					udp:send(dg)
+				end 
+			end 
+			-- userInput = false
+		-- end
+
+		local dg = string.format("%s %s $", 1, 'update')
+		udp:send(dg)
+		
+		t=t-updaterate -- set t for the next round
+	end
+
+	repeat
+		data, msg = udp:receive()
+
+		if data then -- you remember, right? that all values in lua evaluate as true, save nil and false?
+			ent, cmd, parms = data:match("^(%S*) (%S*) (.*)")
+			if cmd == 'at' then
+				local x, y, vx, vy, r = parms:match("^(%-?[%d.e]*) (%-?[%d.e]*) (%-?[%d.e]*) (%-?[%d.e]*) (%-?[%d.e]*)$")
+
+				assert(x and y and vx and vy and r) 
+				x, y, vx, vy, r = tonumber(x), tonumber(y),tonumber(vx),tonumber(vy),tonumber(r)
+				-- players[ent] = {x=x, y=y}
+				p = players[tonumber(ent)]
+				if p then
+					p.x = x
+					p.y = y
+					p.vx = vx
+					p.vy = vy
+					p.rotation = r
+					if ent == 1 then
+						serverRotation = r
+					end
+				end
+				
+			else
+				print("unrecognised command:", cmd)
+			end
+
+		elseif msg ~= 'timeout' then 
+			error("Network error: "..tostring(msg))
+		end
+	until not data
 end
 
 function love.draw()
@@ -172,10 +244,11 @@ function love.draw()
 
 	love.graphics.scale(scaleFactor, scaleFactor)
 
-	TiledMap_DrawNearCam(gCamX,gCamY)
-
-
 	gCamX,gCamY = width/2,height/2
+	TiledMap_AllAtCam(gCamX,gCamY)
+
+
+	
 
 	local joysticks = love.joystick.getJoysticks()
 
@@ -186,12 +259,12 @@ function love.draw()
 
 		if joysticks[i] then
 			axis = joysticks[i]:getGamepadAxis("leftx")
-			love.graphics.print(player.vx .." " .. player.vy, 10, i * 20)
+			love.graphics.print(player.rotation, 10, i * 20)
 		end
 	end
 
 	fps = love.timer.getFPS()
-    love.graphics.print(fps, 50, 50)
+    love.graphics.print(serverRotation, 50, 50)
 	love.graphics.setBackgroundColor(0x20,0x20,0x20)
 
 
