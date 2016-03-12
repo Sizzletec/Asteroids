@@ -20,20 +20,21 @@ function Bullet:update(dt)
   self.x = self.x + self.vx
   self.y = self.y + self.vy
 
-  if self.y > love.graphics.getHeight() then
-    self.y = self.y - love.graphics.getHeight()
+  if self.y > (TiledMap_GetMapH() * 16) then
+    self.y = self.y - TiledMap_GetMapH() * 16
   end
 
   if self.y < 0 then
-    self.y = self.y + love.graphics.getHeight()
+    self.y = self.y + TiledMap_GetMapH() * 16
   end
 
-  if self.x > love.graphics.getWidth() then
-    self.x = self.x - love.graphics.getWidth()
+
+  if self.x > 1920 then
+    self.x = self.x - 1920
   end
 
   if self.x < 0 then
-    self.x = self.x + love.graphics.getWidth()
+    self.x = self.x + 1920
   end
 
 end

@@ -11,8 +11,18 @@ players = {}
 
 gCamX,gCamY = 0,0
 
+shoot = love.audio.newSource("shoot.wav", "static")
+explode = love.audio.newSource("death.wav", "static")
+
+
 function love.load()
-	love.window.setMode(960, 540, {fullscreen=false, resizable=false, highdpi=true})
+	
+	love.window.setMode(1920, 1080, {fullscreen=false, resizable=false, highdpi=true})
+	scale = love.window.getPixelScale()
+
+	love.window.setMode(1920/scale, 1080/scale,{fullscreen=true, resizable=false, highdpi=true})
+
+	TiledMap_Load("arena4.tmx",16)
 	player1 = Ship.new(0,100,100,math.pi/2,0,0)
 	player2 = Ship.new(1,1820,100,-math.pi/2,0,0)
 	player3 = Ship.new(2,100,860,math.pi/2,0,0)
@@ -23,8 +33,6 @@ function love.load()
 	table.insert(players, player3)
 	table.insert(players, player4)
 
-	TiledMap_Load("arena.tmx",16)
-	gCamX,gCamY = 1920/2 ,1080/2
 end
 
 function love.keyreleased(key)
@@ -37,6 +45,7 @@ function love.keypressed(key, unicode)
 	if (key == "space") then
 		for i, player in pairs(players) do
 			player:fire()
+			shoot:play()
 		end
 	end
 	if (key == "e") then player1.rotation = player1.rotation + math.pi end
@@ -46,6 +55,7 @@ function love.gamepadpressed(joystick, button)
     if button == "a" then
     	id, instanceid = joystick:getID()
     	players[id]:fire()
+    	shoot:play()
     end
 end
 
@@ -146,6 +156,7 @@ function love.update( dt )
 					if dist < 20 then
 						table.remove(player.bullets, b)
 						otherPlayer.exploding = true
+						explode:play()
 					end
 				end
 		   end
@@ -154,7 +165,18 @@ function love.update( dt )
 end
 
 function love.draw()
+	width = love.graphics.getWidth()
+	height = love.graphics.getHeight()
+
+	scaleFactor = width/1920
+
+	love.graphics.scale(scaleFactor, scaleFactor)
+
 	TiledMap_DrawNearCam(gCamX,gCamY)
+
+
+	gCamX,gCamY = width/2,height/2
+
 	local joysticks = love.joystick.getJoysticks()
 
 	for i, player in pairs(players) do
@@ -170,7 +192,7 @@ function love.draw()
 
 	fps = love.timer.getFPS()
     love.graphics.print(fps, 50, 50)
-	love.graphics.setBackgroundColor(0x30,0x30,0x30)
+	love.graphics.setBackgroundColor(0x20,0x20,0x20)
 
 
 
