@@ -1,7 +1,11 @@
 Ship = {
   image = love.graphics.newImage('ship-sprites.png'),
+  ship2 = love.graphics.newImage('ship2.png'),
+  ship2cannon = love.graphics.newImage('ship2cannon.png')
 }
 Ship.__index = Ship
+
+shoot = love.audio.newSource("shoot.wav", "static")
 
 function Ship.new(player,x,y,rotation,vx,vy)
   local s = {}
@@ -19,6 +23,8 @@ function Ship.new(player,x,y,rotation,vx,vy)
   s.exploding = false
   s.explodingFrame = 0
   s.player = player
+  s.color = 0
+  s.cannonRotation = 0
   return s
 end
 
@@ -26,16 +32,16 @@ function Ship:update(dt)
   if self.exploding then
     self.explodingFrame = self.explodingFrame + 8 * dt
   end
-  if self.vx > 4 then
-    self.vx = 4
-  elseif self.vx < -4 then
-    self.vx = -4
+  if self.vx > 2 then
+    self.vx = 2
+  elseif self.vx < -2 then
+    self.vx = -2
   end
 
-  if self.vy > 4 then 
-    self.vy = 4
-  elseif self.vy < -4 then
-    self.vy = -4
+  if self.vy > 2 then 
+    self.vy = 2
+  elseif self.vy < -2 then
+    self.vy = -2
   end 
 
   self.x = self.x + self.vx
@@ -71,24 +77,34 @@ function Ship:update(dt)
 end
 
 function Ship:fire()
+  shoot:play()
   -- self.exploding = true
-  if self.cannon == "right" then
-    leftCannonOffsetX = self.x + (10 * math.sin(self.rotation)) + (8 * math.cos(self.rotation))
-    leftCannonOffsetY = self.y + (10 * -math.cos(self.rotation)) + (8 * math.sin(self.rotation))
-    bullet = Bullet.new(leftCannonOffsetX,leftCannonOffsetY,self.rotation)
-    table.insert(self.bullets, bullet)
-  elseif self.cannon == "left" then
-    rightCannonOffsetX = self.x + (10 * math.sin(self.rotation)) + (-7 * math.cos(self.rotation))
-    rightCannonOffsetY = self.y + (10 * -math.cos(self.rotation)) + (-7 * math.sin(self.rotation))
-    bullet = Bullet.new(rightCannonOffsetX,rightCannonOffsetY,self.rotation)
-    table.insert(self.bullets, bullet)
-  end
 
-  if self.cannon == "right" then
-    self.cannon = "left"
-  else
-    self.cannon = "right"
-  end
+
+  -- if self.cannon == "right" then
+  --   leftCannonOffsetX = self.x + (10 * math.sin(self.rotation)) + (8 * math.cos(self.rotation))
+  --   leftCannonOffsetY = self.y + (10 * -math.cos(self.rotation)) + (8 * math.sin(self.rotation))
+  --   bullet = Bullet.new(leftCannonOffsetX,leftCannonOffsetY,self.rotation)
+  --   table.insert(self.bullets, bullet)
+  -- elseif self.cannon == "left" then
+  --   rightCannonOffsetX = self.x + (10 * math.sin(self.rotation)) + (-7 * math.cos(self.rotation))
+  --   rightCannonOffsetY = self.y + (10 * -math.cos(self.rotation)) + (-7 * math.sin(self.rotation))
+  --   bullet = Bullet.new(rightCannonOffsetX,rightCannonOffsetY,self.rotation)
+  --   table.insert(self.bullets, bullet)
+  -- end
+
+  -- if self.cannon == "right" then
+  --   self.cannon = "left"
+  -- else
+  --   self.cannon = "right"
+  -- end
+
+
+  leftCannonOffsetX = self.x - (3 * math.sin(self.rotation))
+  leftCannonOffsetY = self.y + (3 * math.cos(self.rotation))
+  bullet = Bullet.new(leftCannonOffsetX,leftCannonOffsetY,self.cannonRotation)
+  table.insert(self.bullets, bullet)
+
 end
 
 function Ship:draw()
@@ -103,8 +119,16 @@ function Ship:draw()
     if self.engine then
       xFrame = 1
     end
-    top_left = love.graphics.newQuad(xFrame*32, self.player*32, 32, 32, image:getDimensions())
-    love.graphics.draw(image, top_left,self.x, self.y, self.rotation, 1,1 , 16,16)
+
+    -- top_left = love.graphics.newQuad(xFrame*32, self.color*32, 32, 32, image:getDimensions())
+    -- love.graphics.draw(image, top_left,self.x, self.y, self.rotation, 1,1 , 16,16)
+    love.graphics.draw(self.ship2,self.x , self.y, self.rotation, 1,1 , 16,16)
+    love.graphics.draw(self.ship2cannon,self.x - (3 * math.sin(self.rotation))
+, self.y + (3 * math.cos(self.rotation)), self.cannonRotation, 1,1 , 10, 10)
+
+
+    -- y+5 at 0
+    -- x-5 at 90
 
   end
 

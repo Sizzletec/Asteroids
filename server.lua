@@ -33,8 +33,10 @@ while running do
 			for k, v in pairs(world) do
 				udp:sendto(string.format("%s %s %f %f %f %f %f", k, 'at', v.x, v.y, v.vx, v.vy, v.r), msg_or_ip,  port_or_nil)
 			end
+		elseif cmd == 'delete' then
+			world[entity] = nil
 		elseif cmd == 'quit' then
-			running = false;
+			running = false
 		else
 			print("unrecognised command:", cmd)
 		end
