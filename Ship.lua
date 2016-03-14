@@ -1,6 +1,8 @@
 Ship = {
   image = love.graphics.newImage('ship-sprites.png'),
-  ship2 = love.graphics.newImage('ship2.png'),
+  ship2 = love.graphics.newImage('ship3.png'),
+  ship3engine = love.graphics.newImage('ship3engine.png'),
+
   ship2cannon = love.graphics.newImage('ship2cannon.png')
 }
 Ship.__index = Ship
@@ -32,16 +34,16 @@ function Ship:update(dt)
   if self.exploding then
     self.explodingFrame = self.explodingFrame + 8 * dt
   end
-  if self.vx > 2 then
-    self.vx = 2
-  elseif self.vx < -2 then
-    self.vx = -2
+  if self.vx > 5 then
+    self.vx = 5
+  elseif self.vx < -5 then
+    self.vx = -5
   end
 
-  if self.vy > 2 then 
-    self.vy = 2
-  elseif self.vy < -2 then
-    self.vy = -2
+  if self.vy > 5 then 
+    self.vy = 5
+  elseif self.vy < -5 then
+    self.vy = -5
   end 
 
   self.x = self.x + self.vx
@@ -122,9 +124,15 @@ function Ship:draw()
 
     -- top_left = love.graphics.newQuad(xFrame*32, self.color*32, 32, 32, image:getDimensions())
     -- love.graphics.draw(image, top_left,self.x, self.y, self.rotation, 1,1 , 16,16)
-    love.graphics.draw(self.ship2,self.x , self.y, self.rotation, 1,1 , 16,16)
-    love.graphics.draw(self.ship2cannon,self.x - (3 * math.sin(self.rotation))
-, self.y + (3 * math.cos(self.rotation)), self.cannonRotation, 1,1 , 10, 10)
+
+    if self.engine then
+      love.graphics.draw(self.ship3engine,self.x , self.y, self.rotation, 1,1 , 16,16)
+    else
+      love.graphics.draw(self.ship2,self.x , self.y, self.rotation, 1,1 , 16,16)
+    end
+    
+--     love.graphics.draw(self.ship2cannon,self.x - (3 * math.sin(self.rotation))
+-- , self.y + (3 * math.cos(self.rotation)), self.cannonRotation, 1,1 , 10, 10)
 
 
     -- y+5 at 0
