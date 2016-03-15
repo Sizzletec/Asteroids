@@ -55,7 +55,7 @@ function Game.load()
 
 	entity = tostring(math.random(99999))
 
-	localPlayer = Ship.new(entity,200,200,math.pi/2,0,0)
+	localPlayer = Ship.new(entity,200,200,math.pi/2,0,0,ShipType.gunship)
 	table.insert(players, localPlayer)
 
 
@@ -80,7 +80,7 @@ function Game.keypressed(key, unicode)
 	if (key == "e") then localPlayer.rotation = localPlayer.rotation + math.pi end
 end
 
-function love.gamepadpressed(joystick, button)
+function Game.gamepadpressed(joystick, button)
     if button == "a" then
     	id, instanceid = joystick:getID()
     	localPlayer:fire()
@@ -182,7 +182,7 @@ function Game.update(dt)
 
 		for b, bullet in pairs(player.bullets) do
 			for p, otherPlayer in pairs(players) do
-				if player ~= otherPlayer then
+				if players == otherPlayer then
 					xPow = math.pow(otherPlayer.x - bullet.x, 2)
 					yPow = math.pow(otherPlayer.y - bullet.y, 2)
 

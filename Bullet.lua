@@ -3,14 +3,14 @@ Bullet = {
 }
 Bullet.__index = Bullet
 
-function Bullet.new(x,y,rotation,vx,vy)
+function Bullet.new(x,y,speed,rotation)
   local s = {}
   setmetatable(s, Bullet)
   s.x = x
   s.y = y
   s.rotation = rotation or 0
-  s.vx = 10 * math.sin(s.rotation)
-  s.vy = 10 * -math.cos(s.rotation)
+  s.vx = speed * math.sin(s.rotation)
+  s.vy = speed * -math.cos(s.rotation)
   s.lifetime = 0
   return s
 end
