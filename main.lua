@@ -11,7 +11,7 @@ State = {
 	game = 4
 }
 
-currentState = State.game
+currentState = State.title
 
 function love.load()
 	setState(currentState)
@@ -61,9 +61,9 @@ function love.update( dt )
 	elseif currentState == State.title then
 		Title.update(dt)
 	elseif currentState == State.settings then
-		Settings.update()
+		Settings.update(dt)
 	elseif currentState == State.shipSelect then
-		ShipSelect.update()
+		ShipSelect.update(dt)
 	end
 end
 

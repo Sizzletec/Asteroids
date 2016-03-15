@@ -3,8 +3,8 @@ Ship = {
   ship2 = love.graphics.newImage('ship2.png'),
   ship3 = love.graphics.newImage('ship3.png'),
   ship3engine = love.graphics.newImage('ship3engine.png'),
+  ship2engine = love.graphics.newImage('ship2engine.png'),
   ship2cannon = love.graphics.newImage('ship2cannon.png'),
-  bullets = {},
   acceleration = 0,
   shield = false,
   alive = true,
@@ -15,6 +15,7 @@ Ship.__index = Ship
 
 ShipType = {
   standard = {
+    name = "Standard",
     topSpeed = 4,
     acceleration = 4,
     rotationSpeed = 4,
@@ -23,6 +24,7 @@ ShipType = {
     weaponDamage = 30
   },
   gunship = {
+    name = "Gunship",
     topSpeed = 2,
     acceleration = 3,
     rotationSpeed = 4,
@@ -32,6 +34,7 @@ ShipType = {
     weaponDamage = 50
   },
   assalt = {
+    name = "Assault",
     topSpeed = 5,
     acceleration = 5,
     rotationSpeed = 4,
@@ -63,6 +66,8 @@ function Ship.new(player,x,y,rotation,vx,vy, type)
 
   s.player = player
   s.color = 0
+  s.bullets = {}
+  s.gunCooldown = 0
   return s
 end
 
@@ -113,6 +118,13 @@ function Ship:update(dt)
       table.remove(self.bullets, i)
     end
   end
+
+  if self.firing and self.gunCooldown <= 0 then
+    self:fire()
+    self.gunCooldown = 1/self.shipType.fireRate
+  elseif self.gunCooldown > 0 then
+    self.gunCooldown = self.gunCooldown - dt
+  end
 end
 
 function Ship:fire()
@@ -154,7 +166,6 @@ function Ship:fire()
         bullet.image = love.graphics.newImage('bullet-blue.png')
         table.insert(self.bullets, bullet)
       end
-
   end
 end
 
@@ -180,7 +191,12 @@ function Ship:draw()
       love.graphics.draw(image, top_left,self.x, self.y, self.rotation, 1,1 , 16,16)
 
     elseif self.shipType == ShipType.gunship then
-      love.graphics.draw(self.ship2,self.x , self.y, self.rotation, 1,1 , 16,16)
+
+      if self.engine then
+        love.graphics.draw(self.ship2engine,self.x , self.y, self.rotation, 1,1 , 16,16)
+      else
+        love.graphics.draw(self.ship2,self.x , self.y, self.rotation, 1,1 , 16,16)
+      end
       love.graphics.draw(self.ship2cannon,self.x - (3 * math.sin(self.rotation)), self.y + (3 * math.cos(self.rotation)), self.cannonRotation, 1,1 , 10, 10)
     elseif self.shipType == ShipType.assalt then
       if self.engine then
@@ -194,8 +210,7 @@ function Ship:draw()
   if self.exploding then
     top_left = love.graphics.newQuad(math.floor(self.explodingFrame)*32, 4*32, 32, 32, image:getDimensions())
     love.graphics.draw(image, top_left,self.x, self.y, self.rotation, 1,1 , 16,16)
-  end
-
+end
 
 
   love.graphics.setColor(255, 255, 255)

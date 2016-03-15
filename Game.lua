@@ -15,7 +15,6 @@ local t
 local userInput = false
 local serverRotation = 0
 
-
 gKeyPressed = {}
 yAccel = 0
 xAccel = 0
@@ -33,7 +32,7 @@ function Game.load()
 	udp:settimeout(0)
 	udp:setpeername(address, port)
 
-	love.window.setMode(1920, 1080, {fullscreen=false, resizable=true, highdpi=true})
+	love.window.setMode(1920/2, 1080/2, {fullscreen=false, resizable=true, highdpi=true})
 	scale = love.window.getPixelScale()
 
 	-- love.window.setMode(1920/scale, 1080/scale,{fullscreen=true, resizable=false, highdpi=true})
@@ -55,7 +54,7 @@ function Game.load()
 
 	entity = tostring(math.random(99999))
 
-	localPlayer = Ship.new(entity,200,200,math.pi/2,0,0,ShipType.gunship)
+	localPlayer = Ship.new(entity,200,200,math.pi/2,0,0,ShipType.assalt)
 	table.insert(players, localPlayer)
 
 
@@ -182,7 +181,7 @@ function Game.update(dt)
 
 		for b, bullet in pairs(player.bullets) do
 			for p, otherPlayer in pairs(players) do
-				if players == otherPlayer then
+				if player ~= otherPlayer then
 					xPow = math.pow(otherPlayer.x - bullet.x, 2)
 					yPow = math.pow(otherPlayer.y - bullet.y, 2)
 
@@ -278,6 +277,14 @@ function Game.draw()
 	-- 	-- 	love.graphics.print(player.rotation, 10, i * 20)
 	-- 	-- end
 	-- end
+
+	for i, player in pairs(players) do
+
+		bullets = table.getn(player.bullets)
+		love.graphics.print(bullets, 50, 100*i+30)
+	end
+
+
 
 	fps = love.timer.getFPS()
     love.graphics.print(fps, 50, 50)
