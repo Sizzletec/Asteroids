@@ -79,10 +79,14 @@ function ShipSelect.keypressed(key, unicode)
 	end
 end
 
-function love.gamepadpressed(joystick, button)
+function ShipSelect.gamepadpressed(joystick, button)
     if button == "a" then
-    	-- id, instanceid = joystick:getID()
-    	-- localPlayer:fire()
+    	setState(State.game)
+    end
+end
+
+function ShipSelect.gamepadreleased(joystick, button)
+    if button == "a" then
     end
 end
 
@@ -100,10 +104,9 @@ function ShipSelect.update(dt)
 
 	for i, player in pairs(selections) do
 			if t > 2 then
-				player.ship.firing = true
+				-- player.ship.firing = true
 			else
 				player.ship.firing = false
-
 			end
 
 		if player.ship then
@@ -113,7 +116,7 @@ function ShipSelect.update(dt)
 	end
 
 	if t > 4 then
-		t = t -4
+		t = t - 4
 	end
 
 
@@ -132,25 +135,26 @@ function ShipSelect.draw()
 	for i, player in pairs(selections) do
 		love.graphics.setColor(255, 255, 255)
 		love.graphics.setNewFont(60)
-		xOffset = width/4 * (i-1) + 100
-		yOffset = height/8
+		xOffset = 1920/4 * (i-1) + 100
+		yOffset = 1080/8
 		love.graphics.print("Player " .. i, xOffset+30, yOffset)
 
-		yOffset = height/8 + 400
+		yOffset = 1080/8 + 400
 		love.graphics.setColor(255, 255, 255)
 		love.graphics.polygon("fill", xOffset-30, yOffset+30, xOffset-30, yOffset-30, xOffset-60, yOffset)
 
-		triOffset = width/4 * i - 40
+		triOffset = 1920/4 * i - 40
 		love.graphics.polygon("fill", triOffset-30, yOffset+30, triOffset-30, yOffset-30, triOffset, yOffset)
 
-		love.graphics.scale(scaleFactor*2, scaleFactor*2)
+
+		love.graphics.scale(2,2)
 		playerShip = player.ship
 		if playerShip then
 			playerShip.x = (xOffset+120)/2
 			playerShip.y = (yOffset-150)/2
 			playerShip:draw()
 		end
-		love.graphics.scale(scaleFactor/2, scaleFactor/2)
+		love.graphics.scale(0.5, 0.5)
 
 		playerType = player.ship.shipType
 		love.graphics.print(playerType.name, xOffset, yOffset - 45)
@@ -166,6 +170,13 @@ function ShipSelect.draw()
 		love.graphics.print("Health: " .. playerType.health, xOffset, yOffset + 290)
 		love.graphics.print("Weapon Damage: " .. playerType.weaponDamage, xOffset, yOffset + 350)
 	end
+
+	for i, player in pairs(selections) do
+
+		bullets = table.getn(player.ship.bullets)
+		love.graphics.print(bullets, 50, 100*i+30)
+	end
+
 
 	love.graphics.setBackgroundColor(0x20,0x20,0x20)
 end

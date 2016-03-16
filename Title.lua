@@ -14,9 +14,11 @@ local menuOptions = {
 gKeyPressed = {}
 gCamX,gCamY = 0,0
 
+local menuSpeed = 0.3
+local menuCooldown = 0 
 
 function Title.load()
-	love.window.setMode(1920/2, 1080/2, {fullscreen=false, resizable=true, highdpi=true})
+	
 	scale = love.window.getPixelScale()
 
 	TiledMap_Load("title.tmx",16)
@@ -34,11 +36,27 @@ function Title.keypressed(key, unicode)
 	if (key == "return") then setState(highlightedOption) end
 end
 
+function Title.gamepadpressed(joystick, button)
+    if button == "a" then
+    	setState(highlightedOption)
+    end
+end
+
+function Title.gamepadreleased(joystick, button)
+    if button == "a" then
+    end
+end
+
+function Title.gamepadaxis(joystick, axis, value)
+
+end
+
 function Title.menuUp()
 	highlightedOption = highlightedOption - 1
 	if highlightedOption == 0 then
 		highlightedOption = table.getn(menuOptions)
 	end
+	menuCooldown = menuSpeed
 end
 
 function Title.menuDown()
@@ -46,16 +64,30 @@ function Title.menuDown()
 	if highlightedOption > table.getn(menuOptions) then
 		highlightedOption = 1
 	end
-end
-
-function love.gamepadpressed(joystick, button)
-    if button == "a" then
-    	id, instanceid = joystick:getID()
-    	localPlayer:fire()
-    end
+	menuCooldown = menuSpeed
 end
 
 function Title.update(dt)
+	if menuCooldown > 0 then
+		menuCooldown = menuCooldown - dt
+	else
+		local joysticks = love.joystick.getJoysticks()
+		joy = joysticks[1]
+
+		if joy then
+			joyY = joy:getGamepadAxis("lefty")
+
+			if joyY > 0.7 then
+				Title.menuDown()
+			elseif joyY < -0.7 then
+				Title.menuUp()
+			elseif joyY < 0.7 and joyY > -0.7 then
+				menuCooldown = 0
+			end 
+
+		end
+	end
+
 end
 
 function Title.draw()
@@ -79,7 +111,6 @@ function Title.draw()
 		menuString = menuString .. option .. "\n"
 	end
 
-	fps = love.timer.getFPS()
 	love.graphics.setNewFont(60)
     love.graphics.print(menuString, width/2, 800)
 	love.graphics.setBackgroundColor(0x20,0x20,0x20)

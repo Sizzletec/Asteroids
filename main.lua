@@ -14,7 +14,9 @@ State = {
 currentState = State.title
 
 function love.load()
+	love.window.setMode(1920, 1080, {fullscreen=false, resizable=true, highdpi=true})
 	setState(currentState)
+
 end
 
 function love.keyreleased(key)
@@ -52,6 +54,24 @@ function love.gamepadpressed(joystick, button)
 		Settings.gamepadpressed(joystick, button)
 	elseif currentState == State.shipSelect then
 		ShipSelect.gamepadpressed(joystick, button)
+	end
+end
+
+function love.gamepadreleased(joystick, button)
+    if currentState == State.game then
+		Game.gamepadreleased(joystick, button)
+	elseif currentState == State.title then
+		Title.gamepadreleased(joystick, button)
+	elseif currentState == State.settings then
+		Settings.gamepadreleased(joystick, button)
+	elseif currentState == State.shipSelect then
+		ShipSelect.gamepadreleased(joystick, button)
+	end
+end
+
+function love.gamepadaxis(joystick, axis, value)
+	if currentState == State.title then
+		Title.gamepadaxis(joystick, axis, value)
 	end
 end
 

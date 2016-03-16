@@ -32,9 +32,6 @@ function Game.load()
 	udp:settimeout(0)
 	udp:setpeername(address, port)
 
-	love.window.setMode(1920/2, 1080/2, {fullscreen=false, resizable=true, highdpi=true})
-	scale = love.window.getPixelScale()
-
 	-- love.window.setMode(1920/scale, 1080/scale,{fullscreen=true, resizable=false, highdpi=true})
 
 	math.randomseed(os.time())
@@ -54,7 +51,7 @@ function Game.load()
 
 	entity = tostring(math.random(99999))
 
-	localPlayer = Ship.new(entity,200,200,math.pi/2,0,0,ShipType.assalt)
+	localPlayer = Ship.new(entity,200,200,math.pi/2,0,0,ShipType.standard)
 	table.insert(players, localPlayer)
 
 
@@ -83,6 +80,14 @@ function Game.gamepadpressed(joystick, button)
     if button == "a" then
     	id, instanceid = joystick:getID()
     	localPlayer:fire()
+    	localPlayer.firing = true
+    end
+end
+
+function Game.gamepadreleased(joystick, button)
+    if button == "a" then
+    	id, instanceid = joystick:getID()
+    	localPlayer.firing = false
     end
 end
 
