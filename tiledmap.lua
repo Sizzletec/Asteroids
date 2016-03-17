@@ -13,12 +13,17 @@ local max = math.max
 local min = math.min
 local abs = math.abs
 gTileMap_LayerInvisByName = {}
- 
+
+local tilesetImage
+local tileQuads = {} -- parts of the tileset used for different tiles
+local tilesetSprite
+local tilesetBatch
+
 function TiledMap_Load (filepath,tilesize,spritepath_removeold,spritepath_prefix)
     spritepath_removeold = spritepath_removeold or "../"
     spritepath_prefix = spritepath_prefix or ""
     kTileSize = tilesize or kTileSize or 32
-    gTileGfx = {}
+  -- gTileGfx = {}
  
     local tiletype,layers = TiledMap_Parse(filepath)
     gMapLayers = layers
@@ -28,11 +33,13 @@ function TiledMap_Load (filepath,tilesize,spritepath_removeold,spritepath_prefix
         local w,h = raw:getWidth(),raw:getHeight()
         local gid = first_gid
         local e = kTileSize
+        local image = love.graphics.newImage(raw)
+        tilesetBatch = love.graphics.newSpriteBatch(image, w * h)
+
         for y=0,floor(h/kTileSize)-1 do
         for x=0,floor(w/kTileSize)-1 do
-            local sprite = love.image.newImageData(kTileSize,kTileSize)
-            sprite:paste(raw,0,0,x*e,y*e,e,e)
-            gTileGfx[gid] = love.graphics.newImage(sprite)
+            tileQuads[gid] = love.graphics.newQuad(x * kTileSize, y * kTileSize, kTileSize, kTileSize,
+    w, h)
             gid = gid + 1
         end
         end
@@ -142,6 +149,7 @@ end
 
 
 function TiledMap_AllAtCam (camx,camy,fun_layercallback)
+    tilesetBatch:clear()
     camx,camy = floor(camx),floor(camy)
     local screen_w = love.graphics.getWidth()
     local screen_h = love.graphics.getHeight()
@@ -149,20 +157,27 @@ function TiledMap_AllAtCam (camx,camy,fun_layercallback)
     local minx,maxx = floor((camx-screen_w/2)/kTileSize),gMapLayers.width
     local miny,maxy = floor((camy-screen_h/2)/kTileSize),gMapLayers.height
     for z = 1,#gMapLayers do 
-  if (fun_layercallback) then fun_layercallback(z,gMapLayers[z]) end
-  if (TiledMap_IsLayerVisible(z)) then
-    for x = minx,maxx do
-    for y = miny,maxy do
-        local gfx = gTileGfx[TiledMap_GetMapTile(x,y,z)]
-        if (gfx) then
-            local sx = x*kTileSize - camx + screen_w/2
-            local sy = y*kTileSize - camy + screen_h/2
-            love.graphics.draw(gfx,sx,sy) -- x, y, r, sx, sy, ox, oy
+      if (fun_layercallback) then fun_layercallback(z,gMapLayers[z]) end
+          if (TiledMap_IsLayerVisible(z)) then
+            for x = minx,maxx do
+                for y = miny,maxy do
+                    local gfx = tileQuads[TiledMap_GetMapTile(x,y,z)]
+                    if (gfx) then
+                        local sx = x*kTileSize - camx + screen_w/2
+                        local sy = y*kTileSize - camy + screen_h/2
+
+                        tilesetBatch:add(gfx, sx, sy)
+                    -- love.graphics.draw(gfx,sx,sy) -- x, y, r, sx, sy, ox, oy
+                    end
+                end
+            end
+            tilesetBatch:flush()
+            love.graphics.draw(tilesetBatch)
         end
     end
-    end
-    end
-    end
+
+
+
 end
  
 -- ***** ***** ***** ***** ***** xml parser

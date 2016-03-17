@@ -44,6 +44,7 @@ function ShipSelect.load()
 	selections[4].ship = Ship.new(1,0,0)
 end
 
+
 function ShipSelect.keyreleased(key)
 	gKeyPressed[key] = nil
 end
@@ -104,7 +105,7 @@ function ShipSelect.update(dt)
 
 	for i, player in pairs(selections) do
 			if t > 2 then
-				-- player.ship.firing = true
+				player.ship.firing = true
 			else
 				player.ship.firing = false
 			end
@@ -118,9 +119,6 @@ function ShipSelect.update(dt)
 	if t > 4 then
 		t = t - 4
 	end
-
-
-
 end
 
 function ShipSelect.draw()
@@ -133,52 +131,64 @@ function ShipSelect.draw()
 
 
 	for i, player in pairs(selections) do
-		love.graphics.setColor(255, 255, 255)
-		love.graphics.setNewFont(60)
-		xOffset = 1920/4 * (i-1) + 100
-		yOffset = 1080/8
-		love.graphics.print("Player " .. i, xOffset+30, yOffset)
-
-		yOffset = 1080/8 + 400
-		love.graphics.setColor(255, 255, 255)
-		love.graphics.polygon("fill", xOffset-30, yOffset+30, xOffset-30, yOffset-30, xOffset-60, yOffset)
-
-		triOffset = 1920/4 * i - 40
-		love.graphics.polygon("fill", triOffset-30, yOffset+30, triOffset-30, yOffset-30, triOffset, yOffset)
-
-
-		love.graphics.scale(2,2)
-		playerShip = player.ship
-		if playerShip then
-			playerShip.x = (xOffset+120)/2
-			playerShip.y = (yOffset-150)/2
-			playerShip:draw()
-		end
-		love.graphics.scale(0.5, 0.5)
-
-		playerType = player.ship.shipType
-		love.graphics.print(playerType.name, xOffset, yOffset - 45)
-
- 		love.graphics.setNewFont(30)
-
- 		love.graphics.setColor(200, 200, 200)
-
-		love.graphics.print("Top Speed: " .. playerType.topSpeed, xOffset, yOffset + 50)
-		love.graphics.print("Acceleration: " .. playerType.acceleration, xOffset, yOffset + 110)
-		love.graphics.print("Rotation Speed: " .. playerType.rotationSpeed, xOffset, yOffset + 170)
-		love.graphics.print("Fire Rate: " .. playerType.fireRate, xOffset, yOffset + 230)
-		love.graphics.print("Health: " .. playerType.health, xOffset, yOffset + 290)
-		love.graphics.print("Weapon Damage: " .. playerType.weaponDamage, xOffset, yOffset + 350)
+		ShipSelect.drawActive(i, player)
 	end
 
-	for i, player in pairs(selections) do
-
-		bullets = table.getn(player.ship.bullets)
-		love.graphics.print(bullets, 50, 100*i+30)
-	end
-
+	-- for i, player in pairs(selections) do
+	-- 	bullets = table.getn(player.ship.bullets)
+	-- 	love.graphics.print(bullets, 50, 100*i+30)
+	-- end
+	love.graphics.push()
+	love.graphics.scale(2,2)
+	Bullet.draw()
+	love.graphics.pop()
 
 	love.graphics.setBackgroundColor(0x20,0x20,0x20)
 end
+
+
+
+function ShipSelect.drawActive(i, player)
+	love.graphics.setColor(255, 255, 255)
+	love.graphics.setNewFont(60)
+	local xOffset = 1920/4 * (i-1) + 100
+	local yOffset = 1080/8
+	love.graphics.print("Player " .. i, xOffset+30, yOffset)
+
+	local yOffset = 1080/8 + 400
+	love.graphics.setColor(255, 255, 255)
+	love.graphics.polygon("fill", xOffset-30, yOffset+30, xOffset-30, yOffset-30, xOffset-60, yOffset)
+
+	local triOffset = 1920/4 * i - 40
+	love.graphics.polygon("fill", triOffset-30, yOffset+30, triOffset-30, yOffset-30, triOffset, yOffset)
+
+	love.graphics.push()
+	love.graphics.scale(2,2)
+	local playerShip = player.ship
+	if playerShip then
+		playerShip.x = (xOffset+120)/2
+		playerShip.y = (yOffset-150)/2
+		playerShip:draw()
+	end
+	love.graphics.pop()
+
+	local playerType = player.ship.shipType
+	love.graphics.print(playerType.name, xOffset, yOffset - 45)
+	love.graphics.setNewFont(30)
+	love.graphics.setColor(200, 200, 200)
+
+	string = "Top Speed: " .. playerType.topSpeed .. "\n"
+	string = string .. "Acceleration: " .. playerType.acceleration .. "\n"
+	string = string .. "Rotation Speed: " .. playerType.rotationSpeed .. "\n"
+	string = string .. "Fire Rate: " .. playerType.fireRate .. "\n"
+	string = string .. "Health: " .. playerType.health .. "\n"
+	string = string .. "Weapon Damage: " .. playerType.weaponDamage .. "\n"
+
+
+	love.graphics.print(string, xOffset, yOffset + 50)
+end
+
+
+
 
 return ShipSelect

@@ -1,10 +1,7 @@
+local image = love.graphics.newImage('ship-sprites.png')
+local ship2cannon = love.graphics.newImage('ship2cannon.png')
+
 Ship = {
-  image = love.graphics.newImage('ship-sprites.png'),
-  ship2 = love.graphics.newImage('ship2.png'),
-  ship3 = love.graphics.newImage('ship3.png'),
-  ship3engine = love.graphics.newImage('ship3engine.png'),
-  ship2engine = love.graphics.newImage('ship2engine.png'),
-  ship2cannon = love.graphics.newImage('ship2cannon.png'),
   acceleration = 0,
   shield = false,
   alive = true,
@@ -92,14 +89,20 @@ function Ship:update(dt)
   self.y = self.y + self.vy
 
 
+    if self.rotation < 0 then
+      self.rotation = self.rotation + 2 * math.pi
+
+    elseif self.rotation > math.pi then
+      self.rotation = self.rotation - 2 * math.pi
+    end
 
 
-  if self.y > (TiledMap_GetMapH() * 16) then
-    self.y = self.y - TiledMap_GetMapH() * 16
+  if self.y > 960 then
+    self.y = self.y - 960
   end
 
   if self.y < 0 then
-    self.y = self.y + TiledMap_GetMapH() * 16
+    self.y = self.y + 960
   end
 
 
@@ -113,8 +116,7 @@ function Ship:update(dt)
 
   for i, bullet in pairs(self.bullets) do
     bullet:update(dt)
-    hitWall = TiledMap_GetMapTile(math.floor(bullet.x/16),math.floor(bullet.y/16),1)
-    if bullet.lifetime > 1  or hitWall > 0 then
+    if bullet.lifetime > 1 then
       table.remove(self.bullets, i)
     end
   end
@@ -170,47 +172,36 @@ function Ship:fire()
 end
 
 function Ship:draw()
-  for i, bullet in pairs(self.bullets) do
-    bullet:draw()
-  end
-
-  image = self.image
+  -- for i, bullet in pairs(self.bullets) do
+    -- Bullet.draw()
+  -- end
 
   if self.explodingFrame < 3 then
-    xFrame = 0
+    local xFrame = 0
     if self.engine then
       xFrame = 1
     end
 
-    if self.shipType == ShipType.standard then
-      xFrame = 0
-      if self.engine then
-        xFrame = 1
-      end
-      top_left = love.graphics.newQuad(xFrame*32, self.color*32, 32, 32, image:getDimensions())
-      love.graphics.draw(image, top_left,self.x, self.y, self.rotation, 1,1 , 16,16)
-
-    elseif self.shipType == ShipType.gunship then
-
-      if self.engine then
-        love.graphics.draw(self.ship2engine,self.x , self.y, self.rotation, 1,1 , 16,16)
-      else
-        love.graphics.draw(self.ship2,self.x , self.y, self.rotation, 1,1 , 16,16)
-      end
-      love.graphics.draw(self.ship2cannon,self.x - (3 * math.sin(self.rotation)), self.y + (3 * math.cos(self.rotation)), self.cannonRotation, 1,1 , 10, 10)
+    if self.shipType == ShipType.gunship then
+      xFrame = xFrame + 2
+      love.graphics.draw(ship2cannon,self.x - (3 * math.sin(self.rotation)), self.y + (3 * math.cos(self.rotation)), self.cannonRotation, 1,1 , 10, 10)
     elseif self.shipType == ShipType.assalt then
-      if self.engine then
-        love.graphics.draw(self.ship3engine,self.x , self.y, self.rotation, 1,1 , 16,16)
-      else
-        love.graphics.draw(self.ship3,self.x , self.y, self.rotation, 1,1 , 16,16)
-      end
+      xFrame = xFrame + 4
+    end
+
+
+    local top_left = love.graphics.newQuad(xFrame*32, self.color*32, 32, 32, image:getDimensions())
+    love.graphics.draw(image, top_left,self.x, self.y, self.rotation, 1,1 , 16,16)
+
+    if self.shipType == ShipType.gunship then
+      love.graphics.draw(ship2cannon,self.x - (3 * math.sin(self.rotation)), self.y + (3 * math.cos(self.rotation)), self.cannonRotation, 1,1 , 10, 10)
     end
   end
 
   if self.exploding then
-    top_left = love.graphics.newQuad(math.floor(self.explodingFrame)*32, 4*32, 32, 32, image:getDimensions())
+    local top_left = love.graphics.newQuad(math.floor(self.explodingFrame)*32, 4*32, 32, 32, image:getDimensions())
     love.graphics.draw(image, top_left,self.x, self.y, self.rotation, 1,1 , 16,16)
-end
+  end
 
 
   love.graphics.setColor(255, 255, 255)

@@ -64,6 +64,9 @@ end
 
 function Game.keyreleased(key)
 	gKeyPressed[key] = nil
+	if (key == "space") then
+		localPlayer.firing = false
+	end
 end
 
 
@@ -71,7 +74,7 @@ function Game.keypressed(key, unicode)
 	gKeyPressed[key] = true
 	if (key == "escape") then love.event.quit() end
 	if (key == "space") then
-		localPlayer:fire()
+		localPlayer.firing = true
 	end
 	if (key == "e") then localPlayer.rotation = localPlayer.rotation + math.pi end
 end
@@ -103,13 +106,6 @@ function Game.update(dt)
 
 		if math.abs(joyX) > 0.5 then
 			localPlayer.rotation = localPlayer.rotation + (4 * dt * joyX)
-
-			if localPlayer.rotation < 0 then
-				localPlayer.rotation = localPlayer.rotation + 2 * math.pi
-
-			elseif localPlayer.rotation > math.pi then
-				localPlayer.rotation = localPlayer.rotation - 2 * math.pi
-			end
 		end
 
 		if math.abs(joyCannonX) > 0.5 or math.abs(joyCannonY) > 0.5 then
@@ -185,20 +181,25 @@ function Game.update(dt)
 		end
 
 		for b, bullet in pairs(player.bullets) do
-			for p, otherPlayer in pairs(players) do
-				if player ~= otherPlayer then
-					xPow = math.pow(otherPlayer.x - bullet.x, 2)
-					yPow = math.pow(otherPlayer.y - bullet.y, 2)
+		    hitWall = TiledMap_GetMapTile(math.floor(bullet.x/16),math.floor(bullet.y/16),1)
+		    if hitWall > 0 then
+		      table.remove(player.bullets, b)
+		    else
+				for p, otherPlayer in pairs(players) do
+					if player ~= otherPlayer then
+						xPow = math.pow(otherPlayer.x - bullet.x, 2)
+						yPow = math.pow(otherPlayer.y - bullet.y, 2)
 
-					dist = math.sqrt(xPow + yPow)
+						dist = math.sqrt(xPow + yPow)
 
-					if dist < 20 then
-						table.remove(player.bullets, b)
-						otherPlayer.exploding = true
-						-- explode:play()
+						if dist < 20 then
+							table.remove(player.bullets, b)
+							otherPlayer.exploding = true
+							-- explode:play()
+						end
 					end
-				end
-		   end
+			   end
+			end
 		end
 	end
 

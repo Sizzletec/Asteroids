@@ -87,7 +87,7 @@ function Title.update(dt)
 
 		end
 	end
-
+	collectgarbage() 
 end
 
 function Title.draw()

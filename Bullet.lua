@@ -1,7 +1,9 @@
-Bullet = {
-  image = love.graphics.newImage('bullet.png')
-}
+image = love.graphics.newImage('bullet.png')
+
+Bullet = {}
 Bullet.__index = Bullet
+
+local tilesetBatch = love.graphics.newSpriteBatch(image)
 
 function Bullet.new(x,y,speed,rotation)
   local s = {}
@@ -37,12 +39,18 @@ function Bullet:update(dt)
     self.x = self.x + 1920
   end
 
+  tilesetBatch:add(self.x, self.y, self.rotation, 1,1 , 3,3)
 end
 
-function Bullet:draw()
+function Bullet.draw()
+  -- tilesetBatch:clear()
+
+  tilesetBatch:flush()
   -- if self.lifetime < 1 then
-    love.graphics.draw(self.image, self.x, self.y, self.rotation, 1,1 , 3,3)
+    -- love.graphics.draw(self.image, self.x, self.y, self.rotation, 1,1 , 3,3)
   -- end
+  love.graphics.draw(tilesetBatch)
+  tilesetBatch:clear()
 end
 
 return Bullet

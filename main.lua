@@ -85,6 +85,7 @@ function love.update( dt )
 	elseif currentState == State.shipSelect then
 		ShipSelect.update(dt)
 	end
+	collectgarbage()
 end
 
 function love.draw()
