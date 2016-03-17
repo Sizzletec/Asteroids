@@ -7,6 +7,7 @@ Ship = {
   alive = true,
   exploding = false,
   explodingFrame = 0,
+  lives = 100
 }
 Ship.__index = Ship
 
@@ -72,15 +73,16 @@ end
 
 function Ship:update(dt)
 
-  if self.health <= 0 then
-    self.exploding = true 
+  if self.health <= 0 and not self.exploding then
+    self.lives = self.lives - 1
+    self.exploding = true
   end
 
 
   if self.exploding then
     self.explodingFrame = self.explodingFrame + 8 * dt
 
-    if self.explodingFrame > 10 then
+    if self.explodingFrame > 10 and self.lives > 0 then
       self:respawn()
     end
   end
@@ -94,6 +96,7 @@ function Ship:update(dt)
     self.vy = self.vy + yAccel
 
     self.engine = true
+    self.throttle = 0
   else
     self.engine = false
   end
@@ -265,6 +268,14 @@ end
 
 
 function Ship:respawn()
+
+  local spawnLocation = Game.GetSpawnLocation()
+
+  self.x = spawnLocation.x
+  self.y = spawnLocation.y
+  self.rotation = math.rad(spawnLocation.r)
+  self.vx = 0
+  self.vy = 0
   self.health = self.shipType.health
   self.exploding = false
   self.explodingFrame = 0

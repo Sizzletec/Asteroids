@@ -26,6 +26,7 @@ gCamX,gCamY = 0,0
 local localPlayer
 angle = 0
 
+spawn = {}
 
 function Game.load()
 	-- udp = socket.udp()
@@ -40,11 +41,19 @@ function Game.load()
 	local level = "arena" .. tostring(math.random(4)) .. ".tmx"
 	TiledMap_Load(level,16)
 
+	spawn = TiledMap_GetSpawnLocations()
+
 
 	for i, player in pairs(selections) do
 		playerShip = player.ship
 		if playerShip then
 			playerShip.firing = false
+			playerShip.bullets = {}
+			local spawnLocation = Game.GetSpawnLocation()
+
+			playerShip.x = spawnLocation.x
+			playerShip.y = spawnLocation.y
+			playerShip.rotation = math.rad(spawnLocation.r)
 			table.insert(players, playerShip)
 		end
 
@@ -52,12 +61,6 @@ function Game.load()
 			localPlayer = playerShip
 		end
 	end
-
-
-
-
-
-
 
 	-- player2 = Ship.new(1,1820,100,-math.pi/2,0,0,ShipType.gunship)
 	-- player3 = Ship.new(2,100,860,math.pi/2,0,0,ShipType.assalt)
@@ -81,6 +84,44 @@ function Game.load()
 
 	t = 0
 end
+
+
+function Game.GetSpawnLocation()
+	local newSpawn = {x = 100, y = 100, r = 0}
+
+	playerCount = table.getn(players)
+
+	if playerCount == 0 then
+		newSpawn = {x = spawn[1].x, y = spawn[1].y, r = spawn[1].r}
+	else
+		local bestDistance = 0
+
+		for l, location in pairs(spawn) do
+			local compDist
+			for p, player in pairs(players) do
+				if not player.exploding then
+					xPow = math.pow(player.x - location.x, 2)
+					yPow = math.pow(player.y - location.y, 2)
+
+					local dist = math.sqrt(xPow + yPow)
+					if not compDist then
+						compDist = dist
+					elseif dist < compDist then
+						compDist = dist
+					end
+				end
+			end
+
+			if compDist >= bestDistance then
+				bestDistance = compDist
+				newSpawn = {x = location.x, y = location.y, r = location.r}
+			end
+		end
+	end
+
+	return newSpawn
+end
+
 
 function Game.keyreleased(key)
 	gKeyPressed[key] = nil
@@ -202,7 +243,6 @@ function Game.update(dt)
 						dist = math.sqrt(xPow + yPow)
 
 						if dist < 20 then
-							
 							otherPlayer.health = otherPlayer.health - bullet.damage
 							table.remove(player.bullets, b)
 							-- explode:play()
@@ -295,11 +335,6 @@ function Game.draw()
 	-- 	-- 	love.graphics.print(player.rotation, 10, i * 20)
 	-- 	-- end
 	-- end
-
-	for i, player in pairs(players) do
-
-		love.graphics.print(player.health, 50, 100*i+30)
-	end
 
 
 

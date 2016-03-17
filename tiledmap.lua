@@ -25,8 +25,9 @@ function TiledMap_Load (filepath,tilesize,spritepath_removeold,spritepath_prefix
     kTileSize = tilesize or kTileSize or 32
   -- gTileGfx = {}
  
-    local tiletype,layers = TiledMap_Parse(filepath)
+    local tiletype,layers,objects = TiledMap_Parse(filepath)
     gMapLayers = layers
+    gMapObjects = objects
     for first_gid,path in pairs(tiletype) do
         path = spritepath_prefix .. string.gsub(path,"^"..string.gsub(spritepath_removeold,"%.","%%."),"")
         local raw = love.image.newImageData(path)
@@ -275,10 +276,41 @@ local function getLayers(node)
     end
     return layers
 end
- 
+
+
+local function getObjects(node)
+    local layers = {}
+    for k, sub in ipairs(node) do
+        if (sub.label == "objectgroup") then --  and sub.xarg.name == layer_name
+            local layer = {}
+            layer.name = sub.xarg.name
+            layer.objects = {}
+            for l, child in ipairs(sub) do
+                objectX = tonumber(child.xarg.x)
+                objectY = tonumber(child.xarg.y)
+                objectR = tonumber(child.xarg.rotation)
+                objectId = tonumber(child.xarg.id)
+                layer.objects[objectId] = { x = objectX, y = objectY,r = objectR}
+            end
+            table.insert(layers,layer)
+        end
+    end
+    return layers
+end
+
+
+function TiledMap_GetSpawnLocations()
+    for i, layer in pairs(gMapObjects) do
+        if layer.name == "spawn" then
+            return layer.objects
+        end
+    end
+end
+
 function TiledMap_Parse(filename)
     local xml = LoadXML(love.filesystem.read(filename))
     local tiles = getTilesets(xml[2])
     local layers = getLayers(xml[2])
-    return tiles, layers
+    local objectLayers = getObjects(xml[2])
+    return tiles, layers, objectLayers
 end
