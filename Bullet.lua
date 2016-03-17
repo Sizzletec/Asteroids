@@ -5,7 +5,7 @@ Bullet.__index = Bullet
 
 local tilesetBatch = love.graphics.newSpriteBatch(image)
 
-function Bullet.new(x,y,speed,rotation)
+function Bullet.new(x,y,speed,rotation,damage)
   local s = {}
   setmetatable(s, Bullet)
   s.x = x
@@ -14,6 +14,7 @@ function Bullet.new(x,y,speed,rotation)
   s.vx = speed * math.sin(s.rotation)
   s.vy = speed * -math.cos(s.rotation)
   s.lifetime = 0
+  s.damage = damage
   return s
 end
 

@@ -28,31 +28,51 @@ angle = 0
 
 
 function Game.load()
-	udp = socket.udp()
-	udp:settimeout(0)
-	udp:setpeername(address, port)
+	-- udp = socket.udp()
+	-- udp:settimeout(0)
+	-- udp:setpeername(address, port)
 
+
+	players = {}
 	-- love.window.setMode(1920/scale, 1080/scale,{fullscreen=true, resizable=false, highdpi=true})
 
 	math.randomseed(os.time())
 	local level = "arena" .. tostring(math.random(4)) .. ".tmx"
-
 	TiledMap_Load(level,16)
 
-	player2 = Ship.new(1,1820,100,-math.pi/2,0,0,ShipType.gunship)
-	player3 = Ship.new(2,100,860,math.pi/2,0,0,ShipType.assalt)
+
+	for i, player in pairs(selections) do
+		playerShip = player.ship
+		if playerShip then
+			playerShip.firing = false
+			table.insert(players, playerShip)
+		end
+
+		if i == 1 then
+			localPlayer = playerShip
+		end
+	end
+
+
+
+
+
+
+
+	-- player2 = Ship.new(1,1820,100,-math.pi/2,0,0,ShipType.gunship)
+	-- player3 = Ship.new(2,100,860,math.pi/2,0,0,ShipType.assalt)
 	-- player4 = Ship.new(3,1820,860,-math.pi/2,0,0)
 
 	-- table.insert(players, player1)
-	table.insert(players, player2)
-	table.insert(players, player3)
-	-- table.insert(players, player4)
+	-- table.insert(players, player2)
+	-- table.insert(players, player3)
+	-- -- table.insert(players, player4)
 
 
-	entity = tostring(math.random(99999))
+	-- entity = tostring(math.random(99999))
 
-	localPlayer = Ship.new(entity,200,200,math.pi/2,0,0,ShipType.standard)
-	table.insert(players, localPlayer)
+	-- localPlayer = Ship.new(entity,200,200,math.pi/2,0,0,ShipType.gunship)
+	-- table.insert(players, localPlayer)
 
 
 
@@ -72,7 +92,7 @@ end
 
 function Game.keypressed(key, unicode)
 	gKeyPressed[key] = true
-	if (key == "escape") then love.event.quit() end
+	if (key == "escape") then setState(State.shipSelect) end
 	if (key == "space") then
 		localPlayer.firing = true
 	end
@@ -82,8 +102,12 @@ end
 function Game.gamepadpressed(joystick, button)
     if button == "a" then
     	id, instanceid = joystick:getID()
-    	localPlayer:fire()
     	localPlayer.firing = true
+    end
+
+    if button == "y" then
+    	id, instanceid = joystick:getID()
+    	localPlayer:selfDestruct()
     end
 end
 
@@ -96,35 +120,27 @@ end
 
 function Game.update(dt)
 	local joysticks = love.joystick.getJoysticks()
-	joy = joysticks[1]
+	local joy = joysticks[1]
 	if joy then
-		joyX = joy:getGamepadAxis("leftx")
-		joyCannonX = joy:getGamepadAxis("rightx")
-		joyCannonY = joy:getGamepadAxis("righty")
-		throttle = joy:getGamepadAxis("triggerright")
+		local joyX = joy:getGamepadAxis("leftx")
+		local throttle = joy:getGamepadAxis("triggerright")
+		localPlayer.throttle = throttle
 
 
 		if math.abs(joyX) > 0.5 then
-			localPlayer.rotation = localPlayer.rotation + (4 * dt * joyX)
+			localPlayer.angularInput = joyX
 		end
 
-		if math.abs(joyCannonX) > 0.5 or math.abs(joyCannonY) > 0.5 then
-			angle = math.atan2(joyCannonX,-joyCannonY)
+		if localPlayer.shipType == ShipType.gunship then
+			joyCannonX = joy:getGamepadAxis("rightx")
+			joyCannonY = joy:getGamepadAxis("righty")
 
-			localPlayer.cannonRotation = angle
-			localPlayer:fire()
-		end
+			if math.abs(joyCannonX) > 0.5 or math.abs(joyCannonY) > 0.5 then
+				angle = math.atan2(joyCannonX,-joyCannonY)
 
-		if throttle > 0 then
-			xAccel = throttle * 5 * dt * math.sin(localPlayer.rotation)
-			yAccel = throttle * 5 * dt * -math.cos(localPlayer.rotation)
-
-			localPlayer.vx = localPlayer.vx + xAccel
-			localPlayer.vy = localPlayer.vy + yAccel
-
-			localPlayer.engine = true
-		else
-			localPlayer.engine = false
+				localPlayer.cannonRotation = angle
+				localPlayer.firing = true
+			end
 		end
 	end
 
@@ -135,22 +151,15 @@ function Game.update(dt)
 	end
 
 	if (gKeyPressed.up) then
-		xAccel = 5 * dt * math.sin(localPlayer.rotation)
-		yAccel = 5 * dt * -math.cos(localPlayer.rotation)
-
-		localPlayer.vx = localPlayer.vx + xAccel
-		localPlayer.vy = localPlayer.vy + yAccel
-		localPlayer.engine = true
-	else
-		localPlayer.engine = false
+		localPlayer.throttle = 1
 	end
 
 	if (gKeyPressed.left) then
-		localPlayer.rotation = localPlayer.rotation - 4 * dt
+		localPlayer.angularInput = -1
 	end
 
 	if (gKeyPressed.right) then
-		localPlayer.rotation = localPlayer.rotation + 4 * dt
+		localPlayer.angularInput = 1
 	end
 
 
@@ -193,8 +202,9 @@ function Game.update(dt)
 						dist = math.sqrt(xPow + yPow)
 
 						if dist < 20 then
+							
+							otherPlayer.health = otherPlayer.health - bullet.damage
 							table.remove(player.bullets, b)
-							otherPlayer.exploding = true
 							-- explode:play()
 						end
 					end
@@ -278,6 +288,8 @@ function Game.draw()
 		end
 	end
 
+	Bullet.draw()
+
 	-- 	-- if joysticks[i] then
 	-- 	-- 	axis = joysticks[i]:getGamepadAxis("leftx")
 	-- 	-- 	love.graphics.print(player.rotation, 10, i * 20)
@@ -286,8 +298,7 @@ function Game.draw()
 
 	for i, player in pairs(players) do
 
-		bullets = table.getn(player.bullets)
-		love.graphics.print(bullets, 50, 100*i+30)
+		love.graphics.print(player.health, 50, 100*i+30)
 	end
 
 

@@ -11,13 +11,12 @@ local t = 0
 SelectStep = {
 	inactive = 0,
 	active = 1,
-	confirm = 2,
-	ready = 3
+	ready = 2
 }
 
 selections = {
  	{
-		step = SelectStep.inactive
+		step = SelectStep.inactive,
 	},
 	{
 		step = SelectStep.inactive
@@ -33,15 +32,19 @@ selections = {
 function ShipSelect.load()
 	selections[1].step = SelectStep.active
 	selections[1].ship = Ship.new(1,0,0)
+	selections[1].ship.color = 0
 
 	selections[2].step = SelectStep.active
-	selections[2].ship = Ship.new(1,0,0)
+	selections[2].ship = Ship.new(2,0,0)
+	selections[2].ship.color = 1
 
 	selections[3].step = SelectStep.active
-	selections[3].ship = Ship.new(1,0,0)
+	selections[3].ship = Ship.new(3,0,0)
+	selections[3].ship.color = 2
 
 	selections[4].step = SelectStep.active
-	selections[4].ship = Ship.new(1,0,0)
+	selections[4].ship = Ship.new(4,0,0)
+	selections[4].ship.color = 3
 end
 
 
@@ -54,6 +57,14 @@ function ShipSelect.keypressed(key, unicode)
 	gKeyPressed[key] = true
 	if (key == "escape") then setState(State.title) end
 	if (key == "return") then setState(State.game) end
+	if (key == "space") then
+		ship = selections[1].ship
+
+		ship.color = ship.color + 1
+		if ship.color > 3 then
+			ship.color = 0
+		end
+	end
     if (key == "left") then
 		ship = selections[1].ship
 		if ship then
@@ -104,16 +115,11 @@ function ShipSelect.update(dt)
 	t = t + dt
 
 	for i, player in pairs(selections) do
-			if t > 2 then
-				player.ship.firing = true
-			else
-				player.ship.firing = false
-			end
 
-		if player.ship then
-			player.ship.rotation = player.ship.rotation + 2 * dt
+		if player.step == SelectStep.active then
+			ShipSelect.updateActive(i, player, dt)
 		end
-		player.ship:update(dt)
+
 	end
 
 	if t > 4 then
@@ -131,7 +137,12 @@ function ShipSelect.draw()
 
 
 	for i, player in pairs(selections) do
-		ShipSelect.drawActive(i, player)
+
+		if player.step == SelectStep.active then
+			ShipSelect.drawActive(i, player)
+		end
+
+		
 	end
 
 	-- for i, player in pairs(selections) do
@@ -146,14 +157,34 @@ function ShipSelect.draw()
 	love.graphics.setBackgroundColor(0x20,0x20,0x20)
 end
 
+function ShipSelect.updateActive(i, player, dt)
+	if t > 3 then
+		player.ship.engine = true
+	elseif t > 2 then
+		player.ship.firing = true
+	else
+		player.ship.engine = false 
+		player.ship.firing = false
+	end
+
+	if not player.ship.engine then
+		player.ship.rotation = player.ship.rotation + 2 * dt
+	end
+	player.ship:update(dt)
+end
 
 
 function ShipSelect.drawActive(i, player)
 	love.graphics.setColor(255, 255, 255)
 	love.graphics.setNewFont(60)
+	local playerShip = player.ship
 	local xOffset = 1920/4 * (i-1) + 100
 	local yOffset = 1080/8
 	love.graphics.print("Player " .. i, xOffset+30, yOffset)
+
+	local playerColor = player.ship.color
+
+
 
 	local yOffset = 1080/8 + 400
 	love.graphics.setColor(255, 255, 255)
@@ -174,10 +205,27 @@ function ShipSelect.drawActive(i, player)
 
 	local playerType = player.ship.shipType
 	love.graphics.print(playerType.name, xOffset, yOffset - 45)
+
+
+		local colorName = "Gray"
+
+	if playerColor == 1 then
+		colorName = "Red"
+	elseif playerColor == 2 then
+		colorName = "Blue"
+	elseif playerColor == 3 then
+		colorName = "Green"
+	end
+
+
+
+
+
 	love.graphics.setNewFont(30)
 	love.graphics.setColor(200, 200, 200)
 
-	string = "Top Speed: " .. playerType.topSpeed .. "\n"
+	string = "Color: " .. colorName .. "\n"
+	string = string .. "Top Speed: " .. playerType.topSpeed .. "\n"
 	string = string .. "Acceleration: " .. playerType.acceleration .. "\n"
 	string = string .. "Rotation Speed: " .. playerType.rotationSpeed .. "\n"
 	string = string .. "Fire Rate: " .. playerType.fireRate .. "\n"
@@ -185,7 +233,7 @@ function ShipSelect.drawActive(i, player)
 	string = string .. "Weapon Damage: " .. playerType.weaponDamage .. "\n"
 
 
-	love.graphics.print(string, xOffset, yOffset + 50)
+	love.graphics.print(string, xOffset, yOffset + 80)
 end
 
 

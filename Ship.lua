@@ -18,7 +18,7 @@ ShipType = {
     rotationSpeed = 4,
     fireRate = 10,
     health = 150,
-    weaponDamage = 30
+    weaponDamage = 10
   },
   gunship = {
     name = "Gunship",
@@ -28,7 +28,7 @@ ShipType = {
     cannonRotation = 0,
     fireRate = 3,
     health = 200,
-    weaponDamage = 50
+    weaponDamage = 40
   },
   assalt = {
     name = "Assault",
@@ -37,7 +37,7 @@ ShipType = {
     rotationSpeed = 4,
     fireRate = 1,
     health = 100,
-    weaponDamage = 20
+    weaponDamage = 15
   }
 }
 
@@ -65,13 +65,39 @@ function Ship.new(player,x,y,rotation,vx,vy, type)
   s.color = 0
   s.bullets = {}
   s.gunCooldown = 0
+  s.throttle = 0
+  s.angularInput = 0
   return s
 end
 
 function Ship:update(dt)
+
+  if self.health <= 0 then
+    self.exploding = true 
+  end
+
+
   if self.exploding then
     self.explodingFrame = self.explodingFrame + 8 * dt
+
+    if self.explodingFrame > 10 then
+      self:respawn()
+    end
   end
+
+
+  if self.throttle > 0 then
+    xAccel = self.throttle * self.acceleration * dt * math.sin(self.rotation)
+    yAccel = self.throttle * self.acceleration * dt * -math.cos(self.rotation)
+
+    self.vx = self.vx + xAccel
+    self.vy = self.vy + yAccel
+
+    self.engine = true
+  else
+    self.engine = false
+  end
+
 
   if self.vx > self.topSpeed then
     self.vx = self.topSpeed
@@ -89,12 +115,15 @@ function Ship:update(dt)
   self.y = self.y + self.vy
 
 
-    if self.rotation < 0 then
-      self.rotation = self.rotation + 2 * math.pi
+  self.rotation = self.rotation + (4 * dt * self.angularInput)
+  self.angularInput = 0
 
-    elseif self.rotation > math.pi then
-      self.rotation = self.rotation - 2 * math.pi
-    end
+  if self.rotation < 0 then
+    self.rotation = self.rotation + 2 * math.pi
+
+  elseif self.rotation > math.pi then
+    self.rotation = self.rotation - 2 * math.pi
+  end
 
 
   if self.y > 960 then
@@ -130,6 +159,10 @@ function Ship:update(dt)
 end
 
 function Ship:fire()
+  if self.health <= 0 then
+    return
+  end
+
   shoot:play()
 
 
@@ -137,12 +170,12 @@ function Ship:fire()
     if self.cannon == "right" then
       leftCannonOffsetX = self.x + (10 * math.sin(self.rotation)) + (8 * math.cos(self.rotation))
       leftCannonOffsetY = self.y + (10 * -math.cos(self.rotation)) + (8 * math.sin(self.rotation))
-      bullet = Bullet.new(leftCannonOffsetX,leftCannonOffsetY,10,self.rotation)
+      bullet = Bullet.new(leftCannonOffsetX,leftCannonOffsetY,10,self.rotation, self.weaponDamage)
       table.insert(self.bullets, bullet)
     elseif self.cannon == "left" then
       rightCannonOffsetX = self.x + (10 * math.sin(self.rotation)) + (-7 * math.cos(self.rotation))
       rightCannonOffsetY = self.y + (10 * -math.cos(self.rotation)) + (-7 * math.sin(self.rotation))
-      bullet = Bullet.new(rightCannonOffsetX,rightCannonOffsetY,10,self.rotation)
+      bullet = Bullet.new(rightCannonOffsetX,rightCannonOffsetY,10,self.rotation, self.weaponDamage)
       table.insert(self.bullets, bullet)
     end
 
@@ -154,9 +187,10 @@ function Ship:fire()
   elseif self.shipType == ShipType.gunship then
     leftCannonOffsetX = self.x - (3 * math.sin(self.rotation))
     leftCannonOffsetY = self.y + (3 * math.cos(self.rotation))
-    bullet = Bullet.new(leftCannonOffsetX,leftCannonOffsetY,10,self.cannonRotation)
+    bullet = Bullet.new(leftCannonOffsetX,leftCannonOffsetY,15,self.cannonRotation, self.weaponDamage)
     bullet.image = love.graphics.newImage('bullet-red.png')
     table.insert(self.bullets, bullet)
+    self.firing = false
   elseif self.shipType == ShipType.assalt then
       local numBullets = 7
       local angleDiff = math.pi/4/numBullets
@@ -164,11 +198,29 @@ function Ship:fire()
         local rBullet = self.rotation + i * angleDiff
         leftCannonOffsetX = self.x + (5 * math.sin(self.rotation))
         leftCannonOffsetY = self.y + (5 * -math.cos(self.rotation)) 
-        bullet = Bullet.new(leftCannonOffsetX,leftCannonOffsetY,5,rBullet)
+        bullet = Bullet.new(leftCannonOffsetX,leftCannonOffsetY,5,rBullet, self.weaponDamage)
         bullet.image = love.graphics.newImage('bullet-blue.png')
         table.insert(self.bullets, bullet)
       end
   end
+end
+
+function Ship:selfDestruct()
+  if self.health <= 0 then
+    return
+  end
+  self.health = 0
+
+      local numBullets = 100
+      local angleDiff = 2 * math.pi / numBullets
+      for i=numBullets/2,-numBullets/2,-1 do
+        local rBullet = self.rotation + i * angleDiff
+        leftCannonOffsetX = self.x + (5 * math.sin(self.rotation))
+        leftCannonOffsetY = self.y + (5 * -math.cos(self.rotation)) 
+        bullet = Bullet.new(leftCannonOffsetX,leftCannonOffsetY,2,rBullet, 200)
+        bullet.image = love.graphics.newImage('bullet-blue.png')
+        table.insert(self.bullets, bullet)
+      end
 end
 
 function Ship:draw()
@@ -209,6 +261,13 @@ function Ship:draw()
   if self.shield then
     love.graphics.circle("line", self.x, self.y, 20)
   end
+end
+
+
+function Ship:respawn()
+  self.health = self.shipType.health
+  self.exploding = false
+  self.explodingFrame = 0
 end
 
 return Ship
