@@ -159,6 +159,27 @@ function Game.gamepadreleased(joystick, button)
     end
 end
 
+
+function Game.checkWin()
+	numberAlive = 0
+	for i, player in pairs(players) do
+		if player.lives > 0 then
+			numberAlive = numberAlive + 1
+		end
+	end
+
+	if numberAlive <= 1 then
+
+		for i, player in pairs(players) do
+
+			selections[player.player].ship = player
+
+		end
+		setState(State.score)
+	end
+end
+
+
 function Game.update(dt)
 	local joysticks = love.joystick.getJoysticks()
 	local joy = joysticks[1]
@@ -236,7 +257,7 @@ function Game.update(dt)
 		      table.remove(player.bullets, b)
 		    else
 				for p, otherPlayer in pairs(players) do
-					if player ~= otherPlayer then
+					if player ~= otherPlayer and not otherPlayer.exploding then
 						xPow = math.pow(otherPlayer.x - bullet.x, 2)
 						yPow = math.pow(otherPlayer.y - bullet.y, 2)
 
@@ -252,6 +273,8 @@ function Game.update(dt)
 			end
 		end
 	end
+
+	Game.checkWin()
 
 	-- t = t + dt -- increase t by the deltatime
 

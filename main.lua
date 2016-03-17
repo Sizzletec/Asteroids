@@ -2,13 +2,15 @@ local Game = require('Game')
 local Title = require('Title')
 local Settings = require('Settings')
 local ShipSelect = require('ShipSelect')
+local Score = require('Score')
 
 State = {
 	title = 0,
 	onlineMulti = 1,
 	shipSelect = 2,
 	settings = 3,
-	game = 4
+	game = 4,
+	score = 5
 }
 
 currentState = State.title
@@ -28,6 +30,8 @@ function love.keyreleased(key)
 		Settings.keyreleased(key)
 	elseif currentState == State.shipSelect then
 		ShipSelect.keyreleased(key)
+	elseif currentState == State.score then
+		Score.keyreleased(key)
 	end
 end
 
@@ -42,6 +46,8 @@ function love.keypressed(key, unicode)
 		Settings.keypressed(key,unicode)
 	elseif currentState == State.shipSelect then
 		ShipSelect.keypressed(key,unicode)
+	elseif currentState == State.score then
+		Score.keypressed(key,unicode)
 	end
 end
 
@@ -54,6 +60,8 @@ function love.gamepadpressed(joystick, button)
 		Settings.gamepadpressed(joystick, button)
 	elseif currentState == State.shipSelect then
 		ShipSelect.gamepadpressed(joystick, button)
+	elseif currentState == State.score then
+		Score.gamepadpressed(joystick, button)
 	end
 end
 
@@ -66,6 +74,8 @@ function love.gamepadreleased(joystick, button)
 		Settings.gamepadreleased(joystick, button)
 	elseif currentState == State.shipSelect then
 		ShipSelect.gamepadreleased(joystick, button)
+	elseif currentState == State.score then
+		Score.gamepadreleased(joystick, button)
 	end
 end
 
@@ -84,6 +94,8 @@ function love.update( dt )
 		Settings.update(dt)
 	elseif currentState == State.shipSelect then
 		ShipSelect.update(dt)
+	elseif currentState == State.score then
+		Score.update(dt)
 	end
 	collectgarbage()
 end
@@ -97,6 +109,8 @@ function love.draw()
 		Settings.draw()
 	elseif currentState == State.shipSelect then
 		ShipSelect.draw()
+	elseif currentState == State.score then
+		Score.draw()
 	end
 end
 
@@ -110,6 +124,8 @@ function setState(newState)
 		Settings.load()
 	elseif currentState == State.shipSelect then
 		ShipSelect.load()
+	elseif currentState == State.score then
+		Score.load()
 	end
 end
 
