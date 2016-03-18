@@ -124,7 +124,7 @@ function Ship:update(dt)
   if self.rotation < 0 then
     self.rotation = self.rotation + 2 * math.pi
 
-  elseif self.rotation > math.pi then
+  elseif self.rotation > math.pi*2 then
     self.rotation = self.rotation - 2 * math.pi
   end
 
@@ -264,6 +264,29 @@ function Ship:draw()
   if self.shield then
     love.graphics.circle("line", self.x, self.y, 20)
   end
+end
+
+function Ship:flyTowardsPoint(x,y)
+  angle = math.atan2(x - self.x, -(y - self.y))
+
+  if angle < 0 then
+    angle= angle + 2 * math.pi
+
+  elseif angle > math.pi then
+    angle = angle - 2 * math.pi
+  end
+
+  moveAngle = angle - self.rotation
+
+  if moveAngle > math.pi or moveAngle < 0 then
+    self.angularInput = -1
+  elseif moveAngle > 0 then
+    self.angularInput = 1
+  else
+    self.angularInput = 0
+  end
+
+  self.throttle = 1
 end
 
 

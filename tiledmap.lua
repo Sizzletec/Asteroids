@@ -173,6 +173,7 @@ function TiledMap_AllAtCam (camx,camy,fun_layercallback)
                 end
             end
             tilesetBatch:flush()
+            love.graphics.setColor(255, 255, 255)
             love.graphics.draw(tilesetBatch)
         end
     end

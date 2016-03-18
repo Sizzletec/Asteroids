@@ -15,7 +15,7 @@ gKeyPressed = {}
 gCamX,gCamY = 0,0
 
 local menuSpeed = 0.3
-local menuCooldown = 0 
+local menuCooldown = 0
 
 function Title.load()
 	
@@ -48,6 +48,13 @@ function Title.gamepadreleased(joystick, button)
 end
 
 function Title.gamepadaxis(joystick, axis, value)
+	if menuCooldown <= 0 and axis ==  "lefty" then
+		if value > 0.7 then
+			Title.menuDown()
+		elseif value < -0.7 then
+			Title.menuUp()
+		end 
+	end
 
 end
 
@@ -70,24 +77,7 @@ end
 function Title.update(dt)
 	if menuCooldown > 0 then
 		menuCooldown = menuCooldown - dt
-	else
-		local joysticks = love.joystick.getJoysticks()
-		joy = joysticks[1]
-
-		if joy then
-			joyY = joy:getGamepadAxis("lefty")
-
-			if joyY > 0.7 then
-				Title.menuDown()
-			elseif joyY < -0.7 then
-				Title.menuUp()
-			elseif joyY < 0.7 and joyY > -0.7 then
-				menuCooldown = 0
-			end 
-
-		end
 	end
-	collectgarbage() 
 end
 
 function Title.draw()
@@ -114,6 +104,9 @@ function Title.draw()
 	love.graphics.setNewFont(60)
     love.graphics.print(menuString, width/2, 800)
 	love.graphics.setBackgroundColor(0x20,0x20,0x20)
+
+
+
 end
 
 function love.quit()
