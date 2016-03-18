@@ -7,7 +7,7 @@ Ship = {
   alive = true,
   exploding = false,
   explodingFrame = 0,
-  lives = 1
+  lives = 3
 }
 Ship.__index = Ship
 
@@ -69,6 +69,33 @@ function Ship.new(player,x,y,rotation,vx,vy, type)
   s.throttle = 0
   s.angularInput = 0
   return s
+end
+
+function Ship:setDefaults()
+  self.x = 0
+  self.y = 0
+  self.vx = 0
+  self.vy = 0
+  self.rotation = 0
+
+  self.topSpeed = self.shipType.topSpeed
+  self.acceleration = self.shipType.acceleration
+  self.rotationSpeed = self.shipType.rotationSpeed
+  self.fireRate = self.shipType.fireRate
+  self.health = self.shipType.health
+  self.weaponDamage = self.shipType.weaponDamage
+
+  self.bullets = {}
+  self.gunCooldown = 0
+  self.throttle = 0
+  self.angularInput = 0
+
+  self.acceleration = 0
+  self.shield = false
+  self.alive = true
+  self.exploding = false
+  self.explodingFrame = 0
+  self.lives = 3
 end
 
 function Ship:update(dt)

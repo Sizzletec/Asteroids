@@ -14,39 +14,63 @@ SelectStep = {
 	ready = 2
 }
 
+local menuSpeed = 0.3
+
 selections = {
  	{
 		step = SelectStep.inactive,
+		menuCooldown = 0
 	},
 	{
-		step = SelectStep.inactive
+		step = SelectStep.inactive,
+		menuCooldown = 0
 	},
 	{
-		step = SelectStep.inactive
+		step = SelectStep.inactive,
+		menuCooldown = 0
 	},
 	{
-		step = SelectStep.inactive
+		step = SelectStep.inactive,
+		menuCooldown = 0
 	}
 }
 
 function ShipSelect.load()
-	selections[1].step = SelectStep.active
-	selections[1].ship = Ship.new(1,0,0)
-	selections[1].ship.color = 0
+	-- selections[1].step = SelectStep.active
+	-- selections[1].ship = Ship.new(1,0,0)
+	-- selections[1].ship.color = 0
 
-	selections[2].step = SelectStep.active
-	selections[2].ship = Ship.new(2,0,0)
-	selections[2].ship.color = 1
+	-- selections[2].step = SelectStep.active
+	-- selections[2].ship = Ship.new(2,0,0)
+	-- selections[2].ship.color = 1
 
-	selections[3].step = SelectStep.active
-	selections[3].ship = Ship.new(3,0,0)
-	selections[3].ship.color = 2
+	-- selections[3].step = SelectStep.active
+	-- selections[3].ship = Ship.new(3,0,0)
+	-- selections[3].ship.color = 2
 
-	selections[4].step = SelectStep.active
-	selections[4].ship = Ship.new(4,0,0)
-	selections[4].ship.color = 3
+	-- selections[4].step = SelectStep.active
+	-- selections[4].ship = Ship.new(4,0,0)
+	-- selections[4].ship.color = 3
 end
 
+function ShipSelect.activate(player)
+	selections[player].step = SelectStep.active
+	selections[player].ship = Ship.new(player,0,0)
+	selections[player].ship.color = player - 1
+end
+
+function ShipSelect.makeInactive(player)
+	selections[player].step = SelectStep.inactive
+	selections[player].ship = nil
+end
+
+function ShipSelect.unReady(player)
+	selections[player].step = SelectStep.active
+end
+
+function ShipSelect.makeReady(player)
+	selections[player].step = SelectStep.ready
+end
 
 function ShipSelect.keyreleased(key)
 	gKeyPressed[key] = nil
@@ -66,35 +90,103 @@ function ShipSelect.keypressed(key, unicode)
 		end
 	end
     if (key == "left") then
-		ship = selections[1].ship
-		if ship then
-			if ship.shipType == ShipType.standard then
-				selections[1].ship.shipType = ShipType.gunship
-			elseif ship.shipType == ShipType.gunship then
-				selections[1].ship.shipType = ShipType.assalt
-			else
-				selections[1].ship.shipType = ShipType.standard
-			end
-		end
+    	ShipSelect.shipLeft(1)
 	end
 	if (key == "right") then
-		ship = selections[1].ship
-		if ship then
-			if ship.shipType == ShipType.standard then
-				selections[1].ship.shipType = ShipType.assalt
-			elseif ship.shipType == ShipType.assalt then
-				selections[1].ship.shipType = ShipType.gunship
-			else
-				selections[1].ship.shipType = ShipType.standard
-			end
+		ShipSelect.shipRight(1)
+
+	end
+end
+
+function ShipSelect.shipLeft(id)
+	local ship = selections[id].ship
+	if ship then
+		if ship.shipType == ShipType.standard then
+			selections[id].ship.shipType = ShipType.gunship
+		elseif ship.shipType == ShipType.gunship then
+			selections[id].ship.shipType = ShipType.assalt
+		else
+			selections[id].ship.shipType = ShipType.standard
 		end
 	end
 end
 
+
+
+function ShipSelect.shipRight(id)
+	local ship = selections[id].ship
+	if ship then
+		if ship.shipType == ShipType.standard then
+			selections[id].ship.shipType = ShipType.assalt
+		elseif ship.shipType == ShipType.assalt then
+			selections[id].ship.shipType = ShipType.gunship
+		else
+			selections[id].ship.shipType = ShipType.standard
+		end
+	end
+end
+
+
 function ShipSelect.gamepadpressed(joystick, button)
-    if button == "a" then
+	local id, instanceid = joystick:getID()
+	local player = selections[id]
+
+	if player.step == SelectStep.inactive then
+		if button == "a" then
+			ShipSelect.activate(id)
+    	end
+    	if button == "b" then
+	    	setState(State.title)
+    	end
+	elseif player.step == SelectStep.active then
+		if button == "x" or button == "y" then
+	    	ship = player.ship
+
+	    	if ship then
+				ship.color = ship.color + 1
+				if ship.color > 3 then
+					ship.color = 0
+				end
+			end
+	    end
+
+	    if button == "a" then
+	    	ShipSelect.makeReady(id)
+    	end
+
+    	if button == "b" then
+	    	ShipSelect.makeInactive(id)
+    	end
+    elseif player.step == SelectStep.ready then
+    	if button == "b" then
+	    	ShipSelect.unReady(id)
+    	end
+	end
+
+    if button == "start" then
     	setState(State.game)
     end
+
+end
+
+
+function ShipSelect.gamepadaxis(joystick, axis, value)
+	local id, instanceid = joystick:getID()
+	local player = selections[id]
+
+	if axis ==  "leftx"
+		and player.menuCooldown <= 0
+		and player.step == SelectStep.active then
+
+		if value > 0.7 then
+			ShipSelect.shipRight(id)
+			player.menuCooldown = menuSpeed
+		elseif value < -0.7 then
+			ShipSelect.shipLeft(id)
+			player.menuCooldown = menuSpeed
+		end 
+	end
+
 end
 
 function ShipSelect.gamepadreleased(joystick, button)
@@ -115,9 +207,15 @@ function ShipSelect.update(dt)
 	t = t + dt
 
 	for i, player in pairs(selections) do
+		if player.menuCooldown > 0 then
+		player.menuCooldown = player.menuCooldown - dt
+		end
+		
 
 		if player.step == SelectStep.active then
 			ShipSelect.updateActive(i, player, dt)
+		elseif player.step == SelectStep.ready then
+			ShipSelect.updateReady(i, player, dt)
 		end
 
 	end
@@ -140,8 +238,12 @@ function ShipSelect.draw()
 
 		if player.step == SelectStep.active then
 			ShipSelect.drawActive(i, player)
-		end
 
+		elseif player.step == SelectStep.inactive then
+			ShipSelect.drawInactive(i, player)
+		elseif player.step == SelectStep.ready then
+			ShipSelect.drawReady(i, player)
+		end
 		
 	end
 
@@ -169,6 +271,17 @@ function ShipSelect.updateActive(i, player, dt)
 
 	if not player.ship.engine then
 		player.ship.rotation = player.ship.rotation + 2 * dt
+	end
+	player.ship:update(dt)
+end
+
+
+function ShipSelect.updateReady(i, player, dt)
+	player.ship.engine = false 
+	player.ship.firing = false
+
+	if not player.ship.engine then
+		player.ship.rotation = player.ship.rotation + -1 * dt
 	end
 	player.ship:update(dt)
 end
@@ -237,6 +350,50 @@ function ShipSelect.drawActive(i, player)
 end
 
 
+function ShipSelect.drawReady(i, player)
+	love.graphics.setColor(255, 255, 255)
+	love.graphics.setNewFont(60)
+	local playerShip = player.ship
+	local xOffset = 1920/4 * (i-1) + 100
+	local yOffset = 1080/8
+	love.graphics.print("Player " .. i, xOffset+30, yOffset)
+
+	local playerColor = player.ship.color
+
+
+
+	local yOffset = 1080/8 + 400
+	love.graphics.setColor(255, 255, 255)
+
+	love.graphics.push()
+	love.graphics.scale(2,2)
+	local playerShip = player.ship
+	if playerShip then
+		playerShip.x = (xOffset+120)/2
+		playerShip.y = (yOffset-150)/2
+		playerShip:draw()
+	end
+	love.graphics.pop()
+
+	local playerType = player.ship.shipType
+	love.graphics.print("Ready!", xOffset, yOffset - 45)
+end
+
+
+
+function ShipSelect.drawInactive(i, player)
+	love.graphics.setColor(255, 255, 255)
+	love.graphics.setNewFont(60)
+
+
+	local xOffset = 1920/4 * (i-1) + 100
+	local yOffset = 1080/8
+	love.graphics.print("Player " .. i, xOffset+30, yOffset)
+
+	local yOffset = 1080/8 + 400
+	love.graphics.print("Press (A)\n  to join", xOffset, yOffset - 45)
+
+end
 
 
 return ShipSelect

@@ -82,6 +82,8 @@ end
 function love.gamepadaxis(joystick, axis, value)
 	if currentState == State.title then
 		Title.gamepadaxis(joystick, axis, value)
+	elseif currentState == State.shipSelect then
+		ShipSelect.gamepadaxis(joystick, axis, value)
 	end
 end
 

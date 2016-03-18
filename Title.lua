@@ -7,7 +7,7 @@ local Bullet = require('Bullet')
 
 local highlightedOption = 1
 local menuOptions = {
-	"Online Multiplayer",
+	-- "Online Multiplayer",
 	"Local Multiplayer",
 	"Settings"
 }
@@ -33,12 +33,12 @@ function Title.keypressed(key, unicode)
 	if (key == "escape") then love.event.quit() end
 	if (key == "up") then Title.menuUp() end
 	if (key == "down") then Title.menuDown() end
-	if (key == "return") then setState(highlightedOption) end
+	if (key == "return") then setState(highlightedOption+1) end
 end
 
 function Title.gamepadpressed(joystick, button)
     if button == "a" then
-    	setState(highlightedOption)
+    	setState(highlightedOption+1)
     end
 end
 
@@ -89,6 +89,7 @@ function Title.draw()
 	love.graphics.scale(scaleFactor, scaleFactor)
 
 	gCamX,gCamY = width/2,height/2
+	love.graphics.setColor(255, 255, 255)
 	TiledMap_AllAtCam(gCamX,gCamY)
 
 	local menuString = ""

@@ -18,7 +18,17 @@ end
 function Score.keypressed(key, unicode)
 	gKeyPressed[key] = true
 	if (key == "escape") then setState(State.title) end
-	if (key == "return") then setState(State.shipSelect) end
+	if (key == "return") then 
+		for i, player in pairs(selections) do
+			ship = player.ship
+
+			if ship then
+				ship:setDefaults()
+			end
+		end
+		setState(State.shipSelect) 
+
+	end
 end
 
 function Score.gamepadpressed(joystick, button)
