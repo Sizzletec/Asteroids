@@ -241,16 +241,16 @@ function Ship:selfDestruct()
   end
   self.health = 0
 
-      local numBullets = 100
-      local angleDiff = 2 * math.pi / numBullets
-      for i=numBullets/2,-numBullets/2,-1 do
-        local rBullet = self.rotation + i * angleDiff
-        leftCannonOffsetX = self.x + (5 * math.sin(self.rotation))
-        leftCannonOffsetY = self.y + (5 * -math.cos(self.rotation)) 
-        bullet = Bullet.new(leftCannonOffsetX,leftCannonOffsetY,2,rBullet, 200)
-        bullet.image = love.graphics.newImage('bullet-blue.png')
-        table.insert(self.bullets, bullet)
-      end
+  local numBullets = 100
+  local angleDiff = 2 * math.pi / numBullets
+  for i=numBullets/2,-numBullets/2,-1 do
+    local rBullet = self.rotation + i * angleDiff
+    leftCannonOffsetX = self.x + (5 * math.sin(self.rotation))
+    leftCannonOffsetY = self.y + (5 * -math.cos(self.rotation)) 
+    bullet = Bullet.new(leftCannonOffsetX,leftCannonOffsetY,2,rBullet, 200)
+    bullet.image = love.graphics.newImage('bullet-blue.png')
+    table.insert(self.bullets, bullet)
+  end
 end
 
 function Ship:draw()
