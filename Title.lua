@@ -103,7 +103,7 @@ function Title.draw()
 	end
 
 	love.graphics.setNewFont(60)
-    love.graphics.print(menuString, width/2, 800)
+    love.graphics.print(menuString, 1200, 850)
 	love.graphics.setBackgroundColor(0x20,0x20,0x20)
 
 

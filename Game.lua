@@ -19,7 +19,7 @@ gKeyPressed = {}
 yAccel = 0
 xAccel = 0
 
-players = {}
+local players = {}
 
 gCamX,gCamY = 0,0
 
@@ -33,10 +33,7 @@ function Game.load()
 	-- udp:settimeout(0)
 	-- udp:setpeername(address, port)
 
-
 	players = {}
-	-- love.window.setMode(1920/scale, 1080/scale,{fullscreen=true, resizable=false, highdpi=true})
-
 	math.randomseed(os.time())
 	local level = "arena" .. tostring(math.random(4)) .. ".tmx"
 	TiledMap_Load(level,16)
@@ -353,16 +350,8 @@ function Game.draw()
 
 	Bullet.draw()
 
-	-- 	-- if joysticks[i] then
-	-- 	-- 	axis = joysticks[i]:getGamepadAxis("leftx")
-	-- 	-- 	love.graphics.print(player.rotation, 10, i * 20)
-	-- 	-- end
-	-- end
-
-
-
-	fps = love.timer.getFPS()
-    love.graphics.print(fps, 50, 50)
+	-- fps = love.timer.getFPS()
+    -- love.graphics.print(fps, 50, 50)
 	love.graphics.setBackgroundColor(0x20,0x20,0x20)
 end
 

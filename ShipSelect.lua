@@ -36,21 +36,28 @@ selections = {
 }
 
 function ShipSelect.load()
-	-- selections[1].step = SelectStep.active
-	-- selections[1].ship = Ship.new(1,0,0)
-	-- selections[1].ship.color = 0
 
-	-- selections[2].step = SelectStep.active
-	-- selections[2].ship = Ship.new(2,0,0)
-	-- selections[2].ship.color = 1
+	if not selections[1].ship then
 
-	-- selections[3].step = SelectStep.active
-	-- selections[3].ship = Ship.new(3,0,0)
-	-- selections[3].ship.color = 2
+		ShipSelect.activate(2)
+		ShipSelect.makeReady(2)
 
-	-- selections[4].step = SelectStep.active
-	-- selections[4].ship = Ship.new(4,0,0)
-	-- selections[4].ship.color = 3
+		ShipSelect.activate(3)
+		ShipSelect.makeReady(3)
+	end
+
+	for i, player in pairs(selections) do
+		if player.ship then
+			oldship = player.ship
+			newShip = Ship.new(1,0,0)
+
+			newShip.shipType = oldship.shipType
+			newShip.color = oldship.color
+			newShip.player = oldship.player
+
+			player.ship = newShip
+		end
+	end
 end
 
 function ShipSelect.activate(player)
@@ -77,25 +84,79 @@ function ShipSelect.keyreleased(key)
 end
 
 
-function ShipSelect.keypressed(key, unicode)
-	gKeyPressed[key] = true
-	if (key == "escape") then setState(State.title) end
-	if (key == "return") then setState(State.game) end
-	if (key == "space") then
-		ship = selections[1].ship
-
-		ship.color = ship.color + 1
-		if ship.color > 3 then
-			ship.color = 0
+function ShipSelect.isReadyToStart()
+	local start = true
+	for i, player in pairs(selections) do
+		if player.step == SelectStep.active then
+			start = false
 		end
 	end
-    if (key == "left") then
-    	ShipSelect.shipLeft(1)
-	end
-	if (key == "right") then
-		ShipSelect.shipRight(1)
+	return start
+end
 
+
+
+
+function ShipSelect.startGame()
+	if ShipSelect.isReadyToStart then
+		setState(State.game)
 	end
+end
+
+
+function ShipSelect.keypressed(key, unicode)
+	gKeyPressed[key] = true
+	local id = 1
+	local player = selections[id]
+
+	if player.step == SelectStep.inactive then
+		if (key == "return") then
+			ShipSelect.activate(id)
+    	end
+    	if (key == "escape") then
+	    	setState(State.title)
+    	end
+	elseif player.step == SelectStep.active then
+		if (key == "space") then
+	    	ship = player.ship
+
+	    	if ship then
+				ship.color = ship.color + 1
+				if ship.color > 3 then
+					ship.color = 0
+				end
+			end
+	    end
+
+	    if (key == "return") then
+	    	ShipSelect.makeReady(id)
+    	end
+
+    	if (key == "escape") then
+	    	ShipSelect.makeInactive(id)
+    	end
+
+	   	if (key == "left") then
+	    	ShipSelect.shipLeft(id)
+		end
+		if (key == "right") then
+			ShipSelect.shipRight(id)
+
+		end
+    elseif player.step == SelectStep.ready then
+    	if (key == "escape") then
+	    	ShipSelect.unReady(id)
+    	end
+
+    	if (key == "return") then
+	    	ShipSelect.startGame()
+    	end
+	end
+
+
+
+
+
 end
 
 function ShipSelect.shipLeft(id)
@@ -164,7 +225,7 @@ function ShipSelect.gamepadpressed(joystick, button)
 	end
 
     if button == "start" then
-    	setState(State.game)
+    	ShipSelect.startGame()
     end
 
 end
@@ -244,7 +305,10 @@ function ShipSelect.draw()
 		elseif player.step == SelectStep.ready then
 			ShipSelect.drawReady(i, player)
 		end
-		
+	end
+
+	if ShipSelect.isReadyToStart() then
+		love.graphics.print("All Ready! Press start to...?",500, 960)
 	end
 
 	-- for i, player in pairs(selections) do
