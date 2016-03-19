@@ -7,7 +7,21 @@ Ship = {
   alive = true,
   exploding = false,
   explodingFrame = 0,
-  lives = 1
+  lives = 3,
+  wrap = true,
+
+
+  -- for score
+
+  kills = 0,
+  deaths = 0,
+  shots = 0,
+  hits = 0,
+  damageGiven = 0,
+  damageTaken = 0,
+  wallsRunInto = 0
+
+
 }
 Ship.__index = Ship
 
@@ -85,22 +99,33 @@ function Ship:setDefaults()
   self.health = self.shipType.health
   self.weaponDamage = self.shipType.weaponDamage
 
+  playerShip.firing = false
   self.bullets = {}
   self.gunCooldown = 0
   self.throttle = 0
   self.angularInput = 0
 
-  self.acceleration = 0
   self.shield = false
   self.alive = true
   self.exploding = false
   self.explodingFrame = 0
   self.lives = 3
+
+  self.kills = 0
+  self.deaths = 0
+  self.shots = 0
+  self.hits = 0
+  self.damageGiven = 0
+  self.damageTaken = 0
+  self.wallsRunInto = 0
+
 end
 
 function Ship:update(dt)
 
   if self.health <= 0 and not self.exploding then
+    self.health = 0
+    self.deaths = self.deaths + 1
     self.lives = self.lives - 1
     self.exploding = true
   end
@@ -155,22 +180,23 @@ function Ship:update(dt)
     self.rotation = self.rotation - 2 * math.pi
   end
 
+  if self.wrap then
+    if self.y > 960 then
+      self.y = self.y - 960
+    end
 
-  if self.y > 960 then
-    self.y = self.y - 960
-  end
-
-  if self.y < 0 then
-    self.y = self.y + 960
-  end
+    if self.y < 0 then
+      self.y = self.y + 960
+    end
 
 
-  if self.x > 1920 then
-    self.x = self.x - 1920
-  end
+    if self.x > 1920 then
+      self.x = self.x - 1920
+    end
 
-  if self.x < 0 then
-    self.x = self.x + 1920
+    if self.x < 0 then
+      self.x = self.x + 1920
+    end
   end
 
   for i, bullet in pairs(self.bullets) do
@@ -192,6 +218,8 @@ function Ship:fire()
   if self.health <= 0 then
     return
   end
+
+  self.shots = self.shots + 1
 
   shoot:play()
 
@@ -253,6 +281,33 @@ function Ship:selfDestruct()
   end
 end
 
+
+function Ship:drawLifeMarkers(x,y)
+    for live=self.lives,1,-1 do
+
+
+        local xFrame = 0
+        if self.engine then
+          xFrame = 1
+        end
+
+        if self.shipType == ShipType.gunship then
+          xFrame = xFrame + 2
+        elseif self.shipType == ShipType.assalt then
+          xFrame = xFrame + 4
+        end
+
+
+        local top_left = love.graphics.newQuad(xFrame*32, self.color*32, 32, 32, image:getDimensions())
+        love.graphics.draw(image, top_left,x + 36 * live, y, 0, 1,1 , 16,16)
+
+        if self.shipType == ShipType.gunship then
+          love.graphics.draw(ship2cannon,x + 36 * live - (3 * math.sin(0)), y + (3 * math.cos(0)), 0, 1,1 , 10, 10)
+        end
+
+    end
+end
+
 function Ship:draw()
   -- for i, bullet in pairs(self.bullets) do
     -- Bullet.draw()
@@ -266,7 +321,6 @@ function Ship:draw()
 
     if self.shipType == ShipType.gunship then
       xFrame = xFrame + 2
-      love.graphics.draw(ship2cannon,self.x - (3 * math.sin(self.rotation)), self.y + (3 * math.cos(self.rotation)), self.cannonRotation, 1,1 , 10, 10)
     elseif self.shipType == ShipType.assalt then
       xFrame = xFrame + 4
     end

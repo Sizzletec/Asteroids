@@ -18,6 +18,8 @@ gCamX,gCamY = 0,0
 local keyboardPlayer
 spawn = {}
 
+local numberAlive = 0 
+
 function Game.load()
 	players = {}
 	math.randomseed(os.time())
@@ -30,10 +32,9 @@ function Game.load()
 	for i, player in pairs(selections) do
 		playerShip = player.ship
 		if playerShip then
-			playerShip.firing = false
-			playerShip.bullets = {}
-			local spawnLocation = Game.GetSpawnLocation()
+			playerShip:setDefaults()
 
+			local spawnLocation = Game.GetSpawnLocation()
 			playerShip.x = spawnLocation.x
 			playerShip.y = spawnLocation.y
 			playerShip.rotation = math.rad(spawnLocation.r)
@@ -46,7 +47,7 @@ function Game.load()
 
 
 	end
-	t = 0
+	numberAlive = table.getn(players)
 end
 
 
@@ -149,14 +150,20 @@ function Game.getPlayer(id)
 end
 
 function Game.checkWin()
-	numberAlive = 0
 	for i, player in pairs(players) do
-		if player.lives > 0 then
-			numberAlive = numberAlive + 1
+		if player.lives == 0 then
+			if not player.place then
+				player.place = numberAlive
+				numberAlive = numberAlive - 1
+			end
 		end
 	end
-	if numberAlive <= 1 then
+	if numberAlive == 1 then
 		for i, player in pairs(players) do
+
+			if player.lives > 0 then
+				player.place = numberAlive
+			end
 			selections[player.player].ship = player
 		end
 		setState(State.score)
@@ -193,7 +200,15 @@ function Game.update(dt)
 		if joy then
 			local joyX = joy:getGamepadAxis("leftx")
 			local throttle = joy:getGamepadAxis("triggerright")
-			player.throttle = throttle
+
+			if keyboardPlayer.player ==  player.player then
+				if not gKeyPressed.up then
+					player.throttle = throttle
+				end
+			else
+				player.throttle = throttle
+			end
+
 
 
 			if math.abs(joyX) > 0.5 then
@@ -225,17 +240,21 @@ function Game.update(dt)
 		if tileUp > 0 then
 			player.vy = -player.vy/2
 			player.y = player.y - 5
+			player.wallsRunInto = player.wallsRunInto + 1
 		elseif tileDown > 0 then
 			player.vy = -player.vy/2
 			player.y = player.y + 5
+			player.wallsRunInto = player.wallsRunInto + 1
 		end
 
 		if tileLeft > 0 then
 			player.vx = -player.vx/2
 			player.x = player.x + 5
+			player.wallsRunInto = player.wallsRunInto + 1
 		elseif tileRight > 0 then
 			player.vx = -player.vx/2
 			player.x = player.x - 5
+			player.wallsRunInto = player.wallsRunInto + 1
 		end
 
 		for b, bullet in pairs(player.bullets) do
@@ -251,6 +270,17 @@ function Game.update(dt)
 						dist = math.sqrt(xPow + yPow)
 
 						if dist < 20 then
+							player.hits = player.hits + 1
+							if bullet.damage >= otherPlayer.health then
+								player.kills = player.kills + 1
+								player.damageGiven = player.damageGiven + otherPlayer.health
+
+								otherPlayer.damageTaken = otherPlayer.damageTaken + otherPlayer.health
+							else 
+								player.damageGiven = player.damageGiven + bullet.damage 
+								otherPlayer.damageTaken = otherPlayer.damageTaken + bullet.damage 
+							end	
+
 							otherPlayer.health = otherPlayer.health - bullet.damage
 							table.remove(player.bullets, b)
 						end
@@ -272,16 +302,22 @@ function Game.draw()
 
 	gCamX,gCamY = width/2,height/2
 	TiledMap_AllAtCam(gCamX,gCamY)
-
+	love.graphics.setNewFont(40)
 	for i, player in pairs(players) do
-		if player.alive then
-			player:draw()
+		player:draw()
+
+		local xOffset = 1920/4 * (i-1) + 100
+
+		player:drawLifeMarkers(xOffset+10,994)
+
+		if player.lives > 0 then
+			love.graphics.print(player.health .. " hp", xOffset+30, 1016)
 		end
+
 	end
 	Bullet.draw()
-
 	-- fps = love.timer.getFPS()
-    -- love.graphics.print(fps, 50, 50)
+    -- love.graphics.print(numberAlive, 50, 50)
 	love.graphics.setBackgroundColor(0x20,0x20,0x20)
 end
 

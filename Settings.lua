@@ -18,7 +18,14 @@ function Settings.keypressed(key, unicode)
 	if (key == "escape") then setState(State.title) end
 end
 
-function love.gamepadpressed(joystick, button)
+function Settings.gamepadpressed(joystick, button)
+	if button == "b" then
+	    setState(State.title)
+    end
+end
+
+
+function Settings.gamepadreleased(joystick, button)
 end
 
 function Settings.update(dt)
