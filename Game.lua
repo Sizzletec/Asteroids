@@ -56,7 +56,14 @@ function Game.GetSpawnLocation()
 
 	playerCount = table.getn(players)
 
-	if playerCount == 0 then
+	anyoneAlive = false
+	for p, player in pairs(players) do
+		if not player.exploding then
+			anyoneAlive =true
+		end
+	end
+
+	if playerCount == 0 or not anyoneAlive then
 		newSpawn = {x = spawn[1].x, y = spawn[1].y, r = spawn[1].r}
 	else
 		local bestDistance = 0

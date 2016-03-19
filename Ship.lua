@@ -29,9 +29,9 @@ ShipType = {
   standard = {
     name = "Standard",
     topSpeed = 4,
-    acceleration = 4,
+    acceleration = 6,
     rotationSpeed = 4,
-    fireRate = 10,
+    fireRate = 15,
     health = 150,
     weaponDamage = 10
   },
@@ -41,18 +41,18 @@ ShipType = {
     acceleration = 3,
     rotationSpeed = 4,
     cannonRotation = 0,
-    fireRate = 3,
-    health = 200,
+    fireRate = 1.5,
+    health = 130,
     weaponDamage = 40
   },
   assalt = {
     name = "Assault",
     topSpeed = 5,
-    acceleration = 5,
+    acceleration = 4,
     rotationSpeed = 4,
     fireRate = 1,
-    health = 100,
-    weaponDamage = 15
+    health = 170,
+    weaponDamage = 10
   }
 }
 
@@ -109,7 +109,7 @@ function Ship:setDefaults()
   self.alive = true
   self.exploding = false
   self.explodingFrame = 0
-  self.lives = 3
+  self.lives = Ship.lives
 
   self.kills = 0
   self.deaths = 0
