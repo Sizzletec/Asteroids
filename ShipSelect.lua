@@ -169,6 +169,10 @@ function ShipSelect.shipLeft(id)
 			selections[id].ship.shipType = ShipType.gunship
 		elseif ship.shipType == ShipType.gunship then
 			selections[id].ship.shipType = ShipType.assalt
+		elseif ship.shipType == ShipType.assalt then
+			selections[id].ship.shipType = ShipType.ray
+		elseif ship.shipType == ShipType.ray then
+			selections[id].ship.shipType = ShipType.zap
 		else
 			selections[id].ship.shipType = ShipType.standard
 		end
@@ -184,6 +188,10 @@ function ShipSelect.shipRight(id)
 			selections[id].ship.shipType = ShipType.assalt
 		elseif ship.shipType == ShipType.assalt then
 			selections[id].ship.shipType = ShipType.gunship
+		elseif ship.shipType == ShipType.gunship then
+			selections[id].ship.shipType = ShipType.ray
+		elseif ship.shipType == ShipType.ray then
+			selections[id].ship.shipType = ShipType.zap
 		else
 			selections[id].ship.shipType = ShipType.standard
 		end

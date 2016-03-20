@@ -22,7 +22,7 @@ local numberAlive = 0
 
 function Game.load()
 	players = {}
-	math.randomseed(os.time())
+	-- math.randomseed(os.time())
 	local level = "arena" .. tostring(math.random(4)) .. ".tmx"
 	TiledMap_Load(level,16)
 
@@ -279,7 +279,9 @@ function Game.update(dt)
 						if dist < 20 then
 							player.hits = player.hits + 1
 							if bullet.damage >= otherPlayer.health then
-								player.kills = player.kills + 1
+								if otherPlayer.health ~= 0 then
+									player.kills = player.kills + 1
+								end
 								player.damageGiven = player.damageGiven + otherPlayer.health
 
 								otherPlayer.damageTaken = otherPlayer.damageTaken + otherPlayer.health
@@ -289,6 +291,10 @@ function Game.update(dt)
 							end	
 
 							otherPlayer.health = otherPlayer.health - bullet.damage
+
+							if otherPlayer.health < 0 then
+								otherPlayer.health = 0
+							end
 							table.remove(player.bullets, b)
 						end
 					end

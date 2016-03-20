@@ -53,6 +53,24 @@ ShipType = {
     fireRate = 1,
     health = 170,
     weaponDamage = 10
+  },
+  ray = {
+    name = "Rayman",
+    topSpeed = 2,
+    acceleration = 4,
+    rotationSpeed = 1,
+    fireRate = 6,
+    health = 150,
+    weaponDamage = 1.5
+  },
+  zap = {
+    name = "Zapper",
+    topSpeed = 3,
+    acceleration = 3,
+    rotationSpeed = 4,
+    fireRate = 10,
+    health = 160,
+    weaponDamage = 1.5
   }
 }
 
@@ -201,7 +219,7 @@ function Ship:update(dt)
 
   for i, bullet in pairs(self.bullets) do
     bullet:update(dt)
-    if bullet.lifetime > 1 then
+    if bullet.lifetime > bullet.bulletLife then
       table.remove(self.bullets, i)
     end
   end
@@ -260,6 +278,39 @@ function Ship:fire()
         bullet.image = love.graphics.newImage('bullet-blue.png')
         table.insert(self.bullets, bullet)
       end
+  elseif self.shipType == ShipType.ray then
+
+    for i=150,0,-1 do
+
+      OffsetX = self.x + (10*math.sin(self.rotation) +  5*i * math.sin(self.rotation))
+      OffsetY = self.y + (10*-math.cos(self.rotation) + 5*i * -math.cos(self.rotation)) 
+      bullet = Bullet.new(OffsetX,OffsetY,0,self.rotation, self.weaponDamage,0.1)
+      table.insert(self.bullets, bullet)
+    end
+  elseif self.shipType == ShipType.zap then
+    for p=1,0,-1 do
+    local lastAngle = self.rotation
+    local lastX = self.x
+    local lastY = self.y
+    for segments = love.math.random(3)+3,0,-1  do
+        lastAngle = lastAngle + math.rad( love.math.random(40) - 20) 
+
+
+      length = love.math.random(2)+2
+      for i=length,0,-1 do
+
+        OffsetX = lastX + (5*i * math.sin(lastAngle))
+        OffsetY = lastY + (5*i * -math.cos(lastAngle)) 
+        bullet = Bullet.new(OffsetX,OffsetY,0,lastAngle, self.weaponDamage,0.1)
+        table.insert(self.bullets, bullet)
+
+        if i == 1 then
+          lastX = OffsetX + 3 * 5 * math.sin(lastAngle)
+          lastY = OffsetY + 3 * 5 * -math.cos(lastAngle)
+        end
+      end
+    end
+  end
   end
 end
 
@@ -295,6 +346,8 @@ function Ship:drawLifeMarkers(x,y)
           xFrame = xFrame + 2
         elseif self.shipType == ShipType.assalt then
           xFrame = xFrame + 4
+        elseif self.shipType == ShipType.ray then
+          xFrame = xFrame + 6
         end
 
 
@@ -323,6 +376,8 @@ function Ship:draw()
       xFrame = xFrame + 2
     elseif self.shipType == ShipType.assalt then
       xFrame = xFrame + 4
+    elseif self.shipType == ShipType.ray then
+      xFrame = xFrame + 6
     end
 
 
