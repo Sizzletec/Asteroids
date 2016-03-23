@@ -20,7 +20,10 @@ spawn = {}
 
 local numberAlive = 0 
 
+local moon
+
 function Game.load()
+	moon = love.graphics.newImage('aMoon.png')
 	players = {}
 	-- math.randomseed(os.time())
 	local level = "arena" .. tostring(math.random(4)) .. ".tmx"
@@ -312,6 +315,9 @@ function Game.draw()
 	scaleFactor = width/1920
 
 	love.graphics.scale(scaleFactor, scaleFactor)
+
+
+	-- love.graphics.draw(moon,600, 600, 0, 1,1 , 16,16)
 
 	gCamX,gCamY = width/2,height/2
 	TiledMap_AllAtCam(gCamX,gCamY)

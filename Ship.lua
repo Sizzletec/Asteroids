@@ -68,7 +68,7 @@ ShipType = {
     topSpeed = 3,
     acceleration = 3,
     rotationSpeed = 4,
-    fireRate = 10,
+    fireRate = 1,
     health = 160,
     weaponDamage = 1.5
   }
@@ -290,23 +290,23 @@ function Ship:fire()
   elseif self.shipType == ShipType.zap then
     for p=1,0,-1 do
     local lastAngle = self.rotation
-    local lastX = self.x
-    local lastY = self.y
+    local lastX = self.x + (10 * math.sin(lastAngle))
+    local lastY = self.y + (10 * -math.cos(lastAngle))
     for segments = love.math.random(3)+3,0,-1  do
-        lastAngle = lastAngle + math.rad( love.math.random(40) - 20) 
+        lastAngle = lastAngle + math.rad( love.math.random(100) - 50) 
 
 
-      length = love.math.random(2)+2
+      length = love.math.random(4)+1
       for i=length,0,-1 do
 
         OffsetX = lastX + (5*i * math.sin(lastAngle))
         OffsetY = lastY + (5*i * -math.cos(lastAngle)) 
-        bullet = Bullet.new(OffsetX,OffsetY,0,lastAngle, self.weaponDamage,0.1)
+        bullet = Bullet.new(OffsetX,OffsetY,0,lastAngle, self.weaponDamage,1)
         table.insert(self.bullets, bullet)
 
-        if i == 1 then
-          lastX = OffsetX + 3 * 5 * math.sin(lastAngle)
-          lastY = OffsetY + 3 * 5 * -math.cos(lastAngle)
+        if i == 0 then
+          lastX = OffsetX + length * 5 * math.sin(lastAngle) + 5 * math.sin(lastAngle) - math.sin(lastAngle)
+          lastY = OffsetY + length * 5 * -math.cos(lastAngle) + 5 * -math.cos(lastAngle) + math.cos(lastAngle)
         end
       end
     end
@@ -348,6 +348,8 @@ function Ship:drawLifeMarkers(x,y)
           xFrame = xFrame + 4
         elseif self.shipType == ShipType.ray then
           xFrame = xFrame + 6
+        elseif self.shipType == ShipType.zap then
+          xFrame = xFrame + 8
         end
 
 
@@ -378,6 +380,8 @@ function Ship:draw()
       xFrame = xFrame + 4
     elseif self.shipType == ShipType.ray then
       xFrame = xFrame + 6
+    elseif self.shipType == ShipType.zap then
+          xFrame = xFrame + 8
     end
 
 
