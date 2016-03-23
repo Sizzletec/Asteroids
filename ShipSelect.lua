@@ -6,6 +6,7 @@ gKeyPressed = {}
 
 local Ship = require('Ship')
 local Bullet = require('Bullet')
+local Beam = require('Beam')
 local t = 0
 
 SelectStep = {
@@ -329,6 +330,7 @@ function ShipSelect.draw()
 	love.graphics.push()
 	love.graphics.scale(2,2)
 	Bullet.draw()
+	-- Beam.draw()
 	love.graphics.pop()
 
 	love.graphics.setBackgroundColor(0x20,0x20,0x20)

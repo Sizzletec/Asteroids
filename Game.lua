@@ -7,7 +7,7 @@ love.filesystem.load("tiledmap.lua")()
 
 local Ship = require('Ship')
 local Bullet = require('Bullet')
-
+local Beam = require('Beam')
 
 gKeyPressed = {}
 
@@ -335,6 +335,7 @@ function Game.draw()
 
 	end
 	Bullet.draw()
+	-- Beam.draw()
 	-- fps = love.timer.getFPS()
     -- love.graphics.print(numberAlive, 50, 50)
 	love.graphics.setBackgroundColor(0x20,0x20,0x20)

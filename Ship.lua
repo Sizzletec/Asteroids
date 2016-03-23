@@ -59,7 +59,7 @@ ShipType = {
     topSpeed = 2,
     acceleration = 4,
     rotationSpeed = 1,
-    fireRate = 6,
+    fireRate = 60,
     health = 150,
     weaponDamage = 1.5
   },
@@ -97,6 +97,7 @@ function Ship.new(player,x,y,rotation,vx,vy, type)
   s.player = player
   s.color = 0
   s.bullets = {}
+  s.beams = {}
   s.gunCooldown = 0
   s.throttle = 0
   s.angularInput = 0
@@ -119,6 +120,7 @@ function Ship:setDefaults()
 
   playerShip.firing = false
   self.bullets = {}
+  self.beams = {}
   self.gunCooldown = 0
   self.throttle = 0
   self.angularInput = 0
@@ -224,6 +226,13 @@ function Ship:update(dt)
     end
   end
 
+  for i, beam in pairs(self.beams) do
+    beam:update(dt)
+    if beam.lifetime > beam.bulletLife then
+      table.remove(self.beams, i)
+    end
+  end
+
   if self.firing and self.gunCooldown <= 0 then
     self:fire()
     self.gunCooldown = 1/self.shipType.fireRate
@@ -280,13 +289,16 @@ function Ship:fire()
       end
   elseif self.shipType == ShipType.ray then
 
-    for i=150,0,-1 do
+    beam = Beam.new(self.x,self.y,0,self.rotation, self.weaponDamage,0.05)
+    table.insert(self.beams, beam)
 
-      OffsetX = self.x + (10*math.sin(self.rotation) +  5*i * math.sin(self.rotation))
-      OffsetY = self.y + (10*-math.cos(self.rotation) + 5*i * -math.cos(self.rotation)) 
-      bullet = Bullet.new(OffsetX,OffsetY,0,self.rotation, self.weaponDamage,0.1)
-      table.insert(self.bullets, bullet)
-    end
+    -- for i=150,0,-1 do
+
+    --   OffsetX = self.x + (10*math.sin(self.rotation) +  5*i * math.sin(self.rotation))
+    --   OffsetY = self.y + (10*-math.cos(self.rotation) + 5*i * -math.cos(self.rotation)) 
+    --   bullet = Bullet.new(OffsetX,OffsetY,0,self.rotation, self.weaponDamage,0.1)
+    --   table.insert(self.bullets, bullet)
+    -- end
   elseif self.shipType == ShipType.zap then
     for p=1,0,-1 do
     local lastAngle = self.rotation
@@ -403,6 +415,10 @@ function Ship:draw()
 
   if self.shield then
     love.graphics.circle("line", self.x, self.y, 20)
+  end
+
+  for b, beam in pairs(self.beams) do
+    beam:draw()
   end
 end
 
