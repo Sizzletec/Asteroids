@@ -1,4 +1,5 @@
 local image = love.graphics.newImage('ship-sprites.png')
+local lightning = love.graphics.newImage('lightnings.png')
 local ship2cannon = love.graphics.newImage('ship2cannon.png')
 require('ShipTypes')
 Ship = {
@@ -19,8 +20,9 @@ Ship = {
   hits = 0,
   damageGiven = 0,
   damageTaken = 0,
-  wallsRunInto = 0
+  wallsRunInto = 0,
 
+  lightningFrame = 0 
 
 }
 Ship.__index = Ship
@@ -93,6 +95,10 @@ function Ship:setDefaults()
 end
 
 function Ship:update(dt)
+  self.lightningFrame = self.lightningFrame + 8 * dt
+  if self.lightningFrame >= 4 then
+    self.lightningFrame = self.lightningFrame - 4
+  end
 
   if self.health <= 0 and not self.exploding then
     self.health = 0
@@ -334,10 +340,30 @@ function Ship:draw()
     -- Bullet.draw()
   -- end
 
+
+
   if self.explodingFrame < 3 then
     local xFrame = 0
     if self.engine then
       xFrame = 1
+    end
+  
+    if self.shipType == ShipType.zap and self.firing then
+      local top_left = love.graphics.newQuad(math.floor(self.lightningFrame)*100, 0, 100, 80, lightning:getDimensions())
+
+      -- local lightningOffsetX = self.x - (3 * math.sin(self.rotation))
+      -- local lightningOffsetY = self.y + (3 * math.cos(self.rotation))
+
+      -- love.graphics.draw(lightning, top_left,self.x, self.y, self.rotation, 1,1 , 50,70)
+
+      local vertices = {self.x, self.y-10, self.x - 50, self.y - 50, self.x + 50, self.y - 50}
+ 
+      love.graphics.push()
+      love.graphics.translate(self.x,self.y)   -- rotation center
+      love.graphics.rotate(self.rotation)         -- rotate
+      love.graphics.translate(-self.x,-self.y) -- move back
+      love.graphics.polygon('line', vertices)
+      love.graphics.pop()
     end
 
 
@@ -367,6 +393,8 @@ function Ship:draw()
   for b, beam in pairs(self.beams) do
     beam:draw()
   end
+
+
 end
 
 function Ship:flyTowardsPoint(x,y)
