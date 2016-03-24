@@ -24,12 +24,12 @@ function Bullet:update(dt)
   self.x = self.x + self.vx
   self.y = self.y + self.vy
 
-  if self.y > (TiledMap_GetMapH() * 16) then
-    self.y = self.y - TiledMap_GetMapH() * 16
+  if self.y > 960 then
+    self.y = self.y - 960
   end
 
   if self.y < 0 then
-    self.y = self.y + TiledMap_GetMapH() * 16
+    self.y = self.y + 960
   end
 
 

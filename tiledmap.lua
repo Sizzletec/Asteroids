@@ -46,6 +46,12 @@ function TiledMap_Load (filepath,tilesize,spritepath_removeold,spritepath_prefix
         end
     end
 end
+
+function TiledMap_Unload()
+    gMapLayers = nil
+    gMapObjects = nil
+end
+
  
 function TiledMap_GetMapW () return gMapLayers.width end
 function TiledMap_GetMapH () return gMapLayers.height end

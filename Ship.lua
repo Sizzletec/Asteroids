@@ -1,6 +1,6 @@
 local image = love.graphics.newImage('ship-sprites.png')
 local ship2cannon = love.graphics.newImage('ship2cannon.png')
-
+require('ShipTypes')
 Ship = {
   acceleration = 0,
   shield = false,
@@ -24,55 +24,6 @@ Ship = {
 
 }
 Ship.__index = Ship
-
-ShipType = {
-  standard = {
-    name = "Standard",
-    topSpeed = 4,
-    acceleration = 6,
-    rotationSpeed = 4,
-    fireRate = 15,
-    health = 150,
-    weaponDamage = 10
-  },
-  gunship = {
-    name = "Gunship",
-    topSpeed = 2,
-    acceleration = 3,
-    rotationSpeed = 4,
-    cannonRotation = 0,
-    fireRate = 1.5,
-    health = 130,
-    weaponDamage = 40
-  },
-  assalt = {
-    name = "Assault",
-    topSpeed = 5,
-    acceleration = 4,
-    rotationSpeed = 4,
-    fireRate = 1,
-    health = 170,
-    weaponDamage = 10
-  },
-  ray = {
-    name = "Rayman",
-    topSpeed = 2,
-    acceleration = 4,
-    rotationSpeed = 1,
-    fireRate = 60,
-    health = 150,
-    weaponDamage = 1.5
-  },
-  zap = {
-    name = "Zapper",
-    topSpeed = 3,
-    acceleration = 3,
-    rotationSpeed = 4,
-    fireRate = 1,
-    health = 160,
-    weaponDamage = 1.5
-  }
-}
 
 shoot = love.audio.newSource("shoot.wav", "static")
 
@@ -277,16 +228,16 @@ function Ship:fire()
     table.insert(self.bullets, bullet)
     self.firing = false
   elseif self.shipType == ShipType.assalt then
-      local numBullets = 7
-      local angleDiff = math.pi/4/numBullets
-      for i=numBullets/2,-numBullets/2,-1 do
-        local rBullet = self.rotation + i * angleDiff
-        leftCannonOffsetX = self.x + (5 * math.sin(self.rotation))
-        leftCannonOffsetY = self.y + (5 * -math.cos(self.rotation)) 
-        bullet = Bullet.new(leftCannonOffsetX,leftCannonOffsetY,5,rBullet, self.weaponDamage)
-        bullet.image = love.graphics.newImage('bullet-blue.png')
-        table.insert(self.bullets, bullet)
-      end
+    local numBullets = 7
+    local angleDiff = math.pi/4/numBullets
+    for i=numBullets/2,-numBullets/2,-1 do
+      local rBullet = self.rotation + i * angleDiff
+      leftCannonOffsetX = self.x + (5 * math.sin(self.rotation))
+      leftCannonOffsetY = self.y + (5 * -math.cos(self.rotation)) 
+      bullet = Bullet.new(leftCannonOffsetX,leftCannonOffsetY,5,rBullet, self.weaponDamage)
+      bullet.image = love.graphics.newImage('bullet-blue.png')
+      table.insert(self.bullets, bullet)
+    end
   elseif self.shipType == ShipType.ray then
 
     beam = Beam.new(self.x,self.y,0,self.rotation, self.weaponDamage,0.05)
@@ -301,28 +252,40 @@ function Ship:fire()
     -- end
   elseif self.shipType == ShipType.zap then
     for p=1,0,-1 do
-    local lastAngle = self.rotation
-    local lastX = self.x + (10 * math.sin(lastAngle))
-    local lastY = self.y + (10 * -math.cos(lastAngle))
-    for segments = love.math.random(3)+3,0,-1  do
-        lastAngle = lastAngle + math.rad( love.math.random(100) - 50) 
+      local lastAngle = self.rotation
+      local lastX = self.x + (10 * math.sin(lastAngle))
+      local lastY = self.y + (10 * -math.cos(lastAngle))
+
+      for segments = love.math.random(3)+3,0,-1  do
+          lastAngle = lastAngle + math.rad( love.math.random(100) - 50) 
 
 
-      length = love.math.random(4)+1
-      for i=length,0,-1 do
+        length = love.math.random(4)+1
+        for i=length,0,-1 do
 
-        OffsetX = lastX + (5*i * math.sin(lastAngle))
-        OffsetY = lastY + (5*i * -math.cos(lastAngle)) 
-        bullet = Bullet.new(OffsetX,OffsetY,0,lastAngle, self.weaponDamage,1)
-        table.insert(self.bullets, bullet)
+          OffsetX = lastX + (5*i * math.sin(lastAngle))
+          OffsetY = lastY + (5*i * -math.cos(lastAngle)) 
+          bullet = Bullet.new(OffsetX,OffsetY,0,lastAngle, self.weaponDamage,1)
+          table.insert(self.bullets, bullet)
 
-        if i == 0 then
-          lastX = OffsetX + length * 5 * math.sin(lastAngle) + 5 * math.sin(lastAngle) - math.sin(lastAngle)
-          lastY = OffsetY + length * 5 * -math.cos(lastAngle) + 5 * -math.cos(lastAngle) + math.cos(lastAngle)
+          if i == 0 then
+            lastX = OffsetX + length * 5 * math.sin(lastAngle) + 5 * math.sin(lastAngle) - math.sin(lastAngle)
+            lastY = OffsetY + length * 5 * -math.cos(lastAngle) + 5 * -math.cos(lastAngle) + math.cos(lastAngle)
+          end
         end
       end
     end
-  end
+  elseif self.shipType == ShipType.charge then
+    local numBullets = 7
+    local angleDiff = math.pi/4/numBullets
+    for i=numBullets/2,-numBullets/2,-1 do
+      local rBullet = self.rotation + i * angleDiff
+      leftCannonOffsetX = self.x + (5 * math.sin(self.rotation))
+      leftCannonOffsetY = self.y + (5 * -math.cos(self.rotation)) 
+      bullet = Bullet.new(leftCannonOffsetX,leftCannonOffsetY,5,rBullet, self.weaponDamage)
+      bullet.image = love.graphics.newImage('bullet-blue.png')
+      table.insert(self.bullets, bullet)
+    end
   end
 end
 
@@ -354,16 +317,7 @@ function Ship:drawLifeMarkers(x,y)
           xFrame = 1
         end
 
-        if self.shipType == ShipType.gunship then
-          xFrame = xFrame + 2
-        elseif self.shipType == ShipType.assalt then
-          xFrame = xFrame + 4
-        elseif self.shipType == ShipType.ray then
-          xFrame = xFrame + 6
-        elseif self.shipType == ShipType.zap then
-          xFrame = xFrame + 8
-        end
-
+        xFrame = xFrame + self.shipType.frameOffset
 
         local top_left = love.graphics.newQuad(xFrame*32, self.color*32, 32, 32, image:getDimensions())
         love.graphics.draw(image, top_left,x + 36 * live, y, 0, 1,1 , 16,16)
@@ -386,16 +340,9 @@ function Ship:draw()
       xFrame = 1
     end
 
-    if self.shipType == ShipType.gunship then
-      xFrame = xFrame + 2
-    elseif self.shipType == ShipType.assalt then
-      xFrame = xFrame + 4
-    elseif self.shipType == ShipType.ray then
-      xFrame = xFrame + 6
-    elseif self.shipType == ShipType.zap then
-          xFrame = xFrame + 8
-    end
 
+
+    xFrame = xFrame + self.shipType.frameOffset
 
     local top_left = love.graphics.newQuad(xFrame*32, self.color*32, 32, 32, image:getDimensions())
     love.graphics.draw(image, top_left,self.x, self.y, self.rotation, 1,1 , 16,16)

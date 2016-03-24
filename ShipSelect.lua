@@ -37,6 +37,7 @@ selections = {
 }
 
 function ShipSelect.load()
+	TiledMap_Load("empty.tmx",16)
 
 	if not selections[1].ship then
 
@@ -166,17 +167,8 @@ end
 function ShipSelect.shipLeft(id)
 	local ship = selections[id].ship
 	if ship then
-		if ship.shipType == ShipType.standard then
-			selections[id].ship.shipType = ShipType.gunship
-		elseif ship.shipType == ShipType.gunship then
-			selections[id].ship.shipType = ShipType.assalt
-		elseif ship.shipType == ShipType.assalt then
-			selections[id].ship.shipType = ShipType.ray
-		elseif ship.shipType == ShipType.ray then
-			selections[id].ship.shipType = ShipType.zap
-		else
-			selections[id].ship.shipType = ShipType.standard
-		end
+  		newType = ship.shipType.previousType 
+  		ship.shipType =ShipType[newType]
 	end
 end
 
@@ -185,17 +177,8 @@ end
 function ShipSelect.shipRight(id)
 	local ship = selections[id].ship
 	if ship then
-		if ship.shipType == ShipType.standard then
-			selections[id].ship.shipType = ShipType.assalt
-		elseif ship.shipType == ShipType.assalt then
-			selections[id].ship.shipType = ShipType.gunship
-		elseif ship.shipType == ShipType.gunship then
-			selections[id].ship.shipType = ShipType.ray
-		elseif ship.shipType == ShipType.ray then
-			selections[id].ship.shipType = ShipType.zap
-		else
-			selections[id].ship.shipType = ShipType.standard
-		end
+  		newType = ship.shipType.nextType 
+  		ship.shipType =ShipType[newType]
 	end
 end
 
@@ -451,8 +434,6 @@ function ShipSelect.drawReady(i, player)
 		playerShip:draw()
 	end
 	love.graphics.pop()
-
-	local playerType = player.ship.shipType
 	love.graphics.print("Ready!", xOffset, yOffset - 45)
 end
 
