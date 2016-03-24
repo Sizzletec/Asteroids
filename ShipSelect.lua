@@ -321,11 +321,11 @@ end
 
 function ShipSelect.updateActive(i, player, dt)
 	if t > 3 then
-		player.ship.engine = true
+		player.ship.throttle = 1
 	elseif t > 2 then
 		player.ship.firing = true
 	else
-		player.ship.engine = false 
+		player.ship.throttle = 0
 		player.ship.firing = false
 	end
 
@@ -337,7 +337,7 @@ end
 
 
 function ShipSelect.updateReady(i, player, dt)
-	player.ship.engine = false 
+	player.ship.engine = false
 	player.ship.firing = false
 
 	if not player.ship.engine then

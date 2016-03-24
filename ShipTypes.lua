@@ -9,7 +9,7 @@ ShipType = {
     health = 150,
     weaponDamage = 10,
     frameOffset = 0,
-    previousType = "charge",
+    previousType = "carrier",
     nextType = "gunship"
   },
   gunship = {
@@ -76,7 +76,7 @@ ShipType = {
     weaponDamage = 20,
     frameOffset = 10,
     previousType = "zap",
-    nextType = "standard"
+    nextType = "missle"
   },
   -- flack = {
   --   name = "Flack",
@@ -91,17 +91,30 @@ ShipType = {
   --   previousType = "charge",
   --   nextType = "missle"
   -- },
-  -- missle = {
-  --   name = "Missle",
-  --   description = "Fires missles that home in on enemies",
-  --   topSpeed = 2,
-  --   acceleration = 3,
-  --   rotationSpeed = 4,
-  --   fireRate = 3,
-  --   health = 120,
-  --   weaponDamage = 10,
-  --   frameOffset = 10,
-  --   previousType = "Flack",
-  --   nextType = "standard"
-  -- }
+  missle = {
+    name = "Missle",
+    description = "Fires missles that home in on enemies",
+    topSpeed = 3,
+    acceleration = 3,
+    rotationSpeed = 4,
+    fireRate = 2,
+    health = 150,
+    weaponDamage = 40,
+    frameOffset = 12,
+    previousType = "charge",
+    nextType = "carrier"
+  },
+  carrier = {
+    name = "Carrier",
+    description = "Launches drone that attack enemies",
+    topSpeed = 2,
+    acceleration = 2,
+    rotationSpeed = 4,
+    fireRate = 2,
+    health = 150,
+    weaponDamage = 40,
+    frameOffset = 14,
+    previousType = "missle",
+    nextType = "standard"
+  }
 }
