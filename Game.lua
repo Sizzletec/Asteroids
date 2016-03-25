@@ -1,8 +1,6 @@
 Game = {}
 Game.__index = Game
 
-
-
 love.filesystem.load("tiledmap.lua")()
 
 local Ship = require('Ship')
@@ -17,17 +15,15 @@ local players = {}
 gCamX,gCamY = 0,0
 
 local keyboardPlayer
+
 spawn = {}
 
-local numberAlive = 0 
-
-local moon
+local numberAlive = 0
 
 function Game.load()
-	moon = love.graphics.newImage('images/aMoon.png')
 	players = {}
 	-- math.randomseed(os.time())
-	local level = "maps/arena" .. tostring(math.random(4)) .. ".tmx"
+	local level = "maps/arena" .. tostring(love.math.random(4)) .. ".tmx"
 	TiledMap_Load(level,16)
 
 	spawn = TiledMap_GetSpawnLocations()
@@ -54,6 +50,10 @@ function Game.load()
 	numberAlive = table.getn(players)
 end
 
+
+function getPlayers()
+	return players
+end
 
 function Game.GetSpawnLocation()
 	local newSpawn = {x = 100, y = 100, r = 0}
@@ -94,14 +94,12 @@ function Game.GetSpawnLocation()
 			end
 		end
 	end
-
 	return newSpawn
 end
 
 
 function Game.keyreleased(key)
 	gKeyPressed[key] = nil
-
 	if keyboardPlayer then
 		if (key == "space") then
 			keyboardPlayer.firing = false
@@ -316,9 +314,6 @@ function Game.draw()
 	scaleFactor = width/1920
 
 	love.graphics.scale(scaleFactor, scaleFactor)
-
-
-	-- love.graphics.draw(moon,600, 600, 0, 1,1 , 16,16)
 
 	gCamX,gCamY = width/2,height/2
 	TiledMap_AllAtCam(gCamX,gCamY)

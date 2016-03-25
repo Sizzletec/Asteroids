@@ -1,6 +1,7 @@
 local image = love.graphics.newImage('images/ship-sprites.png')
 local lightning = love.graphics.newImage('images/lightnings.png')
 local ship2cannon = love.graphics.newImage('images/ship2cannon.png')
+
 require('ShipTypes')
 Ship = {
   acceleration = 0,
@@ -10,8 +11,6 @@ Ship = {
   explodingFrame = 0,
   lives = 3,
   wrap = true,
-
-
   -- for score
 
   kills = 0,
@@ -21,9 +20,7 @@ Ship = {
   damageGiven = 0,
   damageTaken = 0,
   wallsRunInto = 0,
-
-  lightningFrame = 0 
-
+  lightningFrame = 0
 }
 Ship.__index = Ship
 
@@ -107,15 +104,12 @@ function Ship:update(dt)
     self.exploding = true
   end
 
-
   if self.exploding then
     self.explodingFrame = self.explodingFrame + 8 * dt
-
     if self.explodingFrame > 10 and self.lives > 0 then
       self:respawn()
     end
   end
-
 
   if self.throttle > 0 then
     xAccel = self.throttle * self.acceleration * dt * math.sin(self.rotation)
@@ -129,7 +123,6 @@ function Ship:update(dt)
   else
     self.engine = false
   end
-
 
   if self.vx > self.topSpeed then
     self.vx = self.topSpeed
@@ -146,6 +139,32 @@ function Ship:update(dt)
   self.x = self.x + self.vx
   self.y = self.y + self.vy
 
+
+  tileUp = TiledMap_GetMapTile(math.floor(self.x/16),math.floor((self.y+16)/16),1)
+  tileDown = TiledMap_GetMapTile(math.floor(self.x/16),math.floor((self.y-16)/16),1)
+
+  tileLeft = TiledMap_GetMapTile(math.floor((self.x-16)/16),math.floor(self.y/16),1)
+  tileRight = TiledMap_GetMapTile(math.floor((self.x+16)/16),math.floor(self.y/16),1)
+
+  if tileUp > 0 then
+    self.vy = -self.vy/2
+    self.y = self.y - 5
+    self.wallsRunInto = self.wallsRunInto + 1
+  elseif tileDown > 0 then
+    self.vy = -self.vy/2
+    self.y = self.y + 5
+    self.wallsRunInto = self.wallsRunInto + 1
+  end
+
+  if tileLeft > 0 then
+    self.vx = -self.vx/2
+    self.x = self.x + 5
+    self.wallsRunInto = self.wallsRunInto + 1
+  elseif tileRight > 0 then
+    self.vx = -self.vx/2
+    self.x = self.x - 5
+    self.wallsRunInto = self.wallsRunInto + 1
+  end
 
   self.rotation = self.rotation + (4 * dt * self.angularInput)
   self.angularInput = 0
@@ -206,7 +225,6 @@ function Ship:fire()
   self.shots = self.shots + 1
 
   shoot:play()
-
 
   if self.shipType == ShipType.standard then
     if self.cannon == "right" then
@@ -287,9 +305,8 @@ function Ship:fire()
     for i=numBullets/2,-numBullets/2,-1 do
       local rBullet = self.rotation + i * angleDiff
       leftCannonOffsetX = self.x + (5 * math.sin(self.rotation))
-      leftCannonOffsetY = self.y + (5 * -math.cos(self.rotation)) 
+      leftCannonOffsetY = self.y + (5 * -math.cos(self.rotation))
       bullet = Bullet.new(leftCannonOffsetX,leftCannonOffsetY,5,rBullet, self.weaponDamage)
-      bullet.image = love.graphics.newImage('images/bullet-blue.png')
       table.insert(self.bullets, bullet)
     end
   elseif self.shipType == ShipType.missle then
@@ -310,7 +327,6 @@ function Ship:fire()
     else
       self.cannon = "right"
     end
-
   end
 end
 
@@ -325,48 +341,36 @@ function Ship:selfDestruct()
   for i=numBullets/2,-numBullets/2,-1 do
     local rBullet = self.rotation + i * angleDiff
     leftCannonOffsetX = self.x + (5 * math.sin(self.rotation))
-    leftCannonOffsetY = self.y + (5 * -math.cos(self.rotation)) 
+    leftCannonOffsetY = self.y + (5 * -math.cos(self.rotation))
     bullet = Bullet.new(leftCannonOffsetX,leftCannonOffsetY,2,rBullet, 200)
-    bullet.image = love.graphics.newImage('images/bullet-blue.png')
     table.insert(self.bullets, bullet)
   end
 end
 
-
 function Ship:drawLifeMarkers(x,y)
-    for live=self.lives,1,-1 do
+  for live=self.lives,1,-1 do
+      local xFrame = 0
+      if self.engine then
+        xFrame = 1
+      end
 
+      xFrame = xFrame + self.shipType.frameOffset
+      local top_left = love.graphics.newQuad(xFrame*32, self.color*32, 32, 32, image:getDimensions())
+      love.graphics.draw(image, top_left,x + 36 * live, y, 0, 1,1 , 16,16)
 
-        local xFrame = 0
-        if self.engine then
-          xFrame = 1
-        end
-
-        xFrame = xFrame + self.shipType.frameOffset
-
-        local top_left = love.graphics.newQuad(xFrame*32, self.color*32, 32, 32, image:getDimensions())
-        love.graphics.draw(image, top_left,x + 36 * live, y, 0, 1,1 , 16,16)
-
-        if self.shipType == ShipType.gunship then
-          love.graphics.draw(ship2cannon,x + 36 * live - (3 * math.sin(0)), y + (3 * math.cos(0)), 0, 1,1 , 10, 10)
-        end
-
-    end
+      if self.shipType == ShipType.gunship then
+        love.graphics.draw(ship2cannon,x + 36 * live - (3 * math.sin(0)), y + (3 * math.cos(0)), 0, 1,1 , 10, 10)
+      end
+  end
 end
 
 function Ship:draw()
-  -- for i, bullet in pairs(self.bullets) do
-    -- Bullet.draw()
-  -- end
-
-
-
   if self.explodingFrame < 3 then
     local xFrame = 0
     if self.engine then
       xFrame = 1
     end
-  
+
     if self.shipType == ShipType.zap and self.firing then
       local top_left = love.graphics.newQuad(math.floor(self.lightningFrame)*100, 0, 100, 80, lightning:getDimensions())
 
@@ -375,8 +379,12 @@ function Ship:draw()
 
       love.graphics.draw(lightning, top_left,self.x, self.y, self.rotation, 1,1 , 50,70)
 
-      local vertices = {self.x, self.y-10, self.x - 50, self.y - 50, self.x + 50, self.y - 50}
- 
+      local vertices = {
+        self.x, self.y-10,
+        self.x - 50, self.y - 50,
+        self.x + 50, self.y - 50
+      }
+
       love.graphics.push()
       love.graphics.translate(self.x,self.y)   -- rotation center
       love.graphics.rotate(self.rotation)         -- rotate
@@ -384,8 +392,6 @@ function Ship:draw()
       love.graphics.polygon('line', vertices)
       love.graphics.pop()
     end
-
-
 
     xFrame = xFrame + self.shipType.frameOffset
 
@@ -402,7 +408,6 @@ function Ship:draw()
     love.graphics.draw(image, top_left,self.x, self.y, self.rotation, 1,1 , 16,16)
   end
 
-
   love.graphics.setColor(255, 255, 255)
 
   if self.shield then
@@ -412,8 +417,6 @@ function Ship:draw()
   for b, beam in pairs(self.beams) do
     beam:draw()
   end
-
-
 end
 
 function Ship:flyTowardsPoint(x,y)
@@ -435,13 +438,10 @@ function Ship:flyTowardsPoint(x,y)
   else
     self.angularInput = 0
   end
-
   self.throttle = 1
 end
 
-
 function Ship:respawn()
-
   local spawnLocation = Game.GetSpawnLocation()
 
   self.x = spawnLocation.x

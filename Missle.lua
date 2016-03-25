@@ -44,13 +44,33 @@ function Missle:update(dt)
   tilesetBatch:add(self.x, self.y, self.rotation, 1,1 , 3,3)
 end
 
-function Missle.draw()
-  -- tilesetBatch:clear()
 
+function Missle:flyTowardsPoint(x,y)
+  angle = math.atan2(x - self.x, -(y - self.y))
+
+  if angle < 0 then
+    angle= angle + 2 * math.pi
+
+  elseif angle > math.pi then
+    angle = angle - 2 * math.pi
+  end
+
+  moveAngle = angle - self.rotation
+
+  if moveAngle > math.pi or moveAngle < 0 then
+    self.angularInput = -1
+  elseif moveAngle > 0 then
+    self.angularInput = 1
+  else
+    self.angularInput = 0
+  end
+
+  self.throttle = 1
+end
+
+
+function Missle.draw()
   tilesetBatch:flush()
-  -- if self.lifetime < 1 then
-    -- love.graphics.draw(self.image, self.x, self.y, self.rotation, 1,1 , 3,3)
-  -- end
   love.graphics.draw(tilesetBatch)
   tilesetBatch:clear()
 end

@@ -2,6 +2,7 @@ Title = {}
 Title.__index = Title
 
 love.filesystem.load("tiledmap.lua")()
+
 local Ship = require('Ship')
 local Bullet = require('Bullet')
 
@@ -18,9 +19,7 @@ local menuSpeed = 0.3
 local menuCooldown = 0
 
 function Title.load()
-	
 	scale = love.window.getPixelScale()
-
 	TiledMap_Load("maps/title.tmx",16)
 end
 
@@ -33,12 +32,23 @@ function Title.keypressed(key, unicode)
 	if (key == "escape") then love.event.quit() end
 	if (key == "up") then Title.menuUp() end
 	if (key == "down") then Title.menuDown() end
-	if (key == "return") then setState(highlightedOption+1) end
+	if (key == "return") then
+		Title.SelectMenuItem()
+	end
 end
+
+function Title.SelectMenuItem()
+	if highlightedOption == 1 then
+		setState(State.shipSelect)
+	elseif highlightedOption == 2 then
+		setState(State.settings)
+	end
+end
+
 
 function Title.gamepadpressed(joystick, button)
     if button == "a" then
-    	setState(highlightedOption+1)
+    	Title.SelectMenuItem()
     end
 end
 
@@ -53,7 +63,7 @@ function Title.gamepadaxis(joystick, axis, value)
 			Title.menuDown()
 		elseif value < -0.7 then
 			Title.menuUp()
-		end 
+		end
 	end
 
 end

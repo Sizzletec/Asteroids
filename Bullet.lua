@@ -1,4 +1,4 @@
-image = love.graphics.newImage('images/bullet.png')
+local image = love.graphics.newImage('images/bullet.png')
 
 Bullet = {}
 Bullet.__index = Bullet
