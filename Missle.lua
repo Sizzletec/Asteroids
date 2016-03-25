@@ -21,26 +21,8 @@ end
 
 function Missle:update(dt)
   self.lifetime = self.lifetime + dt
-  self.x = self.x + self.vx
-  self.y = self.y + self.vy
-
-  if self.y > 960 then
-    self.y = self.y - 960
-  end
-
-  if self.y < 0 then
-    self.y = self.y + 960
-  end
-
-
-  if self.x > 1920 then
-    self.x = self.x - 1920
-  end
-
-  if self.x < 0 then
-    self.x = self.x + 1920
-  end
-
+  Mover.ApplyVelocity(self, dt)
+  Mover.StageWrap(self)
   tilesetBatch:add(self.x, self.y, self.rotation, 1,1 , 3,3)
 end
 

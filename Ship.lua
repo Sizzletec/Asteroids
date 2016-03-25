@@ -1,8 +1,11 @@
 local image = love.graphics.newImage('images/ship-sprites.png')
 local lightning = love.graphics.newImage('images/lightnings.png')
 local ship2cannon = love.graphics.newImage('images/ship2cannon.png')
+local shoot = love.audio.newSource("sounds/shoot.wav", "static")
 
 require('ShipTypes')
+require('Mover')
+
 Ship = {
   acceleration = 0,
   shield = false,
@@ -10,7 +13,6 @@ Ship = {
   exploding = false,
   explodingFrame = 0,
   lives = 3,
-  wrap = true,
   -- for score
 
   kills = 0,
@@ -23,8 +25,6 @@ Ship = {
   lightningFrame = 0
 }
 Ship.__index = Ship
-
-shoot = love.audio.newSource("sounds/shoot.wav", "static")
 
 function Ship.new(player,x,y,rotation,vx,vy, type)
   local s = {}
@@ -88,15 +88,17 @@ function Ship:setDefaults()
   self.damageGiven = 0
   self.damageTaken = 0
   self.wallsRunInto = 0
-
 end
 
 function Ship:update(dt)
+
+  -- lightning frame update
   self.lightningFrame = self.lightningFrame + 8 * dt
   if self.lightningFrame >= 4 then
     self.lightningFrame = self.lightningFrame - 4
   end
 
+  -- check if dead
   if self.health <= 0 and not self.exploding then
     self.health = 0
     self.deaths = self.deaths + 1
@@ -104,6 +106,7 @@ function Ship:update(dt)
     self.exploding = true
   end
 
+  -- when dead run exploding animation
   if self.exploding then
     self.explodingFrame = self.explodingFrame + 8 * dt
     if self.explodingFrame > 10 and self.lives > 0 then
@@ -111,6 +114,7 @@ function Ship:update(dt)
     end
   end
 
+  -- if the ship is engine is on
   if self.throttle > 0 then
     xAccel = self.throttle * self.acceleration * dt * math.sin(self.rotation)
     yAccel = self.throttle * self.acceleration * dt * -math.cos(self.rotation)
@@ -124,6 +128,8 @@ function Ship:update(dt)
     self.engine = false
   end
 
+
+  -- limit velocity to max
   if self.vx > self.topSpeed then
     self.vx = self.topSpeed
   elseif self.vx < -self.topSpeed  then
@@ -136,10 +142,14 @@ function Ship:update(dt)
     self.vy = -self.topSpeed
   end
 
-  self.x = self.x + self.vx
-  self.y = self.y + self.vy
+  -- apply velocity to position
+  -- self.x = self.x + self.vx
+  -- self.y = self.y + self.vy
+
+  Mover.ApplyVelocity(self, dt)
 
 
+  -- check wall collisions
   tileUp = TiledMap_GetMapTile(math.floor(self.x/16),math.floor((self.y+16)/16),1)
   tileDown = TiledMap_GetMapTile(math.floor(self.x/16),math.floor((self.y-16)/16),1)
 
@@ -166,6 +176,7 @@ function Ship:update(dt)
     self.wallsRunInto = self.wallsRunInto + 1
   end
 
+  -- apply rotation
   self.rotation = self.rotation + (4 * dt * self.angularInput)
   self.angularInput = 0
 
@@ -176,24 +187,10 @@ function Ship:update(dt)
     self.rotation = self.rotation - 2 * math.pi
   end
 
-  if self.wrap then
-    if self.y > 960 then
-      self.y = self.y - 960
-    end
-
-    if self.y < 0 then
-      self.y = self.y + 960
-    end
+  -- wrap ship position
+  Mover.StageWrap(self)
 
 
-    if self.x > 1920 then
-      self.x = self.x - 1920
-    end
-
-    if self.x < 0 then
-      self.x = self.x + 1920
-    end
-  end
 
   for i, bullet in pairs(self.bullets) do
     bullet:update(dt)

@@ -28,7 +28,6 @@ function Game.load()
 
 	spawn = TiledMap_GetSpawnLocations()
 
-
 	for i, player in pairs(selections) do
 		playerShip = player.ship
 		if playerShip then
@@ -44,12 +43,9 @@ function Game.load()
 				keyboardPlayer = playerShip
 			end
 		end
-
-
 	end
 	numberAlive = table.getn(players)
 end
-
 
 function getPlayers()
 	return players
@@ -97,7 +93,6 @@ function Game.GetSpawnLocation()
 	return newSpawn
 end
 
-
 function Game.keyreleased(key)
 	gKeyPressed[key] = nil
 	if keyboardPlayer then
@@ -106,7 +101,6 @@ function Game.keyreleased(key)
 		end
 	end
 end
-
 
 function Game.keypressed(key, unicode)
 	gKeyPressed[key] = true
@@ -136,9 +130,6 @@ function Game.gamepadpressed(joystick, button)
 	    end
 	end
 end
-
-
-
 
 function Game.gamepadreleased(joystick, button)
 	local id, instanceid = joystick:getID()
@@ -178,7 +169,6 @@ function Game.checkWin()
 		setState(State.score)
 	end
 end
-
 
 function Game.update(dt)
 	if keyboardPlayer then
@@ -240,32 +230,6 @@ function Game.update(dt)
 		local s = 0
 		player:update(dt)
 
-		tileUp = TiledMap_GetMapTile(math.floor(player.x/16),math.floor((player.y+16)/16),1)
-		tileDown = TiledMap_GetMapTile(math.floor(player.x/16),math.floor((player.y-16)/16),1)
-
-		tileLeft = TiledMap_GetMapTile(math.floor((player.x-16)/16),math.floor(player.y/16),1)
-		tileRight = TiledMap_GetMapTile(math.floor((player.x+16)/16),math.floor(player.y/16),1)
-
-		if tileUp > 0 then
-			player.vy = -player.vy/2
-			player.y = player.y - 5
-			player.wallsRunInto = player.wallsRunInto + 1
-		elseif tileDown > 0 then
-			player.vy = -player.vy/2
-			player.y = player.y + 5
-			player.wallsRunInto = player.wallsRunInto + 1
-		end
-
-		if tileLeft > 0 then
-			player.vx = -player.vx/2
-			player.x = player.x + 5
-			player.wallsRunInto = player.wallsRunInto + 1
-		elseif tileRight > 0 then
-			player.vx = -player.vx/2
-			player.x = player.x - 5
-			player.wallsRunInto = player.wallsRunInto + 1
-		end
-
 		for b, bullet in pairs(player.bullets) do
 		    local hitWall = TiledMap_GetMapTile(math.floor(bullet.x/16),math.floor(bullet.y/16),1)
 		    if hitWall > 0 then
@@ -287,10 +251,10 @@ function Game.update(dt)
 								player.damageGiven = player.damageGiven + otherPlayer.health
 
 								otherPlayer.damageTaken = otherPlayer.damageTaken + otherPlayer.health
-							else 
+							else
 								player.damageGiven = player.damageGiven + bullet.damage 
 								otherPlayer.damageTaken = otherPlayer.damageTaken + bullet.damage 
-							end	
+							end
 
 							otherPlayer.health = otherPlayer.health - bullet.damage
 
@@ -336,9 +300,6 @@ function Game.draw()
 	-- fps = love.timer.getFPS()
     -- love.graphics.print(numberAlive, 50, 50)
 	love.graphics.setBackgroundColor(0x20,0x20,0x20)
-end
-
-function love.quit()
 end
 
 return Game
