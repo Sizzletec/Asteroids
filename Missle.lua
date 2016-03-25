@@ -1,13 +1,13 @@
-image = love.graphics.newImage('images/bullet.png')
+local image = love.graphics.newImage('images/missleShot.png')
 
-Bullet = {}
-Bullet.__index = Bullet
+Missle = {}
+Missle.__index = Missle
 
 local tilesetBatch = love.graphics.newSpriteBatch(image)
 
-function Bullet.new(x,y,speed,rotation,damage,bulletLife)
+function Missle.new(x,y,speed,rotation,damage,bulletLife)
   local s = {}
-  setmetatable(s, Bullet)
+  setmetatable(s, Missle)
   s.x = x
   s.y = y
   s.bulletLife = bulletLife or 1
@@ -19,7 +19,7 @@ function Bullet.new(x,y,speed,rotation,damage,bulletLife)
   return s
 end
 
-function Bullet:update(dt)
+function Missle:update(dt)
   self.lifetime = self.lifetime + dt
   self.x = self.x + self.vx
   self.y = self.y + self.vy
@@ -44,7 +44,7 @@ function Bullet:update(dt)
   tilesetBatch:add(self.x, self.y, self.rotation, 1,1 , 3,3)
 end
 
-function Bullet.draw()
+function Missle.draw()
   -- tilesetBatch:clear()
 
   tilesetBatch:flush()
@@ -55,4 +55,4 @@ function Bullet.draw()
   tilesetBatch:clear()
 end
 
-return Bullet
+return Missle

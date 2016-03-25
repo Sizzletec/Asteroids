@@ -7,6 +7,7 @@ gKeyPressed = {}
 local Ship = require('Ship')
 local Bullet = require('Bullet')
 local Beam = require('Beam')
+local Missle = require('Missle')
 local t = 0
 
 SelectStep = {
@@ -37,7 +38,7 @@ selections = {
 }
 
 function ShipSelect.load()
-	TiledMap_Load("empty.tmx",16)
+	TiledMap_Load("maps/empty.tmx",16)
 
 	if not selections[1].ship then
 
@@ -313,6 +314,7 @@ function ShipSelect.draw()
 	love.graphics.push()
 	love.graphics.scale(2,2)
 	Bullet.draw()
+	Missle.draw()
 	-- Beam.draw()
 	love.graphics.pop()
 

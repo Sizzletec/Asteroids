@@ -8,6 +8,7 @@ love.filesystem.load("tiledmap.lua")()
 local Ship = require('Ship')
 local Bullet = require('Bullet')
 local Beam = require('Beam')
+local Missle = require('Missle')
 
 gKeyPressed = {}
 
@@ -23,10 +24,10 @@ local numberAlive = 0
 local moon
 
 function Game.load()
-	moon = love.graphics.newImage('aMoon.png')
+	moon = love.graphics.newImage('images/aMoon.png')
 	players = {}
 	-- math.randomseed(os.time())
-	local level = "arena" .. tostring(math.random(4)) .. ".tmx"
+	local level = "maps/arena" .. tostring(math.random(4)) .. ".tmx"
 	TiledMap_Load(level,16)
 
 	spawn = TiledMap_GetSpawnLocations()
@@ -335,6 +336,7 @@ function Game.draw()
 
 	end
 	Bullet.draw()
+	Missle.draw()
 	-- Beam.draw()
 	-- fps = love.timer.getFPS()
     -- love.graphics.print(numberAlive, 50, 50)

@@ -1,6 +1,6 @@
-local image = love.graphics.newImage('ship-sprites.png')
-local lightning = love.graphics.newImage('lightnings.png')
-local ship2cannon = love.graphics.newImage('ship2cannon.png')
+local image = love.graphics.newImage('images/ship-sprites.png')
+local lightning = love.graphics.newImage('images/lightnings.png')
+local ship2cannon = love.graphics.newImage('images/ship2cannon.png')
 require('ShipTypes')
 Ship = {
   acceleration = 0,
@@ -27,7 +27,7 @@ Ship = {
 }
 Ship.__index = Ship
 
-shoot = love.audio.newSource("shoot.wav", "static")
+shoot = love.audio.newSource("sounds/shoot.wav", "static")
 
 function Ship.new(player,x,y,rotation,vx,vy, type)
   local s = {}
@@ -230,7 +230,7 @@ function Ship:fire()
     leftCannonOffsetX = self.x - (3 * math.sin(self.rotation))
     leftCannonOffsetY = self.y + (3 * math.cos(self.rotation))
     bullet = Bullet.new(leftCannonOffsetX,leftCannonOffsetY,15,self.cannonRotation, self.weaponDamage)
-    bullet.image = love.graphics.newImage('bullet-red.png')
+    bullet.image = love.graphics.newImage('images/bullet-red.png')
     table.insert(self.bullets, bullet)
     self.firing = false
   elseif self.shipType == ShipType.assalt then
@@ -241,7 +241,7 @@ function Ship:fire()
       leftCannonOffsetX = self.x + (5 * math.sin(self.rotation))
       leftCannonOffsetY = self.y + (5 * -math.cos(self.rotation)) 
       bullet = Bullet.new(leftCannonOffsetX,leftCannonOffsetY,5,rBullet, self.weaponDamage)
-      bullet.image = love.graphics.newImage('bullet-blue.png')
+      bullet.image = love.graphics.newImage('images/bullet-blue.png')
       table.insert(self.bullets, bullet)
     end
   elseif self.shipType == ShipType.ray then
@@ -289,9 +289,28 @@ function Ship:fire()
       leftCannonOffsetX = self.x + (5 * math.sin(self.rotation))
       leftCannonOffsetY = self.y + (5 * -math.cos(self.rotation)) 
       bullet = Bullet.new(leftCannonOffsetX,leftCannonOffsetY,5,rBullet, self.weaponDamage)
-      bullet.image = love.graphics.newImage('bullet-blue.png')
+      bullet.image = love.graphics.newImage('images/bullet-blue.png')
       table.insert(self.bullets, bullet)
     end
+  elseif self.shipType == ShipType.missle then
+    if self.cannon == "right" then
+      leftCannonOffsetX = self.x + (10 * math.sin(self.rotation)) + (8 * math.cos(self.rotation))
+      leftCannonOffsetY = self.y + (10 * -math.cos(self.rotation)) + (8 * math.sin(self.rotation))
+      bullet = Missle.new(leftCannonOffsetX,leftCannonOffsetY,5,self.rotation, self.weaponDamage,5)
+      table.insert(self.bullets, bullet)
+    elseif self.cannon == "left" then
+      rightCannonOffsetX = self.x + (10 * math.sin(self.rotation)) + (-7 * math.cos(self.rotation))
+      rightCannonOffsetY = self.y + (10 * -math.cos(self.rotation)) + (-7 * math.sin(self.rotation))
+      bullet = Missle.new(rightCannonOffsetX,rightCannonOffsetY,5,self.rotation, self.weaponDamage,5)
+      table.insert(self.bullets, bullet)
+    end
+
+    if self.cannon == "right" then
+      self.cannon = "left"
+    else
+      self.cannon = "right"
+    end
+
   end
 end
 
@@ -308,7 +327,7 @@ function Ship:selfDestruct()
     leftCannonOffsetX = self.x + (5 * math.sin(self.rotation))
     leftCannonOffsetY = self.y + (5 * -math.cos(self.rotation)) 
     bullet = Bullet.new(leftCannonOffsetX,leftCannonOffsetY,2,rBullet, 200)
-    bullet.image = love.graphics.newImage('bullet-blue.png')
+    bullet.image = love.graphics.newImage('images/bullet-blue.png')
     table.insert(self.bullets, bullet)
   end
 end
@@ -351,10 +370,10 @@ function Ship:draw()
     if self.shipType == ShipType.zap and self.firing then
       local top_left = love.graphics.newQuad(math.floor(self.lightningFrame)*100, 0, 100, 80, lightning:getDimensions())
 
-      -- local lightningOffsetX = self.x - (3 * math.sin(self.rotation))
-      -- local lightningOffsetY = self.y + (3 * math.cos(self.rotation))
+      local lightningOffsetX = self.x - (3 * math.sin(self.rotation))
+      local lightningOffsetY = self.y + (3 * math.cos(self.rotation))
 
-      -- love.graphics.draw(lightning, top_left,self.x, self.y, self.rotation, 1,1 , 50,70)
+      love.graphics.draw(lightning, top_left,self.x, self.y, self.rotation, 1,1 , 50,70)
 
       local vertices = {self.x, self.y-10, self.x - 50, self.y - 50, self.x + 50, self.y - 50}
  

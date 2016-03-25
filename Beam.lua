@@ -1,4 +1,4 @@
-local beamImage = love.graphics.newImage('beam.png')
+local beamImage = love.graphics.newImage('images/beam.png')
 
 Beam = {}
 Beam.__index = Beam

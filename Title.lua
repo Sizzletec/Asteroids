@@ -21,7 +21,7 @@ function Title.load()
 	
 	scale = love.window.getPixelScale()
 
-	TiledMap_Load("title.tmx",16)
+	TiledMap_Load("maps/title.tmx",16)
 end
 
 function Title.keyreleased(key)
