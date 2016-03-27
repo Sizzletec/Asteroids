@@ -63,6 +63,10 @@ end
 function Score.gamepadreleased(joystick, button)
 end
 
+function Score.gamepadaxis(joystick, axis, value)
+
+end
+
 function Score.update(dt)
 	for i, player in pairs(selections) do
 		ship = player.ship

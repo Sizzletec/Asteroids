@@ -177,7 +177,7 @@ function Ship:update(dt)
   end
 
   -- apply rotation
-  self.rotation = self.rotation + (4 * dt * self.angularInput)
+  self.rotation = self.rotation + self.rotationSpeed * self.angularInput * dt
   self.angularInput = 0
 
   if self.rotation < 0 then
@@ -227,12 +227,12 @@ function Ship:fire()
     if self.cannon == "right" then
       leftCannonOffsetX = self.x + (10 * math.sin(self.rotation)) + (8 * math.cos(self.rotation))
       leftCannonOffsetY = self.y + (10 * -math.cos(self.rotation)) + (8 * math.sin(self.rotation))
-      bullet = Bullet.new(leftCannonOffsetX,leftCannonOffsetY,10,self.rotation, self.weaponDamage)
+      bullet = Bullet.new(leftCannonOffsetX,leftCannonOffsetY,600,self.rotation, self.weaponDamage)
       table.insert(self.bullets, bullet)
     elseif self.cannon == "left" then
       rightCannonOffsetX = self.x + (10 * math.sin(self.rotation)) + (-7 * math.cos(self.rotation))
       rightCannonOffsetY = self.y + (10 * -math.cos(self.rotation)) + (-7 * math.sin(self.rotation))
-      bullet = Bullet.new(rightCannonOffsetX,rightCannonOffsetY,10,self.rotation, self.weaponDamage)
+      bullet = Bullet.new(rightCannonOffsetX,rightCannonOffsetY,600,self.rotation, self.weaponDamage)
       table.insert(self.bullets, bullet)
     end
 
@@ -244,8 +244,7 @@ function Ship:fire()
   elseif self.shipType == ShipType.gunship then
     leftCannonOffsetX = self.x - (3 * math.sin(self.rotation))
     leftCannonOffsetY = self.y + (3 * math.cos(self.rotation))
-    bullet = Bullet.new(leftCannonOffsetX,leftCannonOffsetY,15,self.cannonRotation, self.weaponDamage)
-    bullet.image = love.graphics.newImage('images/bullet-red.png')
+    bullet = Bullet.new(leftCannonOffsetX,leftCannonOffsetY,900,self.cannonRotation, self.weaponDamage)
     table.insert(self.bullets, bullet)
     self.firing = false
   elseif self.shipType == ShipType.assalt then
@@ -255,22 +254,21 @@ function Ship:fire()
       local rBullet = self.rotation + i * angleDiff
       leftCannonOffsetX = self.x + (5 * math.sin(self.rotation))
       leftCannonOffsetY = self.y + (5 * -math.cos(self.rotation)) 
-      bullet = Bullet.new(leftCannonOffsetX,leftCannonOffsetY,5,rBullet, self.weaponDamage)
-      bullet.image = love.graphics.newImage('images/bullet-blue.png')
+      bullet = Bullet.new(leftCannonOffsetX,leftCannonOffsetY,300,rBullet, self.weaponDamage)
       table.insert(self.bullets, bullet)
     end
   elseif self.shipType == ShipType.ray then
 
-    beam = Beam.new(self.x,self.y,0,self.rotation, self.weaponDamage,0.05)
-    table.insert(self.beams, beam)
+    -- beam = Beam.new(self.x,self.y,0,self.rotation, self.weaponDamage,0.05)
+    -- table.insert(self.beams, beam)
 
-    -- for i=150,0,-1 do
+    for i=150,0,-1 do
 
-    --   OffsetX = self.x + (10*math.sin(self.rotation) +  5*i * math.sin(self.rotation))
-    --   OffsetY = self.y + (10*-math.cos(self.rotation) + 5*i * -math.cos(self.rotation)) 
-    --   bullet = Bullet.new(OffsetX,OffsetY,0,self.rotation, self.weaponDamage,0.1)
-    --   table.insert(self.bullets, bullet)
-    -- end
+      OffsetX = self.x + (10*math.sin(self.rotation) +  5*i * math.sin(self.rotation))
+      OffsetY = self.y + (10*-math.cos(self.rotation) + 5*i * -math.cos(self.rotation)) 
+      bullet = Bullet.new(OffsetX,OffsetY,0,self.rotation, self.weaponDamage,0.1)
+      table.insert(self.bullets, bullet)
+    end
   elseif self.shipType == ShipType.zap then
     for p=1,0,-1 do
       local lastAngle = self.rotation
@@ -303,19 +301,19 @@ function Ship:fire()
       local rBullet = self.rotation + i * angleDiff
       leftCannonOffsetX = self.x + (5 * math.sin(self.rotation))
       leftCannonOffsetY = self.y + (5 * -math.cos(self.rotation))
-      bullet = Bullet.new(leftCannonOffsetX,leftCannonOffsetY,5,rBullet, self.weaponDamage)
+      bullet = Bullet.new(leftCannonOffsetX,leftCannonOffsetY,300,rBullet, self.weaponDamage)
       table.insert(self.bullets, bullet)
     end
   elseif self.shipType == ShipType.missle then
     if self.cannon == "right" then
       leftCannonOffsetX = self.x + (10 * math.sin(self.rotation)) + (8 * math.cos(self.rotation))
       leftCannonOffsetY = self.y + (10 * -math.cos(self.rotation)) + (8 * math.sin(self.rotation))
-      bullet = Missle.new(leftCannonOffsetX,leftCannonOffsetY,5,self.rotation, self.weaponDamage,5)
+      bullet = Missle.new(leftCannonOffsetX,leftCannonOffsetY,300,self.rotation, self.weaponDamage,5)
       table.insert(self.bullets, bullet)
     elseif self.cannon == "left" then
       rightCannonOffsetX = self.x + (10 * math.sin(self.rotation)) + (-7 * math.cos(self.rotation))
       rightCannonOffsetY = self.y + (10 * -math.cos(self.rotation)) + (-7 * math.sin(self.rotation))
-      bullet = Missle.new(rightCannonOffsetX,rightCannonOffsetY,5,self.rotation, self.weaponDamage,5)
+      bullet = Missle.new(rightCannonOffsetX,rightCannonOffsetY,300,self.rotation, self.weaponDamage,5)
       table.insert(self.bullets, bullet)
     end
 
@@ -324,7 +322,20 @@ function Ship:fire()
     else
       self.cannon = "right"
     end
+
+  elseif self.shipType == ShipType.carrier then
+    local numBullets = 100
+    local angleDiff = math.pi*2/numBullets
+    for i=numBullets/2,-numBullets/2,-1 do
+      local rBullet = self.rotation + i * angleDiff
+      leftCannonOffsetX = self.x + (5 * math.sin(self.rotation))
+      leftCannonOffsetY = self.y + (5 * -math.cos(self.rotation))
+      bullet = Bullet.new(leftCannonOffsetX,leftCannonOffsetY,10,rBullet, self.weaponDamage)
+      table.insert(self.bullets, bullet)
+    end
+
   end
+  
 end
 
 function Ship:selfDestruct()
@@ -339,7 +350,7 @@ function Ship:selfDestruct()
     local rBullet = self.rotation + i * angleDiff
     leftCannonOffsetX = self.x + (5 * math.sin(self.rotation))
     leftCannonOffsetY = self.y + (5 * -math.cos(self.rotation))
-    bullet = Bullet.new(leftCannonOffsetX,leftCannonOffsetY,2,rBullet, 200)
+    bullet = Bullet.new(leftCannonOffsetX,leftCannonOffsetY,2*60,rBullet, 200)
     table.insert(self.bullets, bullet)
   end
 end
@@ -368,27 +379,27 @@ function Ship:draw()
       xFrame = 1
     end
 
-    if self.shipType == ShipType.zap and self.firing then
-      local top_left = love.graphics.newQuad(math.floor(self.lightningFrame)*100, 0, 100, 80, lightning:getDimensions())
+    -- if self.shipType == ShipType.zap and self.firing then
+    --   local top_left = love.graphics.newQuad(math.floor(self.lightningFrame)*100, 0, 100, 80, lightning:getDimensions())
 
-      local lightningOffsetX = self.x - (3 * math.sin(self.rotation))
-      local lightningOffsetY = self.y + (3 * math.cos(self.rotation))
+    --   local lightningOffsetX = self.x - (3 * math.sin(self.rotation))
+    --   local lightningOffsetY = self.y + (3 * math.cos(self.rotation))
 
-      love.graphics.draw(lightning, top_left,self.x, self.y, self.rotation, 1,1 , 50,70)
+    --   love.graphics.draw(lightning, top_left,self.x, self.y, self.rotation, 1,1 , 50,70)
 
-      local vertices = {
-        self.x, self.y-10,
-        self.x - 50, self.y - 50,
-        self.x + 50, self.y - 50
-      }
+    --   local vertices = {
+    --     self.x, self.y-10,
+    --     self.x - 50, self.y - 50,
+    --     self.x + 50, self.y - 50
+    --   }
 
-      love.graphics.push()
-      love.graphics.translate(self.x,self.y)   -- rotation center
-      love.graphics.rotate(self.rotation)         -- rotate
-      love.graphics.translate(-self.x,-self.y) -- move back
-      love.graphics.polygon('line', vertices)
-      love.graphics.pop()
-    end
+    --   love.graphics.push()
+    --   love.graphics.translate(self.x,self.y)   -- rotation center
+    --   love.graphics.rotate(self.rotation)         -- rotate
+    --   love.graphics.translate(-self.x,-self.y) -- move back
+    --   love.graphics.polygon('line', vertices)
+    --   love.graphics.pop()
+    -- end
 
     xFrame = xFrame + self.shipType.frameOffset
 

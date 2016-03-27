@@ -22,6 +22,8 @@ end
 function Missle:update(dt)
   self.lifetime = self.lifetime + dt
   Mover.ApplyVelocity(self, dt)
+  -- self:flyTowardsPoint(100.0,100.0)
+
   Mover.StageWrap(self)
   tilesetBatch:add(self.x, self.y, self.rotation, 1,1 , 3,3)
 end

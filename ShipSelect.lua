@@ -45,11 +45,11 @@ function ShipSelect.load()
 		ShipSelect.activate(2)
 		ShipSelect.makeReady(2)
 
-		ShipSelect.activate(3)
-		ShipSelect.makeReady(3)
+		-- ShipSelect.activate(3)
+		-- ShipSelect.makeReady(3)
 
-		ShipSelect.activate(4)
-		ShipSelect.makeReady(4)
+		-- ShipSelect.activate(4)
+		-- ShipSelect.makeReady(4)
 	end
 
 	for i, player in pairs(selections) do

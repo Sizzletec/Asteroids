@@ -141,6 +141,10 @@ function Game.gamepadreleased(joystick, button)
 	end
 end
 
+function Game.gamepadaxis(joystick, axis, value)
+
+end
+
 function Game.getPlayer(id)
 	for i, player in pairs(players) do
 		if player.player == id then
@@ -197,8 +201,8 @@ function Game.update(dt)
 		local joy = joysticks[player.player]
 
 		if joy then
-			local joyX = joy:getGamepadAxis("leftx")
-			local throttle = joy:getGamepadAxis("triggerright")
+			-- local joyX = joy:getGamepadAxis("leftx")
+			-- local throttle = joy:getGamepadAxis("triggerright")
 
 			if keyboardPlayer.player ==  player.player then
 				if not gKeyPressed.up then
@@ -209,10 +213,48 @@ function Game.update(dt)
 			end
 
 
+			joyX = joy:getGamepadAxis("leftx")
+			joyY = joy:getGamepadAxis("lefty")
 
-			if math.abs(joyX) > 0.5 then
-				player.angularInput = joyX
+			if math.abs(joyX) > 0.5 or math.abs(joyY) > 0.5 then
+				local angle = math.atan2(joyX,-joyY)
+
+				if angle < 0 then
+					angle = angle + 2 * math.pi
+
+				elseif angle > math.pi then
+					angle = angle - 2 * math.pi
+				end
+
+				moveAngle = angle - player.rotation
+
+
+				if (moveAngle < 0 and moveAngle > -math.pi) or moveAngle > math.pi then
+					player.angularInput = -1
+				elseif moveAngle > 0 or moveAngle < -math.pi then
+				    player.angularInput = 1
+				else
+				    player.angularInput = 0
+				end
+
+				if math.abs(moveAngle) > math.pi and (2*math.pi - math.abs(moveAngle)) < player.rotationSpeed * dt then
+					player.angularInput = player.angularInput * (2*math.pi - math.abs(moveAngle))/(player.rotationSpeed* dt)
+				elseif math.abs(moveAngle) < player.rotationSpeed * dt then
+					player.angularInput = player.angularInput * math.abs(moveAngle)/(player.rotationSpeed* dt)
+				end
+				if math.abs(moveAngle) < math.pi/8 then
+					local xPow = math.pow(joyX, 2)
+					local yPow = math.pow(joyY, 2)
+					local dist = math.sqrt(xPow + yPow)
+				  	player.throttle = dist
+				end
 			end
+
+
+
+			-- if math.abs(joyX) > 0.5 then
+			-- 	player.angularInput = joyX
+			-- end
 
 			if player.shipType == ShipType.gunship then
 				joyCannonX = joy:getGamepadAxis("rightx")
@@ -298,7 +340,7 @@ function Game.draw()
 	Missle.draw()
 	-- Beam.draw()
 	-- fps = love.timer.getFPS()
-    -- love.graphics.print(numberAlive, 50, 50)
+    -- love.graphics.print(keyboardPlayer.rotation, 50, 50)
 	love.graphics.setBackgroundColor(0x20,0x20,0x20)
 end
 
