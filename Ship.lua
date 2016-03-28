@@ -128,24 +128,6 @@ function Ship:update(dt)
     self.engine = false
   end
 
-
-  -- limit velocity to max
-  if self.vx > self.topSpeed then
-    self.vx = self.topSpeed
-  elseif self.vx < -self.topSpeed  then
-    self.vx = -self.topSpeed
-  end
-
-  if self.vy > self.topSpeed then
-    self.vy = self.topSpeed
-  elseif self.vy < -self.topSpeed then
-    self.vy = -self.topSpeed
-  end
-
-  -- apply velocity to position
-  -- self.x = self.x + self.vx
-  -- self.y = self.y + self.vy
-
   Mover.ApplyVelocity(self, dt)
 
 
@@ -176,21 +158,9 @@ function Ship:update(dt)
     self.wallsRunInto = self.wallsRunInto + 1
   end
 
-  -- apply rotation
-  self.rotation = self.rotation + self.rotationSpeed * self.angularInput * dt
-  self.angularInput = 0
 
-  if self.rotation < 0 then
-    self.rotation = self.rotation + 2 * math.pi
-
-  elseif self.rotation > math.pi*2 then
-    self.rotation = self.rotation - 2 * math.pi
-  end
-
-  -- wrap ship position
+  Mover.ApplyRotation(self,dt)
   Mover.StageWrap(self)
-
-
 
   for i, bullet in pairs(self.bullets) do
     bullet:update(dt)
@@ -308,12 +278,12 @@ function Ship:fire()
     if self.cannon == "right" then
       leftCannonOffsetX = self.x + (10 * math.sin(self.rotation)) + (8 * math.cos(self.rotation))
       leftCannonOffsetY = self.y + (10 * -math.cos(self.rotation)) + (8 * math.sin(self.rotation))
-      bullet = Missle.new(leftCannonOffsetX,leftCannonOffsetY,300,self.rotation, self.weaponDamage,5)
+      bullet = Missle.new(self,leftCannonOffsetX,leftCannonOffsetY,300,self.rotation, self.weaponDamage,5)
       table.insert(self.bullets, bullet)
     elseif self.cannon == "left" then
       rightCannonOffsetX = self.x + (10 * math.sin(self.rotation)) + (-7 * math.cos(self.rotation))
       rightCannonOffsetY = self.y + (10 * -math.cos(self.rotation)) + (-7 * math.sin(self.rotation))
-      bullet = Missle.new(rightCannonOffsetX,rightCannonOffsetY,300,self.rotation, self.weaponDamage,5)
+      bullet = Missle.new(self,rightCannonOffsetX,rightCannonOffsetY,300,self.rotation, self.weaponDamage,5)
       table.insert(self.bullets, bullet)
     end
 
@@ -425,28 +395,6 @@ function Ship:draw()
   for b, beam in pairs(self.beams) do
     beam:draw()
   end
-end
-
-function Ship:flyTowardsPoint(x,y)
-  angle = math.atan2(x - self.x, -(y - self.y))
-
-  if angle < 0 then
-    angle= angle + 2 * math.pi
-
-  elseif angle > math.pi then
-    angle = angle - 2 * math.pi
-  end
-
-  moveAngle = angle - self.rotation
-
-  if moveAngle > math.pi or moveAngle < 0 then
-    self.angularInput = -1
-  elseif moveAngle > 0 then
-    self.angularInput = 1
-  else
-    self.angularInput = 0
-  end
-  self.throttle = 1
 end
 
 function Ship:respawn()

@@ -47,7 +47,7 @@ function Game.load()
 	numberAlive = table.getn(players)
 end
 
-function getPlayers()
+function Game.getPlayers()
 	return players
 end
 
@@ -217,37 +217,7 @@ function Game.update(dt)
 			joyY = joy:getGamepadAxis("lefty")
 
 			if math.abs(joyX) > 0.5 or math.abs(joyY) > 0.5 then
-				local angle = math.atan2(joyX,-joyY)
-
-				if angle < 0 then
-					angle = angle + 2 * math.pi
-
-				elseif angle > math.pi then
-					angle = angle - 2 * math.pi
-				end
-
-				moveAngle = angle - player.rotation
-
-
-				if (moveAngle < 0 and moveAngle > -math.pi) or moveAngle > math.pi then
-					player.angularInput = -1
-				elseif moveAngle > 0 or moveAngle < -math.pi then
-				    player.angularInput = 1
-				else
-				    player.angularInput = 0
-				end
-
-				if math.abs(moveAngle) > math.pi and (2*math.pi - math.abs(moveAngle)) < player.rotationSpeed * dt then
-					player.angularInput = player.angularInput * (2*math.pi - math.abs(moveAngle))/(player.rotationSpeed* dt)
-				elseif math.abs(moveAngle) < player.rotationSpeed * dt then
-					player.angularInput = player.angularInput * math.abs(moveAngle)/(player.rotationSpeed* dt)
-				end
-				if math.abs(moveAngle) < math.pi/8 then
-					local xPow = math.pow(joyX, 2)
-					local yPow = math.pow(joyY, 2)
-					local dist = math.sqrt(xPow + yPow)
-				  	player.throttle = dist
-				end
+				Mover.MoveTowards(player,joyX,joyY,dt)
 			end
 
 
