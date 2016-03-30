@@ -1,10 +1,3 @@
--- see https://love2d.org/wiki/TiledMapLoader for latest version
--- loader for "tiled" map editor maps (.tmx,xml-based) http://www.mapeditor.org/
--- supports multiple layers
--- NOTE : function ReplaceMapTileClass (tx,ty,oldTileType,newTileType,fun_callback) end
--- NOTE : function TransmuteMap (from_to_table) end -- from_to_table[old]=new
--- NOTE : function GetMousePosOnMap () return gMouseX+gCamX-gScreenW/2,gMouseY+gCamY-gScreenH/2 end
- 
 kTileSize = 32
 kMapTileTypeEmpty = 0
 local floor = math.floor
@@ -15,7 +8,7 @@ local abs = math.abs
 gTileMap_LayerInvisByName = {}
 
 local tilesetImage
-local tileQuads = {} -- parts of the tileset used for different tiles
+local tileQuads = {}
 local tilesetSprite
 local tilesetBatch
 
@@ -23,8 +16,7 @@ function TiledMap_Load (filepath,tilesize,spritepath_removeold,spritepath_prefix
     spritepath_removeold = spritepath_removeold or "../"
     spritepath_prefix = spritepath_prefix or ""
     kTileSize = tilesize or kTileSize or 32
-  -- gTileGfx = {}
- 
+
     local tiletype,layers,objects = TiledMap_Parse(filepath)
     gMapLayers = layers
     gMapObjects = objects
@@ -56,7 +48,6 @@ end
 function TiledMap_GetMapW () return gMapLayers.width end
 function TiledMap_GetMapH () return gMapLayers.height end
  
--- returns the mapwidth actually used by tiles
 function TiledMap_GetMapWUsed ()
 	local maxx = 0
 	local miny = 0
@@ -74,10 +65,7 @@ function TiledMap_GetMapWUsed ()
 	end
 	return maxx + 1,miny,maxy+1
 end
- 
--- x,y= position for nearest-distance(square,not round), z= layer, maxrad= optional limit for searching
--- returns x,y
--- if x,y can be far outside map, set a sensible maxrad, otherwise it'll get very slow since searching outside map isn't optimized
+
 function TiledMap_GetNearestTileByTypeOnLayer (x,y,z,iTileType,maxrad)
 	local w = TiledMap_GetMapW()
 	local h = TiledMap_GetMapW()
@@ -93,18 +81,17 @@ function TiledMap_GetNearestTileByTypeOnLayer (x,y,z,iTileType,maxrad)
 	end
 end
  
-function TiledMap_GetMapTile (tx,ty,layerid) -- coords in tiles
+function TiledMap_GetMapTile (tx,ty,layerid)
     local row = gMapLayers[layerid][ty]
     return row and row[tx] or kMapTileTypeEmpty
 end
  
-function TiledMap_SetMapTile (tx,ty,layerid,v) -- coords in tiles
+function TiledMap_SetMapTile (tx,ty,layerid,v)
     local row = gMapLayers[layerid][ty]
 	if (not row) then row = {} gMapLayers[layerid][ty] = row end
 	row[tx] = v
 end
- 
--- todo : maybe optimize during parse xml for types registered as to-be-listed before parsing ?
+
 function TiledMap_ListAllOfTypeOnLayer (layerid,iTileType)
 	local res = {}
 	local w = TiledMap_GetMapW()
@@ -146,14 +133,13 @@ function TiledMap_DrawNearCam (camx,camy,fun_layercallback)
         if (gfx) then
             local sx = x*kTileSize - camx + screen_w/2
             local sy = y*kTileSize - camy + screen_h/2
-            love.graphics.draw(gfx,sx,sy) -- x, y, r, sx, sy, ox, oy
+            love.graphics.draw(gfx,sx,sy)
         end
     end
     end
     end
     end
 end
-
 
 function TiledMap_AllAtCam (camx,camy,fun_layercallback)
     tilesetBatch:clear()
@@ -174,7 +160,6 @@ function TiledMap_AllAtCam (camx,camy,fun_layercallback)
                         local sy = y*kTileSize - camy + screen_h/2
 
                         tilesetBatch:add(gfx, sx, sy)
-                    -- love.graphics.draw(gfx,sx,sy) -- x, y, r, sx, sy, ox, oy
                     end
                 end
             end
@@ -183,15 +168,8 @@ function TiledMap_AllAtCam (camx,camy,fun_layercallback)
             love.graphics.draw(tilesetBatch)
         end
     end
-
-
-
 end
- 
--- ***** ***** ***** ***** ***** xml parser
- 
- 
--- LoadXML from http://lua-users.org/wiki/LuaXml
+
 function LoadXML(s)
   local function LoadXML_parseargs(s)
     local arg = {}
@@ -239,10 +217,7 @@ function LoadXML(s)
   end
   return stack[1]
 end
- 
- 
--- ***** ***** ***** ***** ***** parsing the tilemap xml file
- 
+
 local function getTilesets(node)
     local tiles = {}
     for k, sub in ipairs(node) do
@@ -264,7 +239,6 @@ local function getLayers(node)
             local layer = {}
             table.insert(layers,layer)
 			layer.name = sub.xarg.name
-			--~ print("layername",layer.name)
             width = tonumber(sub.xarg.width)
             i = 0
             j = 0
@@ -284,11 +258,10 @@ local function getLayers(node)
     return layers
 end
 
-
 local function getObjects(node)
     local layers = {}
     for k, sub in ipairs(node) do
-        if (sub.label == "objectgroup") then --  and sub.xarg.name == layer_name
+        if (sub.label == "objectgroup") then
             local layer = {}
             layer.name = sub.xarg.name
             layer.objects = {}
@@ -304,7 +277,6 @@ local function getObjects(node)
     end
     return layers
 end
-
 
 function TiledMap_GetSpawnLocations()
     for i, layer in pairs(gMapObjects) do

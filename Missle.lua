@@ -17,10 +17,10 @@ function Missle.new(player,x,y,speed,rotation,damage,bulletLife)
   s.vy = speed * -math.cos(s.rotation)
   s.lifetime = 0
   s.damage = damage
-  s.rotationSpeed = 20
+  s.rotationSpeed = 1
   s.throttle = 0
   s.topSpeed = 200
-  s.acceleration = 3
+  s.acceleration = 1
   s.throttle = 0
   s.angularInput = 0
   return s
@@ -32,33 +32,34 @@ function Missle:update(dt)
   Mover.ApplyVelocity(self, dt)
 
   players = Game.getPlayers()
-  local playerDist = 0
+  local playerDist = 1920
 
-  for p, player in pairs(players) do
-    if player ~= self.player then
-      xPow = math.pow(player.x - self.x, 2)
-      yPow = math.pow(player.y - self.y, 2)
+  for p, otherPlayer in pairs(players) do
+    if otherPlayer ~= self.player then
+      xPow = math.pow(self.x - otherPlayer.x, 2)
+      yPow = math.pow(self.y - otherPlayer.y, 2)
 
       dist = math.sqrt(xPow + yPow)
 
       if moveToPoint then
         if playerDist > dist then
-          moveToPoint = {x = player.x, y = player.y}
+          moveToPoint = {x = otherPlayer.x, y = otherPlayer.y}
+          playerDist = dist
         end
       else
-        moveToPoint = {x = player.x, y = player.y}
+        moveToPoint = {x = otherPlayer.x, y = otherPlayer.y}
         playerDist = dist
       end
 
-    --         if dist < 20 then
-    --           player.health = player.health - self.damage
+            -- if dist < 20 then
+            --   player.health = player.health - self.damage
 
-    --           if player.health < 0 then
-    --             player.health = 0
-    --           end
-    --           table.remove(self.player.bullets, b)
-    --         end
-    -- end
+            --   if player.health < 0 then
+            --     player.health = 0
+            --   end
+            --   table.remove(self.player.bullets, b)
+            -- end
+    end
   end
 
   if moveToPoint then

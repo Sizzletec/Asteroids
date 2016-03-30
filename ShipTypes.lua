@@ -40,7 +40,7 @@ ShipType = {
     nextType = "ray"
   },
   ray = {
-    name = "Rayman",
+    name = "Ray",
     description = "Medium attack range with instant damage",
     topSpeed = 180,
     acceleration = 240,
@@ -118,3 +118,35 @@ ShipType = {
     nextType = "standard"
   }
 }
+
+
+-- ideas
+
+-- Assault - fires a shotgun blast
+-- Standard - fires bullets in an alternating stream
+-- Gunship - fires bullets in any direction 
+-- Ray - fires a beam that
+-- Zap - Short range aoe cone attack
+-- Flack - fires short range exposions that block incoming attacks
+-- Missle - fires a homing missle
+-- Boomerang - fires a single boomerange that will return to the player after a short diration or when it hits something
+-- Bomber - fires and gernade that explodes when it hits a wall, player, or after a short duration
+-- Phaser - warps a short distance doing damage to the the space it warped through
+-- Railgun - fires a bullet that can travel through walls
+-- Bouncer - fires bullets that bounch off the walls
+-- Carrier - control 3 fighter that will attack nearby enemies
+-- Turret - deploy a turret that will fire at ships nearby
+-- Spreader - fires a spreadshot of 3-5 bullets
+-- Vortex - ship fires bullets that spin outward in a circle
+-- Charge - can hold down attack to charge a move powerful bullet
+-- Shockwave - does AOE damage around the ship
+-- GunAndShield - when firing you have a shield in that dirrection
+-- Control - fire a projectile you can control trigger explosions
+-- sapper - fires a bullet that does damage over time
+
+
+
+
+
+
+

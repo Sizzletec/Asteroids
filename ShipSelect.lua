@@ -100,15 +100,11 @@ function ShipSelect.isReadyToStart()
 	return start
 end
 
-
-
-
 function ShipSelect.startGame()
 	if ShipSelect.isReadyToStart then
 		setState(State.game)
 	end
 end
-
 
 function ShipSelect.keypressed(key, unicode)
 	gKeyPressed[key] = true
@@ -158,22 +154,15 @@ function ShipSelect.keypressed(key, unicode)
 	    	ShipSelect.startGame()
     	end
 	end
-
-
-
-
-
 end
 
 function ShipSelect.shipLeft(id)
 	local ship = selections[id].ship
 	if ship then
   		newType = ship.shipType.previousType 
-  		ship.shipType =ShipType[newType]
+  		ship.shipType = ShipType[newType]
 	end
 end
-
-
 
 function ShipSelect.shipRight(id)
 	local ship = selections[id].ship
@@ -182,7 +171,6 @@ function ShipSelect.shipRight(id)
   		ship.shipType =ShipType[newType]
 	end
 end
-
 
 function ShipSelect.gamepadpressed(joystick, button)
 	local id, instanceid = joystick:getID()
@@ -223,9 +211,7 @@ function ShipSelect.gamepadpressed(joystick, button)
     if button == "start" then
     	ShipSelect.startGame()
     end
-
 end
-
 
 function ShipSelect.gamepadaxis(joystick, axis, value)
 	local id, instanceid = joystick:getID()
@@ -243,7 +229,6 @@ function ShipSelect.gamepadaxis(joystick, axis, value)
 			player.menuCooldown = menuSpeed
 		end 
 	end
-
 end
 
 function ShipSelect.gamepadreleased(joystick, button)
@@ -267,14 +252,12 @@ function ShipSelect.update(dt)
 		if player.menuCooldown > 0 then
 		player.menuCooldown = player.menuCooldown - dt
 		end
-		
 
 		if player.step == SelectStep.active then
 			ShipSelect.updateActive(i, player, dt)
 		elseif player.step == SelectStep.ready then
 			ShipSelect.updateReady(i, player, dt)
 		end
-
 	end
 
 	if t > 4 then
@@ -290,12 +273,9 @@ function ShipSelect.draw()
 
 	love.graphics.scale(scaleFactor, scaleFactor)
 
-
 	for i, player in pairs(selections) do
-
 		if player.step == SelectStep.active then
 			ShipSelect.drawActive(i, player)
-
 		elseif player.step == SelectStep.inactive then
 			ShipSelect.drawInactive(i, player)
 		elseif player.step == SelectStep.ready then
@@ -307,10 +287,6 @@ function ShipSelect.draw()
 		love.graphics.print("All Ready! Press start to...?",500, 960)
 	end
 
-	-- for i, player in pairs(selections) do
-	-- 	bullets = table.getn(player.ship.bullets)
-	-- 	love.graphics.print(bullets, 50, 100*i+30)
-	-- end
 	love.graphics.push()
 	love.graphics.scale(2,2)
 	Bullet.draw()
@@ -348,7 +324,6 @@ function ShipSelect.updateReady(i, player, dt)
 	player.ship:update(dt)
 end
 
-
 function ShipSelect.drawActive(i, player)
 	love.graphics.setColor(255, 255, 255)
 	love.graphics.setNewFont(60)
@@ -358,10 +333,8 @@ function ShipSelect.drawActive(i, player)
 	love.graphics.print("Player " .. i, xOffset+30, yOffset)
 
 	local playerColor = player.ship.color
-
-
-
 	local yOffset = 1080/8 + 400
+
 	love.graphics.setColor(255, 255, 255)
 	love.graphics.polygon("fill", xOffset-30, yOffset+30, xOffset-30, yOffset-30, xOffset-60, yOffset)
 
@@ -381,8 +354,7 @@ function ShipSelect.drawActive(i, player)
 	local playerType = player.ship.shipType
 	love.graphics.print(playerType.name, xOffset, yOffset - 45)
 
-
-		local colorName = "Gray"
+	local colorName = "Gray"
 
 	if playerColor == 1 then
 		colorName = "Red"
@@ -391,10 +363,6 @@ function ShipSelect.drawActive(i, player)
 	elseif playerColor == 3 then
 		colorName = "Green"
 	end
-
-
-
-
 
 	love.graphics.setNewFont(30)
 	love.graphics.setColor(200, 200, 200)
@@ -407,10 +375,8 @@ function ShipSelect.drawActive(i, player)
 	string = string .. "Health: " .. playerType.health .. "\n"
 	string = string .. "Weapon Damage: " .. playerType.weaponDamage .. "\n"
 
-
 	love.graphics.print(string, xOffset, yOffset + 80)
 end
-
 
 function ShipSelect.drawReady(i, player)
 	love.graphics.setColor(255, 255, 255)
@@ -421,8 +387,6 @@ function ShipSelect.drawReady(i, player)
 	love.graphics.print("Player " .. i, xOffset+30, yOffset)
 
 	local playerColor = player.ship.color
-
-
 
 	local yOffset = 1080/8 + 400
 	love.graphics.setColor(255, 255, 255)
@@ -439,12 +403,9 @@ function ShipSelect.drawReady(i, player)
 	love.graphics.print("Ready!", xOffset, yOffset - 45)
 end
 
-
-
 function ShipSelect.drawInactive(i, player)
 	love.graphics.setColor(255, 255, 255)
 	love.graphics.setNewFont(60)
-
 
 	local xOffset = 1920/4 * (i-1) + 100
 	local yOffset = 1080/8
@@ -452,8 +413,6 @@ function ShipSelect.drawInactive(i, player)
 
 	local yOffset = 1080/8 + 400
 	love.graphics.print("Press (A)\n  to join", xOffset, yOffset - 45)
-
 end
-
 
 return ShipSelect

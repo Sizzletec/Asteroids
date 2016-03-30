@@ -220,12 +220,6 @@ function Game.update(dt)
 				Mover.MoveTowards(player,joyX,joyY,dt)
 			end
 
-
-
-			-- if math.abs(joyX) > 0.5 then
-			-- 	player.angularInput = joyX
-			-- end
-
 			if player.shipType == ShipType.gunship then
 				joyCannonX = joy:getGamepadAxis("rightx")
 				joyCannonY = joy:getGamepadAxis("righty")

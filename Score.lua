@@ -4,36 +4,15 @@ Score.__index = Score
 
 gKeyPressed = {}
 
-
 placeStrings = {
 	"Winner!!",
 	"Second..",
 	"Not Last!?",
 	"...hmm"
 } 
+
 function Score.load()
-
-	-- local second = 0
-	-- local third = 0
-	-- local forth = 0
-
-for i, player in pairs(selections) do
- 	ship = player.ship
-
- 		if ship then
- 			ship.firing = false
- 		end
-	end
 end
-
-
-
-	-- 		local xOffset = 1920/4 * (i-1) + 100
-	-- 		local yOffset = 1100
-	-- 		ship:setDefaults()
-	-- 		ship.x = xOffset
-	-- 		ship.y = yOffset
-	-- 		ship.wrap = false
 
 function Score.keyreleased(key)
 	gKeyPressed[key] = nil
@@ -51,7 +30,6 @@ function Score.keypressed(key, unicode)
 end
 
 function Score.gamepadpressed(joystick, button)
-
 	 if button == "start" then
     	for i, player in pairs(selections) do
 			ship = player.ship
@@ -64,16 +42,9 @@ function Score.gamepadreleased(joystick, button)
 end
 
 function Score.gamepadaxis(joystick, axis, value)
-
 end
 
 function Score.update(dt)
-	for i, player in pairs(selections) do
-		ship = player.ship
-		if ship then
-			ship:update(dt)
-		end
-	end
 end
 
 function Score.draw()
@@ -81,11 +52,8 @@ function Score.draw()
 	height = love.graphics.getHeight()
 
 	scaleFactor = width/1920
-
 	love.graphics.scale(scaleFactor, scaleFactor)
-
 	love.graphics.setBackgroundColor(0x20,0x20,0x20)
-	
 
 	for i, player in pairs(selections) do
 		love.graphics.setColor(255, 255, 255)
@@ -93,7 +61,6 @@ function Score.draw()
 		ship = player.ship
 
 		if ship then
-
 			local xOffset = 1920/4 * (i-1) + 100
 
 			love.graphics.print("Player " .. ship.player, xOffset, 100)
@@ -109,18 +76,12 @@ function Score.draw()
 			love.graphics.print("Damage Given\n" .. ship.damageGiven, xOffset, 650 )
 			love.graphics.print("Damage Taken\n" .. ship.damageTaken, xOffset, 730 )
 			love.graphics.print("Walls Hit\n" .. ship.wallsRunInto, xOffset, 810 )
-
 		end
-
 	end
 
 	love.graphics.setColor(255, 255, 255)
 	love.graphics.setNewFont(60)
-
 	love.graphics.print("Press start to stop looking at this.",500, 960)
 end
-
-
-
 
 return Score

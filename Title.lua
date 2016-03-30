@@ -5,10 +5,8 @@ love.filesystem.load("tiledmap.lua")()
 
 local Ship = require('Ship')
 local Bullet = require('Bullet')
-
 local highlightedOption = 1
 local menuOptions = {
-	-- "Online Multiplayer",
 	"Local Multiplayer",
 	"Settings"
 }
@@ -45,7 +43,6 @@ function Title.SelectMenuItem()
 	end
 end
 
-
 function Title.gamepadpressed(joystick, button)
     if button == "a" then
     	Title.SelectMenuItem()
@@ -65,7 +62,6 @@ function Title.gamepadaxis(joystick, axis, value)
 			Title.menuUp()
 		end
 	end
-
 end
 
 function Title.menuUp()
@@ -115,12 +111,6 @@ function Title.draw()
 	love.graphics.setNewFont(60)
     love.graphics.print(menuString, 1200, 850)
 	love.graphics.setBackgroundColor(0x20,0x20,0x20)
-
-
-
-end
-
-function love.quit()
 end
 
 return Title
