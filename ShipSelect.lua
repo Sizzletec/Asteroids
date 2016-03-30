@@ -5,9 +5,9 @@ ShipSelect.__index = ShipSelect
 gKeyPressed = {}
 
 local Ship = require('Ship')
-local Bullet = require('Bullet')
-local Beam = require('Beam')
-local Missle = require('Missle')
+local Bullet = require('weapons/Bullet')
+local Beam = require('weapons/Beam')
+local MissileShot = require('weapons/MissileShot')
 local t = 0
 
 SelectStep = {
@@ -290,7 +290,7 @@ function ShipSelect.draw()
 	love.graphics.push()
 	love.graphics.scale(2,2)
 	Bullet.draw()
-	Missle.draw()
+	MissileShot.draw()
 	-- Beam.draw()
 	love.graphics.pop()
 

@@ -5,6 +5,7 @@ local Ray = require('ship_types/Ray')
 local Zap = require('ship_types/Zap')
 local Charge = require('ship_types/Charge')
 local Missile = require('ship_types/Missile')
+local Carrier = require('ship_types/Carrier')
 
 ShipType = {
   standard = {
@@ -57,16 +58,16 @@ ShipType = {
     topSpeed = 180,
     acceleration = 240,
     rotationSpeed = 4,
-    fireRate = 10,
+    fireRate = 20,
     health = 150,
-    weaponDamage = 1.5,
+    weaponDamage = 3,
     frameOffset = 6,
     previousType = "assalt",
     nextType = "zap"
   },
   zap = {
     name = "Zapper",
-    actionHandler = Standard,
+    actionHandler = Zap,
     description = "High short range damage at the cost of defence",
     topSpeed = 180,
     acceleration = 180,
@@ -80,7 +81,7 @@ ShipType = {
   },
   charge = {
     name = "Charger",
-    actionHandler = Standard,
+    actionHandler = Charge,
     description = "Can charge attack extra damage and range",
     topSpeed = 240,
     acceleration = 240,
@@ -94,7 +95,7 @@ ShipType = {
   },
   missile = {
     name = "Missile",
-    actionHandler = Standard,
+    actionHandler = Missile,
     description = "Fires missiles that home in on enemies",
     topSpeed = 180,
     acceleration = 180,
@@ -108,7 +109,7 @@ ShipType = {
   },
   carrier = {
     name = "Carrier",
-    actionHandler = Standard,
+    actionHandler = Carrier,
     description = "Launches drone that attack enemies",
     topSpeed = 120,
     acceleration = 120,
@@ -117,7 +118,7 @@ ShipType = {
     health = 150,
     weaponDamage = 10,
     frameOffset = 14,
-    previousType = "Missile",
+    previousType = "missile",
     nextType = "standard"
   }
 }

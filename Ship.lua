@@ -1,9 +1,7 @@
-local image = love.graphics.newImage('images/ship-sprites.png')
-local lightning = love.graphics.newImage('images/lightnings.png')
-local ship2cannon = love.graphics.newImage('images/ship2cannon.png')
+ShipsImage = love.graphics.newImage('images/ship-sprites.png')
 local shoot = love.audio.newSource("sounds/shoot.wav", "static")
 
-require('ShipTypes')
+require('ship_types/ShipTypes')
 require('Mover')
 
 Ship = {
@@ -22,7 +20,7 @@ Ship = {
   damageGiven = 0,
   damageTaken = 0,
   wallsRunInto = 0,
-  lightningFrame = 0
+  attackFrame = 0
 }
 Ship.__index = Ship
 
@@ -91,13 +89,6 @@ function Ship:setDefaults()
 end
 
 function Ship:update(dt)
-
-  -- lightning frame update
-  self.lightningFrame = self.lightningFrame + 8 * dt
-  if self.lightningFrame >= 4 then
-    self.lightningFrame = self.lightningFrame - 4
-  end
-
   -- check if dead
   if self.health <= 0 and not self.exploding then
     self.health = 0
@@ -114,20 +105,8 @@ function Ship:update(dt)
     end
   end
 
-  -- if the ship is engine is on
-  if self.throttle > 0 then
-    xAccel = self.throttle * self.acceleration * dt * math.sin(self.rotation)
-    yAccel = self.throttle * self.acceleration * dt * -math.cos(self.rotation)
 
-    self.vx = self.vx + xAccel
-    self.vy = self.vy + yAccel
-
-    self.engine = true
-    self.throttle = 0
-  else
-    self.engine = false
-  end
-
+  Mover.ApplyAcceleration(self, dt)
   Mover.ApplyVelocity(self, dt)
 
 
@@ -162,17 +141,12 @@ function Ship:update(dt)
   Mover.ApplyRotation(self,dt)
   Mover.StageWrap(self)
 
+  self.shipType.actionHandler.Update(self,dt)
+
   for i, bullet in pairs(self.bullets) do
     bullet:update(dt)
     if bullet.lifetime > bullet.bulletLife then
       table.remove(self.bullets, i)
-    end
-  end
-
-  for i, beam in pairs(self.beams) do
-    beam:update(dt)
-    if beam.lifetime > beam.bulletLife then
-      table.remove(self.beams, i)
     end
   end
 
@@ -190,122 +164,8 @@ function Ship:fire()
   end
 
   self.shots = self.shots + 1
-
   shoot:play()
-
-  if self.shipType == ShipType.standard then
-    if self.cannon == "right" then
-      leftCannonOffsetX = self.x + (10 * math.sin(self.rotation)) + (8 * math.cos(self.rotation))
-      leftCannonOffsetY = self.y + (10 * -math.cos(self.rotation)) + (8 * math.sin(self.rotation))
-      bullet = Bullet.new(leftCannonOffsetX,leftCannonOffsetY,600,self.rotation, self.weaponDamage)
-      table.insert(self.bullets, bullet)
-    elseif self.cannon == "left" then
-      rightCannonOffsetX = self.x + (10 * math.sin(self.rotation)) + (-7 * math.cos(self.rotation))
-      rightCannonOffsetY = self.y + (10 * -math.cos(self.rotation)) + (-7 * math.sin(self.rotation))
-      bullet = Bullet.new(rightCannonOffsetX,rightCannonOffsetY,600,self.rotation, self.weaponDamage)
-      table.insert(self.bullets, bullet)
-    end
-
-    if self.cannon == "right" then
-      self.cannon = "left"
-    else
-      self.cannon = "right"
-    end
-  elseif self.shipType == ShipType.gunship then
-    leftCannonOffsetX = self.x - (3 * math.sin(self.rotation))
-    leftCannonOffsetY = self.y + (3 * math.cos(self.rotation))
-    bullet = Bullet.new(leftCannonOffsetX,leftCannonOffsetY,900,self.cannonRotation, self.weaponDamage)
-    table.insert(self.bullets, bullet)
-    self.firing = false
-  elseif self.shipType == ShipType.assalt then
-    local numBullets = 7
-    local angleDiff = math.pi/4/numBullets
-    for i=numBullets/2,-numBullets/2,-1 do
-      local rBullet = self.rotation + i * angleDiff
-      leftCannonOffsetX = self.x + (5 * math.sin(self.rotation))
-      leftCannonOffsetY = self.y + (5 * -math.cos(self.rotation)) 
-      bullet = Bullet.new(leftCannonOffsetX,leftCannonOffsetY,300,rBullet, self.weaponDamage)
-      table.insert(self.bullets, bullet)
-    end
-  elseif self.shipType == ShipType.ray then
-
-    -- beam = Beam.new(self.x,self.y,0,self.rotation, self.weaponDamage,0.05)
-    -- table.insert(self.beams, beam)
-
-    for i=150,0,-1 do
-
-      OffsetX = self.x + (10*math.sin(self.rotation) +  5*i * math.sin(self.rotation))
-      OffsetY = self.y + (10*-math.cos(self.rotation) + 5*i * -math.cos(self.rotation)) 
-      bullet = Bullet.new(OffsetX,OffsetY,0,self.rotation, self.weaponDamage,0.1)
-      table.insert(self.bullets, bullet)
-    end
-  elseif self.shipType == ShipType.zap then
-    for p=1,0,-1 do
-      local lastAngle = self.rotation
-      local lastX = self.x + (10 * math.sin(lastAngle))
-      local lastY = self.y + (10 * -math.cos(lastAngle))
-
-      for segments = love.math.random(3)+3,0,-1  do
-          lastAngle = lastAngle + math.rad( love.math.random(100) - 50) 
-
-
-        length = love.math.random(4)+1
-        for i=length,0,-1 do
-
-          OffsetX = lastX + (5*i * math.sin(lastAngle))
-          OffsetY = lastY + (5*i * -math.cos(lastAngle)) 
-          bullet = Bullet.new(OffsetX,OffsetY,0,lastAngle, self.weaponDamage,1)
-          table.insert(self.bullets, bullet)
-
-          if i == 0 then
-            lastX = OffsetX + length * 5 * math.sin(lastAngle) + 5 * math.sin(lastAngle) - math.sin(lastAngle)
-            lastY = OffsetY + length * 5 * -math.cos(lastAngle) + 5 * -math.cos(lastAngle) + math.cos(lastAngle)
-          end
-        end
-      end
-    end
-  elseif self.shipType == ShipType.charge then
-    local numBullets = 7
-    local angleDiff = math.pi/4/numBullets
-    for i=numBullets/2,-numBullets/2,-1 do
-      local rBullet = self.rotation + i * angleDiff
-      leftCannonOffsetX = self.x + (5 * math.sin(self.rotation))
-      leftCannonOffsetY = self.y + (5 * -math.cos(self.rotation))
-      bullet = Bullet.new(leftCannonOffsetX,leftCannonOffsetY,300,rBullet, self.weaponDamage)
-      table.insert(self.bullets, bullet)
-    end
-  elseif self.shipType == ShipType.missle then
-    if self.cannon == "right" then
-      leftCannonOffsetX = self.x + (10 * math.sin(self.rotation)) + (8 * math.cos(self.rotation))
-      leftCannonOffsetY = self.y + (10 * -math.cos(self.rotation)) + (8 * math.sin(self.rotation))
-      bullet = Missle.new(self,leftCannonOffsetX,leftCannonOffsetY,300,self.rotation, self.weaponDamage,5)
-      table.insert(self.bullets, bullet)
-    elseif self.cannon == "left" then
-      rightCannonOffsetX = self.x + (10 * math.sin(self.rotation)) + (-7 * math.cos(self.rotation))
-      rightCannonOffsetY = self.y + (10 * -math.cos(self.rotation)) + (-7 * math.sin(self.rotation))
-      bullet = Missle.new(self,rightCannonOffsetX,rightCannonOffsetY,300,self.rotation, self.weaponDamage,5)
-      table.insert(self.bullets, bullet)
-    end
-
-    if self.cannon == "right" then
-      self.cannon = "left"
-    else
-      self.cannon = "right"
-    end
-
-  elseif self.shipType == ShipType.carrier then
-    local numBullets = 100
-    local angleDiff = math.pi*2/numBullets
-    for i=numBullets/2,-numBullets/2,-1 do
-      local rBullet = self.rotation + i * angleDiff
-      leftCannonOffsetX = self.x + (5 * math.sin(self.rotation))
-      leftCannonOffsetY = self.y + (5 * -math.cos(self.rotation))
-      bullet = Bullet.new(leftCannonOffsetX,leftCannonOffsetY,10,rBullet, self.weaponDamage)
-      table.insert(self.bullets, bullet)
-    end
-
-  end
-  
+  self.shipType.actionHandler.Fire(self)
 end
 
 function Ship:selfDestruct()
@@ -333,11 +193,12 @@ function Ship:drawLifeMarkers(x,y)
       end
 
       xFrame = xFrame + self.shipType.frameOffset
-      local top_left = love.graphics.newQuad(xFrame*32, self.color*32, 32, 32, image:getDimensions())
-      love.graphics.draw(image, top_left,x + 36 * live, y, 0, 1,1 , 16,16)
+      local top_left = love.graphics.newQuad(xFrame*32, self.color*32, 32, 32, ShipsImage:getDimensions())
+      love.graphics.draw(ShipsImage, top_left,x + 36 * live, y, 0, 1,1 , 16,16)
 
       if self.shipType == ShipType.gunship then
-        love.graphics.draw(ship2cannon,x + 36 * live - (3 * math.sin(0)), y + (3 * math.cos(0)), 0, 1,1 , 10, 10)
+        local cannonQuad = love.graphics.newQuad(0, 160, 20, 20, ShipsImage:getDimensions())
+        love.graphics.draw(ShipsImage,cannonQuad,x + 36 * live - (3 * math.sin(0)), y + (3 * math.cos(0)), 0, 1,1 , 10, 10)
       end
   end
 end
@@ -348,42 +209,17 @@ function Ship:draw()
     if self.engine then
       xFrame = 1
     end
-
-    -- if self.shipType == ShipType.zap and self.firing then
-    --   local top_left = love.graphics.newQuad(math.floor(self.lightningFrame)*100, 0, 100, 80, lightning:getDimensions())
-
-    --   local lightningOffsetX = self.x - (3 * math.sin(self.rotation))
-    --   local lightningOffsetY = self.y + (3 * math.cos(self.rotation))
-
-    --   love.graphics.draw(lightning, top_left,self.x, self.y, self.rotation, 1,1 , 50,70)
-
-    --   local vertices = {
-    --     self.x, self.y-10,
-    --     self.x - 50, self.y - 50,
-    --     self.x + 50, self.y - 50
-    --   }
-
-    --   love.graphics.push()
-    --   love.graphics.translate(self.x,self.y)   -- rotation center
-    --   love.graphics.rotate(self.rotation)         -- rotate
-    --   love.graphics.translate(-self.x,-self.y) -- move back
-    --   love.graphics.polygon('line', vertices)
-    --   love.graphics.pop()
-    -- end
-
     xFrame = xFrame + self.shipType.frameOffset
 
-    local top_left = love.graphics.newQuad(xFrame*32, self.color*32, 32, 32, image:getDimensions())
-    love.graphics.draw(image, top_left,self.x, self.y, self.rotation, 1,1 , 16,16)
+    local top_left = love.graphics.newQuad(xFrame*32, self.color*32, 32, 32, ShipsImage:getDimensions())
+    love.graphics.draw(ShipsImage, top_left,self.x, self.y, self.rotation, 1,1 , 16,16)
 
-    if self.shipType == ShipType.gunship then
-      love.graphics.draw(ship2cannon,self.x - (3 * math.sin(self.rotation)), self.y + (3 * math.cos(self.rotation)), self.cannonRotation, 1,1 , 10, 10)
-    end
+    self.shipType.actionHandler.Draw(self)
   end
 
   if self.exploding then
-    local top_left = love.graphics.newQuad(math.floor(self.explodingFrame)*32, 4*32, 32, 32, image:getDimensions())
-    love.graphics.draw(image, top_left,self.x, self.y, self.rotation, 1,1 , 16,16)
+    local top_left = love.graphics.newQuad(math.floor(self.explodingFrame)*32, 4*32, 32, 32, ShipsImage:getDimensions())
+    love.graphics.draw(ShipsImage, top_left,self.x, self.y, self.rotation, 1,1 , 16,16)
   end
 
   love.graphics.setColor(255, 255, 255)

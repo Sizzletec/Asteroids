@@ -4,9 +4,40 @@ Game.__index = Game
 love.filesystem.load("tiledmap.lua")()
 
 local Ship = require('Ship')
-local Bullet = require('Bullet')
-local Beam = require('Beam')
-local Missle = require('Missle')
+local Bullet = require('weapons/Bullet')
+local Beam = require('weapons/Beam')
+local missileShot = require('weapons/MissileShot')
+
+local myShader = love.graphics.newShader[[
+	//extern number numLights;
+	//extern vec2 lights[20];
+    vec4 effect( vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords ){
+		vec4 pixel = Texel(texture, texture_coords );//This is the current pixel color
+		int count = 0;
+		/*
+		while(count > 0){
+			vec2 ship = lights[count];
+
+			float dist = distance(ship,screen_coords);
+
+			//return pixel;
+			  if(dist > 400){
+			  	pixel.r = pixel.r - 50;
+				pixel.g = pixel.g - 50;
+				pixel.b = pixel.b - 50;
+			  }
+			  else
+			  {
+			    pixel.r = pixel.r - dist/800;
+				pixel.g = pixel.g - dist/800;
+				pixel.b = pixel.b - dist/800;
+			  }
+			count--;
+		}
+		*/
+		return pixel;
+    }
+  ]]
 
 gKeyPressed = {}
 
@@ -278,10 +309,24 @@ function Game.update(dt)
 end
 
 function Game.draw()
+	love.graphics.setShader(myShader) --draw something here
+
+
+
+
 	width = love.graphics.getWidth()
 	height = love.graphics.getHeight()
 
 	scaleFactor = width/1920
+
+	-- myShader:send("numLights",table.getn(players))
+
+	lights = {}
+	for i, player in pairs(players) do
+		 table.insert(lights, {player.x*scaleFactor,player.y*scaleFactor})
+	end
+
+	-- myShader:send("lights", lights)
 
 	love.graphics.scale(scaleFactor, scaleFactor)
 
@@ -301,11 +346,13 @@ function Game.draw()
 
 	end
 	Bullet.draw()
-	Missle.draw()
+	MissileShot.draw()
 	-- Beam.draw()
 	-- fps = love.timer.getFPS()
     -- love.graphics.print(keyboardPlayer.rotation, 50, 50)
 	love.graphics.setBackgroundColor(0x20,0x20,0x20)
+
+	love.graphics.setShader()
 end
 
 return Game

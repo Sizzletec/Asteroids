@@ -3,8 +3,6 @@ Title.__index = Title
 
 love.filesystem.load("tiledmap.lua")()
 
-local Ship = require('Ship')
-local Bullet = require('Bullet')
 local highlightedOption = 1
 local menuOptions = {
 	"Local Multiplayer",

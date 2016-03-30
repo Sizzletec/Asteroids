@@ -10,11 +10,12 @@ beamBatch = love.graphics.newSpriteBatch(beamImage)
 local beam1 = love.graphics.newQuad(0, 0, 6, 4,w,h)
 local beam2 = love.graphics.newQuad(6, 0, 6, 4,w,h)
 
-function Beam.new(x,y,speed,rotation,damage,bulletLife)
+function Beam.new(player,x,y,speed,rotation,damage,bulletLife)
   local s = {}
   setmetatable(s, Beam)
   s.x = x
   s.y = y
+  s.player = player
   s.bulletLife = bulletLife or 1
   s.rotation = rotation or 0
   s.vx = speed * math.sin(s.rotation)
@@ -46,9 +47,30 @@ function Beam:update(dt)
     OffsetX = xBeam + (beamSegmants * 3 * math.sin(self.rotation))
     OffsetY = yBeam + (beamSegmants * 3 * -math.cos(self.rotation))
 
+    local playerHit = false
+    local players = Game.getPlayers()
+
+    for p, otherPlayer in pairs(players) do
+      if otherPlayer ~= self.player then
+        xPow = math.pow(xBeam - otherPlayer.x, 2)
+        yPow = math.pow(yBeam - otherPlayer.y, 2)
+
+        dist = math.sqrt(xPow + yPow)
+        if dist < 10 then
+
+          otherPlayer.health = otherPlayer.health - self.damage
+
+          if otherPlayer.health < 0 then
+            otherPlayer.health = 0
+          end
+
+          playerHit = true
+        end
+      end
+    end
 
     tile = TiledMap_GetMapTile(math.floor(xBeam/16),math.floor(yBeam/16),1)
-    if tile > 0 then
+    if tile > 0  or playerHit then
       collide = false
     else
         beamSegmants = beamSegmants + 1

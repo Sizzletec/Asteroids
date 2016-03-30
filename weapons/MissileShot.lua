@@ -1,13 +1,13 @@
-local image = love.graphics.newImage('images/missleShot.png')
+local image = love.graphics.newImage('images/missileShot.png')
 
-Missle = {}
-Missle.__index = Missle
+MissileShot = {}
+MissileShot.__index = MissileShot
 
 local tilesetBatch = love.graphics.newSpriteBatch(image)
 
-function Missle.new(player,x,y,speed,rotation,damage,bulletLife)
+function MissileShot.new(player,x,y,speed,rotation,damage,bulletLife)
   local s = {}
-  setmetatable(s, Missle)
+  setmetatable(s, MissileShot)
   s.player = player
   s.x = x
   s.y = y
@@ -26,7 +26,7 @@ function Missle.new(player,x,y,speed,rotation,damage,bulletLife)
   return s
 end
 
-function Missle:update(dt)
+function MissileShot:update(dt)
   self.lifetime = self.lifetime + dt
   Mover.ApplyAcceleration(self, dt)
   Mover.ApplyVelocity(self, dt)
@@ -72,10 +72,10 @@ function Missle:update(dt)
 end
 
 
-function Missle.draw()
+function MissileShot.draw()
   tilesetBatch:flush()
   love.graphics.draw(tilesetBatch)
   tilesetBatch:clear()
 end
 
-return Missle
+return MissileShot
