@@ -3,11 +3,13 @@ Charge.__index = Charge
 
 
 function Charge.Fire(entity)
-  entity.charging = true
-  entity.chargeAmount = 1
-
   if entity.charging then
-    entity.chargeAmount = entity.chargeAmount + 1
+    if entity.chargeAmount < 10 then
+      entity.chargeAmount = entity.chargeAmount + 1
+    end
+  else
+    entity.charging = true
+    entity.chargeAmount = 1
   end
 end
 
@@ -32,6 +34,11 @@ end
 
 function Charge.Draw(entity)
   -- body
+
+  if entity.charging then
+
+    love.graphics.circle("line", entity.x + (15 * math.sin(entity.rotation)), entity.y - (15 * math.cos(entity.rotation)), entity.chargeAmount, 30)
+  end
 end
 
 return Charge

@@ -37,6 +37,7 @@ function Zap.Update(entity,dt)
     if entity.attackFrame >= 4 then
       entity.attackFrame = entity.attackFrame - 4
     end
+
     entity.hitbox = {
       { x = 0, y = 0 },
       { x = 65, y = -65},
@@ -88,18 +89,13 @@ function Zap.Draw(entity)
 
     if entity.hitbox then
         love.graphics.push()
-        -- love.graphics.translate(entity.x,entity.y)   -- rotation center
-        -- love.graphics.rotate(entity.rotation)         -- rotate
-        -- love.graphics.translate(-entity.x,-entity.y) -- move back
-
         local hitbox = {}
         for i=1,#entity.hitbox do
             local vert = entity.hitbox[i]
             table.insert(hitbox,vert.x)
             table.insert(hitbox,vert.y)
         end
-
-      --  love.graphics.polygon('line', hitbox)
+        love.graphics.polygon('line', hitbox)
         love.graphics.pop()
     end
   end

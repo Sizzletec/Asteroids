@@ -6,6 +6,7 @@ local Zap = require('ship_types/Zap')
 local Charge = require('ship_types/Charge')
 local Missile = require('ship_types/Missile')
 local Carrier = require('ship_types/Carrier')
+local Spreader = require('ship_types/Spreader')
 
 ShipType = {
   standard = {
@@ -19,7 +20,7 @@ ShipType = {
     health = 150,
     weaponDamage = 10,
     frameOffset = 0,
-    previousType = "carrier",
+    previousType = "spreader",
     nextType = "gunship"
   },
   gunship = {
@@ -86,7 +87,7 @@ ShipType = {
     topSpeed = 240,
     acceleration = 240,
     rotationSpeed = 4,
-    fireRate = 2,
+    fireRate = 4,
     health = 160,
     weaponDamage = 20,
     frameOffset = 10,
@@ -119,8 +120,22 @@ ShipType = {
     weaponDamage = 10,
     frameOffset = 14,
     previousType = "missile",
+    nextType = "spreader"
+  },
+  spreader = {
+    name = "Spreader",
+    actionHandler = Spreader,
+    description = "Fires a spreadshot",
+    topSpeed = 240,
+    acceleration = 360,
+    rotationSpeed = 10,
+    fireRate = 4,
+    health = 150,
+    weaponDamage = 5,
+    frameOffset = 0,
+    previousType = "carrier",
     nextType = "standard"
-  }
+  },
 }
 
 
@@ -146,7 +161,34 @@ ShipType = {
 -- Shockwave - does AOE damage around the ship
 -- GunAndShield - when firing you have a shield in that dirrection
 -- Control - fire a projectile you can control trigger explosions
+-- Miner - drops mines that explod when a ship runs into them or after a short duration
 -- sapper - fires a bullet that does damage over time
+
+
+
+-- level ideas
+
+-- Healing zone
+-- Pistons
+-- Gate (hit button to open)
+-- bridge (multi layer stage)
+-- explosive blocks that come back
+-- breakable blocks that come back
+-- shield block that fail after x damage
+
+
+-- general
+
+-- Battle with a variety of ships in a 4 player arena battle
+-- Team battle
+-- Astroid style movement
+-- single or co-op missions
+-- Ship hanger where you can walk around between the ships(get in a ship)
+-- 5 - 10 good playable ships
+-- Levels moves from scene to scene with moving section in between
+-- return to a hanger between levels
+-- on foot sections
+-- can board enemy ships and steal there fighters(one way to aquire new ships)
 
 
 
