@@ -37,6 +37,43 @@ function Zap.Update(entity,dt)
     if entity.attackFrame >= 4 then
       entity.attackFrame = entity.attackFrame - 4
     end
+    entity.hitbox = {
+      { x = 0, y = 0 },
+      { x = 65, y = -65},
+      { x = -65, y = -65}
+    }
+
+    for i=1,#entity.hitbox do
+        local vert = entity.hitbox[i]
+        local s = math.sin(entity.rotation)
+        local c = math.cos(entity.rotation)
+        local x = vert.x
+        local y = vert.y
+        vert.x = entity.x - ( x * c + y* s )
+        vert.y = entity.y - (x *s + y * -c)
+    end
+
+
+    -- leftCannonOffsetX = entity.x + (10 * math.sin(entity.rotation)) + (8 * math.cos(entity.rotation))
+    -- leftCannonOffsetY = entity.y + (10 * -math.cos(entity.rotation)) + (8 * math.sin(entity.rotation))
+
+    local players = Game.getPlayers()
+    for p, otherPlayer in pairs(players) do
+      if otherPlayer ~= entity then
+        inShape = PointWithinShape(entity.hitbox,otherPlayer.x,otherPlayer.y)
+
+        if inShape then
+            otherPlayer.health = otherPlayer.health- entity.weaponDamage
+        end
+      end
+  end
+
+
+
+
+  else
+    entity.hitbox = nil
+
   end
 end
 
@@ -49,27 +86,22 @@ function Zap.Draw(entity)
 
     love.graphics.draw(lightning, top_left,entity.x, entity.y, entity.rotation, 1,1 , 50,70)
 
-    -- local vertices = {
-    --   entity.x, entity.y-10,
-    --   entity.x - 50, entity.y - 50,
-    --   entity.x + 50, entity.y - 50
-    -- }
+    if entity.hitbox then
+        love.graphics.push()
+        -- love.graphics.translate(entity.x,entity.y)   -- rotation center
+        -- love.graphics.rotate(entity.rotation)         -- rotate
+        -- love.graphics.translate(-entity.x,-entity.y) -- move back
 
-    -- if entity.attackFrame >= 3 then
-    --   vertices = {
-    --     entity.x, entity.y-10,
-    --     entity.x - 100, entity.y - 100,
-    --     entity.x + 100, entity.y - 100
-    --   }
+        local hitbox = {}
+        for i=1,#entity.hitbox do
+            local vert = entity.hitbox[i]
+            table.insert(hitbox,vert.x)
+            table.insert(hitbox,vert.y)
+        end
 
-    -- end
-
-    -- love.graphics.push()
-    -- love.graphics.translate(entity.x,entity.y)   -- rotation center
-    -- love.graphics.rotate(entity.rotation)         -- rotate
-    -- love.graphics.translate(-entity.x,-entity.y) -- move back
-    -- love.graphics.polygon('line', vertices)
-    -- love.graphics.pop()
+      --  love.graphics.polygon('line', hitbox)
+        love.graphics.pop()
+    end
   end
 end
 

@@ -212,7 +212,13 @@ function Game.update(dt)
 		else
 			keyboardPlayer.shield = false
 		end
+		-- local leftDown = love.mouse.isDown(1)
+		-- if leftDown then
+		-- 	scaleFactor = width/1920
 
+		-- 	x, y = love.mouse.getPosition( )
+		-- 	Mover.MoveTowards(keyboardPlayer,x*scaleFactor,y*scaleFactor,dt)
+		-- end
 		if (gKeyPressed.up) then
 			keyboardPlayer.throttle = 1
 		end
@@ -225,7 +231,7 @@ function Game.update(dt)
 			keyboardPlayer.angularInput = 1
 		end
 	end
-
+ 
 
 	for i, player in pairs(players) do
 		local joysticks = love.joystick.getJoysticks()

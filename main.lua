@@ -4,6 +4,8 @@ local Settings = require('Settings')
 local ShipSelect = require('ShipSelect')
 local Score = require('Score')
 
+require('PointWithinShape')
+
 State = {
 	title = Title,
 	onlineMulti = ShipSelect,
