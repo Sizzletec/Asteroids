@@ -274,8 +274,11 @@ function Game.update(dt)
 		player:update(dt)
 
 		for b, bullet in pairs(player.bullets) do
+
+
+
 		    local hitWall = TiledMap_GetMapTile(math.floor(bullet.x/16),math.floor(bullet.y/16),1)
-		    if hitWall > 0 then
+		    if hitWall > 0 and (not bullet.bounce) then
 		    	table.remove(player.bullets, b)
 		    else
 				for p, otherPlayer in pairs(players) do

@@ -5,8 +5,12 @@ local Ray = require('ship_types/Ray')
 local Zap = require('ship_types/Zap')
 local Charge = require('ship_types/Charge')
 local Missile = require('ship_types/Missile')
-local Carrier = require('ship_types/Carrier')
+local Miner = require('ship_types/Miner')
 local Spreader = require('ship_types/Spreader')
+local Phaser = require('ship_types/Phaser')
+local Shockwave = require('ship_types/Shockwave')
+local Bounce = require('ship_types/Bounce')
+local Vortex = require('ship_types/Vortex')
 
 ShipType = {
   standard = {
@@ -20,7 +24,7 @@ ShipType = {
     health = 150,
     weaponDamage = 10,
     frameOffset = 0,
-    previousType = "spreader",
+    previousType = "vortex",
     nextType = "gunship"
   },
   gunship = {
@@ -106,14 +110,14 @@ ShipType = {
     weaponDamage = 70,
     frameOffset = 12,
     previousType = "charge",
-    nextType = "carrier"
+    nextType = "miner"
   },
-  carrier = {
-    name = "Carrier",
-    actionHandler = Carrier,
-    description = "Launches drone that attack enemies",
-    topSpeed = 120,
-    acceleration = 120,
+  miner = {
+    name = "Miner",
+    actionHandler = Miner,
+    description = "Drops a powerful mine that explodes",
+    topSpeed = 200,
+    acceleration = 200,
     rotationSpeed = 4,
     fireRate = 1,
     health = 150,
@@ -133,32 +137,93 @@ ShipType = {
     health = 150,
     weaponDamage = 5,
     frameOffset = 0,
-    previousType = "carrier",
+    previousType = "miner",
+    nextType = "phaser"
+  },
+  phaser = {
+    name = "Phaser",
+    actionHandler = Phaser,
+    description = "Warps a short distance and deals damage",
+    topSpeed = 240,
+    acceleration = 360,
+    rotationSpeed = 10,
+    fireRate = 1,
+    health = 150,
+    weaponDamage = 100,
+    frameOffset = 0,
+    previousType = "spreader",
+    nextType = "standard"
+  },
+  shockwave = {
+    name = "Shockwave",
+    actionHandler = Shockwave,
+    description = "Deal AOE damage around the ship and slow them",
+    topSpeed = 240,
+    acceleration = 360,
+    rotationSpeed = 10,
+    fireRate = 1,
+    health = 150,
+    weaponDamage = 100,
+    frameOffset = 0,
+    previousType = "phaser",
+    nextType = "bounce"
+  },
+  bounce = {
+    name = "Bounce",
+    actionHandler = Bounce,
+    description = "bullets bounce off walls",
+    topSpeed = 200,
+    acceleration = 260,
+    rotationSpeed = 5,
+    fireRate = 2,
+    health = 150,
+    weaponDamage = 20,
+    frameOffset = 0,
+    previousType = "shockwave",
+    nextType = "standard"
+  },
+  vortex = {
+    name = "Vortex",
+    actionHandler = Vortex,
+    description = "shoots 4 bullet that spin outward in a circle",
+    topSpeed = 200,
+    acceleration = 260,
+    rotationSpeed = 5,
+    fireRate = 10,
+    health = 150,
+    weaponDamage = 20,
+    frameOffset = 0,
+    previousType = "bounce",
     nextType = "standard"
   },
 }
 
 
--- ideas
+-- basic functionality
 
 -- Assault - fires a shotgun blast
 -- Standard - fires bullets in an alternating stream
 -- Gunship - fires bullets in any direction
 -- Ray - fires a beam that
 -- Zap - Short range aoe cone attack
--- Flack - fires short range exposions that block incoming attacks
 -- Missile - fires a homing Missile
+-- Spreader - fires a spreadshot of 3-5 bullets
+-- Charge - can hold down attack to charge a move powerful bullet
+-- Phaser - warps a short distance doing damage to the the space it warped through
+-- Shockwave - does AOE damage around the ship
+-- Bouncer - fires bullets that bounch off the walls
+-- Vortex - ship fires bullets that spin outward in a circle
+
+-- ideas
+
+
+-- Flack - fires short range exposions that block incoming attacks
 -- Boomerang - fires a single boomerange that will return to the player after a short diration or when it hits something
 -- Bomber - fires and gernade that explodes when it hits a wall, player, or after a short duration
--- Phaser - warps a short distance doing damage to the the space it warped through
 -- Railgun - fires a bullet that can travel through walls
--- Bouncer - fires bullets that bounch off the walls
 -- Carrier - control 3 fighter that will attack nearby enemies
 -- Turret - deploy a turret that will fire at ships nearby
--- Spreader - fires a spreadshot of 3-5 bullets
 -- Vortex - ship fires bullets that spin outward in a circle
--- Charge - can hold down attack to charge a move powerful bullet
--- Shockwave - does AOE damage around the ship
 -- GunAndShield - when firing you have a shield in that dirrection
 -- Control - fire a projectile you can control trigger explosions
 -- Miner - drops mines that explod when a ship runs into them or after a short duration
@@ -175,6 +240,7 @@ ShipType = {
 -- explosive blocks that come back
 -- breakable blocks that come back
 -- shield block that fail after x damage
+
 
 
 -- general

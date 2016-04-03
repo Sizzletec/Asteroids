@@ -1,8 +1,7 @@
-Carrier = {}
-Carrier.__index = Carrier
+Miner = {}
+Miner.__index = Miner
 
-
-function Carrier.Fire(entity)
+function Miner.Fire(entity)
     local numBullets = 100
     local angleDiff = math.pi*2/numBullets
     for i=numBullets/2,-numBullets/2,-1 do
@@ -14,12 +13,12 @@ function Carrier.Fire(entity)
     end
 end
 
-function Carrier.Update(entity,dt)
+function Miner.Update(entity,dt)
   -- body
 end
 
-function Carrier.Draw(entity)
+function Miner.Draw(entity)
 	-- body
 end
 
-return Carrier
+return Miner
