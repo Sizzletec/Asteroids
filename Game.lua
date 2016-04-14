@@ -212,13 +212,13 @@ function Game.update(dt)
 		else
 			keyboardPlayer.shield = false
 		end
-		-- local leftDown = love.mouse.isDown(1)
-		-- if leftDown then
-		-- 	scaleFactor = width/1920
+		local leftDown = love.mouse.isDown(1)
+		if leftDown then
+			scaleFactor = width/1920
 
-		-- 	x, y = love.mouse.getPosition( )
-		-- 	Mover.MoveTowards(keyboardPlayer,x*scaleFactor,y*scaleFactor,dt)
-		-- end
+			x, y = love.mouse.getPosition( )
+			Mover.MoveToPoint(keyboardPlayer,x,y,dt)
+		end
 		if (gKeyPressed.up) then
 			keyboardPlayer.throttle = 1
 		end

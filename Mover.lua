@@ -108,8 +108,54 @@ function Mover.MoveTowards(entity,x,y,dt)
     local xPow = math.pow(x, 2)
     local yPow = math.pow(y, 2)
     local dist = math.sqrt(xPow + yPow)
+      if dist > 1 then
+        dist = 1
+      end
       entity.throttle = dist
   end
 end
+
+function Mover.MoveToPoint(entity,x,y,dt)
+  local pX = x - entity.x
+  local pY = y - entity.y
+  local vMag = math.sqrt(entity.vx^2 + entity.vy^2)
+  local pMag = math.sqrt(pX^2 + pY^2)
+
+  local angle = math.atan2(pX,-pY)
+
+  if angle < 0 then
+    angle = angle + 2 * math.pi
+
+  elseif angle > math.pi then
+    angle = angle - 2 * math.pi
+  end
+
+
+  local angleV = math.atan2(pX - entity.vx, - pY + entity.vy)
+
+
+  if angleV < 0 then
+    angleV = angleV + 2 * math.pi
+  elseif angleV > math.pi then
+     print("subtracting")
+    angleV = angleV - 2 * math.pi
+  end
+
+    -- print("V:"..vMag)
+    -- print("P:"..pMag)
+    print("A:"..math.abs(angleV - angle))
+  local xOffset = pX 
+  local yOffset = pY
+
+  
+  -- if math.abs(angleV - angle) < math.pi/4 then
+    xOffset = xOffset - entity.vx
+    yOffset = yOffset - entity.vy
+  -- end
+
+
+  Mover.MoveTowards(entity,xOffset,yOffset,dt)
+end
+
 
 return Mover

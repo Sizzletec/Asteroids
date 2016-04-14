@@ -17,10 +17,10 @@ function MissileShot.new(player,x,y,speed,rotation,damage,bulletLife)
   s.vy = speed * -math.cos(s.rotation)
   s.lifetime = 0
   s.damage = damage
-  s.rotationSpeed = 1
+  s.rotationSpeed = 2
   s.throttle = 0
   s.topSpeed = 200
-  s.acceleration = 1
+  s.acceleration = 300
   s.throttle = 0
   s.angularInput = 0
   return s
@@ -67,6 +67,11 @@ function MissileShot:update(dt)
   end
 
   Mover.ApplyRotation(self,dt)
+
+  self.vx = self.topSpeed * math.sin(self.rotation)
+  self.vy = self.topSpeed * -math.cos(self.rotation)
+
+
   Mover.StageWrap(self)
   tilesetBatch:add(self.x, self.y, self.rotation, 1,1 , 3,3)
 end
