@@ -86,12 +86,12 @@ function Assault.Update(entity,dt)
 end
 
 function Assault.Draw(entity)
-  if entity.firing then
+  if entity.shotsFired then
     local top_left = love.graphics.newQuad(math.floor(entity.attackFrame)*76, 0, 76, 48, shotgun:getDimensions())
 
-    if entity.shotsFired then
+    -- if entity.shotsFired then
       love.graphics.draw(shotgun, top_left,entity.x, entity.y, entity.rotation, 1,1 , 38,56)
-    end
+    -- end
 
     if entity.hitbox then
       love.graphics.push()
