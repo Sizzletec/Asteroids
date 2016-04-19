@@ -374,6 +374,7 @@ function Game.draw()
 	MissileShot.draw()
 	-- Beam.draw()
 	-- fps = love.timer.getFPS()
+    -- love.graphics.print(winCount, 50, 50)
 	love.graphics.setBackgroundColor(0x20,0x20,0x20)
 end
 
