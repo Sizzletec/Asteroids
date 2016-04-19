@@ -4,16 +4,16 @@ Assault.__index = Assault
 local shotgun = love.graphics.newImage('images/ShotGun.png')
 
 function Assault.Fire(entity)
-    -- local numBullets = 7
-    -- local angleDiff = math.pi/4/numBullets
-    -- for i=numBullets/2,-numBullets/2,-1 do
-    --   local rBullet = entity.rotation + i * angleDiff
-    --   leftCannonOffsetX = entity.x + (5 * math.sin(entity.rotation))
-    --   leftCannonOffsetY = entity.y + (5 * -math.cos(entity.rotation))
-    --   bullet = Bullet.new(leftCannonOffsetX,leftCannonOffsetY,300,rBullet, entity.weaponDamage)
-    --   table.insert(entity.bullets, bullet)
-    -- end
-    entity.shotsFired = true
+    local numBullets = 7
+    local angleDiff = math.pi/4/numBullets
+    for i=numBullets/2,-numBullets/2,-1 do
+      local rBullet = entity.rotation + i * angleDiff
+      leftCannonOffsetX = entity.x + (5 * math.sin(entity.rotation))
+      leftCannonOffsetY = entity.y + (5 * -math.cos(entity.rotation))
+      bullet = Bullet.new(leftCannonOffsetX,leftCannonOffsetY,300,rBullet, entity.weaponDamage)
+      table.insert(entity.bullets, bullet)
+    end
+    -- entity.shotsFired = true
 end
 
 function Assault.Update(entity,dt)

@@ -5,7 +5,7 @@ love.filesystem.load("tiledmap.lua")()
 
 local Ship = require('Ship')
 local Bullet = require('weapons/Bullet')
-local Beam = require('weapons/Beam')
+
 local missileShot = require('weapons/MissileShot')
 
 local myShader = love.graphics.newShader[[
@@ -50,6 +50,8 @@ local keyboardPlayer
 spawn = {}
 
 local numberAlive = 0
+local gameWon = false
+local winCount = 10
 
 function Game.load()
 	players = {}
@@ -76,6 +78,8 @@ function Game.load()
 		end
 	end
 	numberAlive = table.getn(players)
+	gameWon = false
+	winCount = 8
 end
 
 function Game.getPlayers()
@@ -201,11 +205,24 @@ function Game.checkWin()
 			end
 			selections[player.player].ship = player
 		end
-		setState(State.score)
+
+		gameWon = true
+		-- setState(State.score)
 	end
 end
 
 function Game.update(dt)
+
+	if gameWon then
+		winCount = winCount - 3 * dt
+		dt = dt / winCount
+
+		if winCount <= 1 then
+			setState(State.score)
+		end
+	end
+
+
 	if keyboardPlayer then
 		if (gKeyPressed.lshift) then
 			keyboardPlayer.shield = true
@@ -357,7 +374,6 @@ function Game.draw()
 	MissileShot.draw()
 	-- Beam.draw()
 	-- fps = love.timer.getFPS()
-    -- love.graphics.print(keyboardPlayer.rotation, 50, 50)
 	love.graphics.setBackgroundColor(0x20,0x20,0x20)
 end
 

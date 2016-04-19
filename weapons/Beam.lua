@@ -30,7 +30,6 @@ function Beam.new(player,x,y,speed,rotation,damage,bulletLife)
 end
 
 function Beam:update(dt)
-  self.lifetime = self.lifetime + dt
 
   local collide = true
   local xBeam = self.x + 12 * math.sin(self.rotation)

@@ -6,18 +6,10 @@ function Vortex.Fire(entity)
     leftCannonOffsetX = entity.x 
     leftCannonOffsetY = entity.y
 
-    bullet = Bullet.new(leftCannonOffsetX,leftCannonOffsetY,0,entity.rotation, entity.weaponDamage)
-    table.insert(entity.bullets, bullet)
-
-    bullet = Bullet.new(leftCannonOffsetX,leftCannonOffsetY,0,entity.rotation + math.pi/2, entity.weaponDamage)
-    table.insert(entity.bullets, bullet)
-
-    bullet = Bullet.new(leftCannonOffsetX,leftCannonOffsetY,0,entity.rotation + math.pi, entity.weaponDamage)
-    table.insert(entity.bullets, bullet)
-
-    bullet = Bullet.new(leftCannonOffsetX,leftCannonOffsetY,0,entity.rotation+ 3 * math.pi/2, entity.weaponDamage)
-    table.insert(entity.bullets, bullet)
-
+    for i=1,8 do
+        bullet = Bullet.new(leftCannonOffsetX,leftCannonOffsetY,0,entity.rotation + math.pi/4 * i, entity.weaponDamage)
+        table.insert(entity.bullets, bullet)
+    end
 end
 
 function Vortex.Update(entity,dt)

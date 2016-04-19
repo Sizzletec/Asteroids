@@ -47,8 +47,8 @@ ShipType = {
     actionHandler = Assault,
     description = "High speed and damage at the cost of attack range",
     topSpeed = 300,
-    acceleration = 240,
-    rotationSpeed = 3,
+    acceleration = 400,
+    rotationSpeed = 5,
     fireRate = 1,
     health = 170,
     weaponDamage = 10,
@@ -189,9 +189,9 @@ ShipType = {
     topSpeed = 200,
     acceleration = 260,
     rotationSpeed = 5,
-    fireRate = 10,
+    fireRate = 1,
     health = 150,
-    weaponDamage = 20,
+    weaponDamage = 40,
     frameOffset = 0,
     previousType = "bounce",
     nextType = "standard"
@@ -199,11 +199,12 @@ ShipType = {
 }
 
 
--- basic functionality
+
+-- basic functionality N:Some attacks could be addons insead of ships
 
 -- Assault - fires a shotgun blast
--- Standard - fires bullets in an alternating stream
--- Gunship - fires bullets in any direction
+-- Standard - fires bullets in an alternating stream N:feels a little fast weapon feel reasonable
+-- Gunship - fires bullets in any direction N:Feels slow gun is inacurate, doesn't feel that fun
 -- Ray - fires a beam that
 -- Zap - Short range aoe cone attack
 -- Missile - fires a homing Missile
@@ -223,7 +224,6 @@ ShipType = {
 -- Railgun - fires a bullet that can travel through walls
 -- Carrier - control 3 fighter that will attack nearby enemies
 -- Turret - deploy a turret that will fire at ships nearby
--- Vortex - ship fires bullets that spin outward in a circle
 -- GunAndShield - when firing you have a shield in that dirrection
 -- Control - fire a projectile you can control trigger explosions
 -- Miner - drops mines that explod when a ship runs into them or after a short duration
