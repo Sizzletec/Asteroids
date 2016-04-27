@@ -16,7 +16,6 @@ ShipType = {
   standard = {
     name = "Standard",
     actionHandler = Standard,
-    description = "Balanced speed, range, and damage",
     topSpeed = 240,
     acceleration = 360,
     rotationSpeed = 8,
@@ -30,7 +29,6 @@ ShipType = {
   gunship = {
     name = "Gunship",
     actionHandler = Gunship,
-    description = "Can fire a long range attack in any direction, at the cost of speed and defence",
     topSpeed = 120,
     acceleration = 180,
     rotationSpeed = 5,
@@ -45,7 +43,6 @@ ShipType = {
   assalt = {
     name = "Assault",
     actionHandler = Assault,
-    description = "High speed and damage at the cost of attack range",
     topSpeed = 300,
     acceleration = 400,
     rotationSpeed = 5,
@@ -59,7 +56,6 @@ ShipType = {
   ray = {
     name = "Ray",
     actionHandler = Ray,
-    description = "Medium attack range with instant damage",
     topSpeed = 180,
     acceleration = 240,
     rotationSpeed = 4,
@@ -73,7 +69,6 @@ ShipType = {
   zap = {
     name = "Zapper",
     actionHandler = Zap,
-    description = "High short range damage at the cost of defence",
     topSpeed = 180,
     acceleration = 180,
     rotationSpeed = 5,
@@ -87,7 +82,6 @@ ShipType = {
   charge = {
     name = "Charger",
     actionHandler = Charge,
-    description = "Can charge attack extra damage and range",
     topSpeed = 240,
     acceleration = 240,
     rotationSpeed = 4,
@@ -101,7 +95,6 @@ ShipType = {
   missile = {
     name = "Missile",
     actionHandler = Missile,
-    description = "Fires missiles that home in on enemies",
     topSpeed = 180,
     acceleration = 180,
     rotationSpeed = 4,
@@ -115,7 +108,6 @@ ShipType = {
   miner = {
     name = "Miner",
     actionHandler = Miner,
-    description = "Drops a powerful mine that explodes",
     topSpeed = 200,
     acceleration = 200,
     rotationSpeed = 4,
@@ -129,7 +121,6 @@ ShipType = {
   spreader = {
     name = "Spreader",
     actionHandler = Spreader,
-    description = "Fires a spreadshot",
     topSpeed = 240,
     acceleration = 360,
     rotationSpeed = 10,
@@ -143,7 +134,6 @@ ShipType = {
   phaser = {
     name = "Phaser",
     actionHandler = Phaser,
-    description = "Warps a short distance and deals damage",
     topSpeed = 240,
     acceleration = 360,
     rotationSpeed = 10,
@@ -157,7 +147,6 @@ ShipType = {
   shockwave = {
     name = "Shockwave",
     actionHandler = Shockwave,
-    description = "Deal AOE damage around the ship and slow them",
     topSpeed = 240,
     acceleration = 360,
     rotationSpeed = 10,
@@ -171,7 +160,6 @@ ShipType = {
   bounce = {
     name = "Bounce",
     actionHandler = Bounce,
-    description = "bullets bounce off walls",
     topSpeed = 200,
     acceleration = 260,
     rotationSpeed = 5,
@@ -185,7 +173,6 @@ ShipType = {
   vortex = {
     name = "Vortex",
     actionHandler = Vortex,
-    description = "shoots 4 bullet that spin outward in a circle",
     topSpeed = 200,
     acceleration = 260,
     rotationSpeed = 5,
@@ -197,68 +184,3 @@ ShipType = {
     nextType = "standard"
   },
 }
-
-
-
--- basic functionality N:Some attacks could be addons insead of ships
-
--- Assault - fires a shotgun blast
--- Standard - fires bullets in an alternating stream N:feels a little fast weapon feel reasonable
--- Gunship - fires bullets in any direction N:Feels slow gun is inacurate, doesn't feel that fun
--- Ray - fires a beam that
--- Zap - Short range aoe cone attack
--- Missile - fires a homing Missile
--- Spreader - fires a spreadshot of 3-5 bullets
--- Charge - can hold down attack to charge a move powerful bullet
--- Phaser - warps a short distance doing damage to the the space it warped through
--- Shockwave - does AOE damage around the ship
--- Bouncer - fires bullets that bounch off the walls
--- Vortex - ship fires bullets that spin outward in a circle
-
--- ideas
-
-
--- Flack - fires short range exposions that block incoming attacks
--- Boomerang - fires a single boomerange that will return to the player after a short diration or when it hits something
--- Bomber - fires and gernade that explodes when it hits a wall, player, or after a short duration
--- Railgun - fires a bullet that can travel through walls
--- Carrier - control 3 fighter that will attack nearby enemies
--- Turret - deploy a turret that will fire at ships nearby
--- GunAndShield - when firing you have a shield in that dirrection
--- Control - fire a projectile you can control trigger explosions
--- Miner - drops mines that explod when a ship runs into them or after a short duration
--- sapper - fires a bullet that does damage over time
-
-
-
--- level ideas
-
--- Healing zone
--- Pistons
--- Gate (hit button to open)
--- bridge (multi layer stage)
--- explosive blocks that come back
--- breakable blocks that come back
--- shield block that fail after x damage
-
-
-
--- general
-
--- Battle with a variety of ships in a 4 player arena battle
--- Team battle
--- Astroid style movement
--- single or co-op missions
--- Ship hanger where you can walk around between the ships(get in a ship)
--- 5 - 10 good playable ships
--- Levels moves from scene to scene with moving section in between
--- return to a hanger between levels
--- on foot sections
--- can board enemy ships and steal there fighters(one way to aquire new ships)
-
-
-
-
-
-
-
