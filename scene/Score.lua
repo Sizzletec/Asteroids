@@ -1,27 +1,16 @@
 Score = {}
 Score.__index = Score
 
-
-gKeyPressed = {}
-
-placeStrings = {
+local placeStrings = {
 	"Winner!!",
 	"Second..",
 	"Not Last!?",
 	"...hmm"
-} 
-
-function Score.load()
-end
-
-function Score.keyreleased(key)
-	gKeyPressed[key] = nil
-end
+}
 
 function Score.keypressed(key, unicode)
-	gKeyPressed[key] = true
 	if (key == "escape") then setState(State.title) end
-	if (key == "return") then 
+	if (key == "return") then
 		for i, player in pairs(selections) do
 			ship = player.ship
 		end

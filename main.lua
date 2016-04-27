@@ -1,10 +1,10 @@
-local Game = require('Game')
-local Title = require('Title')
-local Settings = require('Settings')
-local ShipSelect = require('ShipSelect')
-local Score = require('Score')
+require('helpers/PointWithinShape')
 
-require('PointWithinShape')
+local Game = require('scene/Game')
+local Title = require('scene/Title')
+local Settings = require('scene/Settings')
+local ShipSelect = require('scene/ShipSelect')
+local Score = require('scene/Score')
 
 State = {
 	title = Title,
@@ -24,39 +24,61 @@ function love.load()
 end
 
 function love.keyreleased(key)
-	currentState.keyreleased(key)
+	if currentState.keyreleased then
+		currentState.keyreleased(key)
+	end
 end
 
 function love.keypressed(key, unicode)
-	gKeyPressed[key] = true
-	currentState.keypressed(key,unicode)
+	if currentState.keypressed then
+		currentState.keypressed(key,unicode)
+	end
 end
 
 function love.gamepadpressed(joystick, button)
-	currentState.gamepadpressed(joystick, button)
+	if currentState.gamepadpressed then
+		currentState.gamepadpressed(joystick, button)
+	end
 end
 
 function love.gamepadreleased(joystick, button)
-	currentState.gamepadreleased(joystick, button)
+	if currentState.gamepadreleased then
+		currentState.gamepadreleased(joystick, button)
+	end
 end
 
 function love.gamepadaxis(joystick, axis, value)
-	currentState.gamepadaxis(joystick, axis, value)
+	if currentState.gamepadaxis then
+		currentState.gamepadaxis(joystick, axis, value)
+	end
 end
 
 function love.update( dt )
-	currentState.update(dt)
+	if currentState.update then
+		currentState.update(dt)
+	end
 	collectgarbage()
 end
 
 function love.draw()
-	currentState.draw()
+	-- currentState.draw = function()
+	-- 	 love.graphics.print("NOPE!!", 1200, 850)
+	-- end
+
+	if currentState.draw then
+		currentState.draw()
+	end
 end
 
 function setState(newState)
 	currentState = newState
-	currentState.load()
+	if currentState.load then
+		currentState.load()
+	end
 end
 
 function love.quit()
+	if currentState.quit then
+		currentState.quit()
+	end
 end

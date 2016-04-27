@@ -2,7 +2,7 @@ ShipsImage = love.graphics.newImage('images/ship-sprites.png')
 local shoot = love.audio.newSource("sounds/shoot.wav", "static")
 
 require('ship_types/ShipTypes')
-require('Mover')
+require('helpers/Mover')
 
 Ship = {
   acceleration = 0,

@@ -1,7 +1,7 @@
 Title = {}
 Title.__index = Title
 
-love.filesystem.load("tiledmap.lua")()
+love.filesystem.load("maps/tiledmap.lua")()
 
 local highlightedOption = 1
 local menuOptions = {
@@ -15,7 +15,6 @@ local menuSpeed = 0.3
 local menuCooldown = 0
 
 function Title.load()
-	scale = love.window.getPixelScale()
 	TiledMap_Load("maps/title.tmx",16)
 end
 

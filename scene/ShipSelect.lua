@@ -4,10 +4,10 @@ ShipSelect.__index = ShipSelect
 
 gKeyPressed = {}
 
-local Ship = require('Ship')
-local Bullet = require('weapons/Bullet')
-local Beam = require('weapons/Beam')
-local MissileShot = require('weapons/MissileShot')
+local Ship = require('object/Ship')
+local Bullet = require('object/Bullet')
+local Beam = require('object/Beam')
+local MissileShot = require('object/MissileShot')
 local t = 0
 
 SelectStep = {

@@ -1,10 +1,9 @@
 Ray = {}
 Ray.__index = Ray
 
-require('weapons/Beam')
+require('object/Beam')
 
 function Ray.Fire(entity)
-    
 end
 
 function Ray.Update(entity,dt)
