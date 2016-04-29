@@ -1,9 +1,11 @@
-ShipsImage = love.graphics.newImage('images/ship-sprites.png')
+local ShipsImage = love.graphics.newImage('images/ship-sprites.png')
 local shoot = love.audio.newSource("sounds/shoot.wav", "static")
 
 require('ship_types/ShipTypes')
 require('helpers/Mover')
 require('components/KeyboardInputComponent')
+require('components/RenderComponent')
+require('components/ScoreComponent')
 
 Ship = {
   acceleration = 0,
@@ -13,14 +15,6 @@ Ship = {
   explodingFrame = 0,
   lives = 3,
   -- for score
-
-  kills = 0,
-  deaths = 0,
-  shots = 0,
-  hits = 0,
-  damageGiven = 0,
-  damageTaken = 0,
-  wallsRunInto = 0,
   attackFrame = 0
 }
 Ship.__index = Ship
@@ -42,7 +36,10 @@ function Ship.new(player,x,y,rotation,vx,vy, type)
   s.fireRate = s.shipType.fireRate
   s.health = s.shipType.health
   s.weaponDamage = s.shipType.weaponDamage
-  s.components = {}
+  s.components = {
+    render = RenderComponent.new(s),
+    score = ScoreComponent.new(s)
+  }
 
   s.player = player
   if player == 1 then
@@ -96,10 +93,10 @@ end
 function Ship:update(dt)
 
   for _, component in pairs(self.components) do
-    if component ~= nil then
+    if component.update ~= nil then
       component:update(dt)
     end
-  end 
+  end
   -- check if dead
   if self.health <= 0 and not self.exploding then
     self.health = 0
@@ -197,50 +194,18 @@ function Ship:selfDestruct()
 end
 
 function Ship:drawLifeMarkers(x,y)
-  for live=self.lives,1,-1 do
-      local xFrame = 0
-      if self.engine then
-        xFrame = 1
-      end
-
-      xFrame = xFrame + self.shipType.frameOffset
-      local top_left = love.graphics.newQuad(xFrame*32, self.color*32, 32, 32, ShipsImage:getDimensions())
-      love.graphics.draw(ShipsImage, top_left,x + 36 * live, y, 0, 1,1 , 16,16)
-
-      if self.shipType == ShipType.gunship then
-        local cannonQuad = love.graphics.newQuad(0, 160, 20, 20, ShipsImage:getDimensions())
-        love.graphics.draw(ShipsImage,cannonQuad,x + 36 * live - (3 * math.sin(0)), y + (3 * math.cos(0)), 0, 1,1 , 10, 10)
-      end
+  for _, component in pairs(self.components) do
+    if component.drawLifeMarkers ~= nil then
+      component:drawLifeMarkers(x,y)
+    end
   end
 end
 
 function Ship:draw()
-  if self.explodingFrame < 3 then
-    local xFrame = 0
-    if self.engine then
-      xFrame = 1
+  for _, component in pairs(self.components) do
+    if component.draw ~= nil then
+      component:draw()
     end
-    xFrame = xFrame + self.shipType.frameOffset
-
-    local top_left = love.graphics.newQuad(xFrame*32, self.color*32, 32, 32, ShipsImage:getDimensions())
-    love.graphics.draw(ShipsImage, top_left,self.x, self.y, self.rotation, 1,1 , 16,16)
-
-    self.shipType.actionHandler.Draw(self)
-  end
-
-  if self.exploding then
-    local top_left = love.graphics.newQuad(math.floor(self.explodingFrame)*32, 4*32, 32, 32, ShipsImage:getDimensions())
-    love.graphics.draw(ShipsImage, top_left,self.x, self.y, self.rotation, 1,1 , 16,16)
-  end
-
-  love.graphics.setColor(255, 255, 255)
-
-  if self.shield then
-    love.graphics.circle("line", self.x, self.y, 20)
-  end
-
-  for b, beam in pairs(self.beams) do
-    beam:draw()
   end
 end
 

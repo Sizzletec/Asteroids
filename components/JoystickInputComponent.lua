@@ -1,5 +1,5 @@
 JoystickInputComponent = {}
-JoystickInputComponent.__index = InputComponent
+JoystickInputComponent.__index = JoystickInputComponent
 
 function JoystickInputComponent.new(entity)
   local i = {}
