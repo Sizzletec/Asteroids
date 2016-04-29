@@ -3,10 +3,9 @@ Game.__index = Game
 
 love.filesystem.load("maps/tiledmap.lua")()
 
-local Ship = require('object/Ship')
-local Bullet = require('object/Bullet')
-
-local missileShot = require('object/MissileShot')
+require('object/Ship')
+require('object/Bullet')
+require('object/MissileShot')
 
 local myShader = love.graphics.newShader( "shaders/lighting.glsl" )
 
@@ -15,10 +14,6 @@ gKeyPressed = {}
 local players = {}
 
 gCamX,gCamY = 0,0
-
-local keyboardPlayer
-
-spawn = {}
 
 local numberAlive = 0
 local gameWon = false
@@ -42,10 +37,6 @@ function Game.load()
 			playerShip.y = spawnLocation.y
 			playerShip.rotation = math.rad(spawnLocation.r)
 			table.insert(players, playerShip)
-
-			if playerShip.player == 1 then
-				keyboardPlayer = playerShip
-			end
 		end
 	end
 	numberAlive = table.getn(players)
@@ -100,56 +91,50 @@ function Game.GetSpawnLocation()
 end
 
 function Game.keyreleased(key)
-	gKeyPressed[key] = nil
-	if keyboardPlayer then
-		if (key == "space") then
-			keyboardPlayer.firing = false
+	for _, player in pairs(players) do
+		local keyboard = player.components.keyboard
+		if keyboard ~= nil then
+			keyboard:keyreleased(key)
 		end
 	end
 end
 
 function Game.keypressed(key, unicode)
-	gKeyPressed[key] = true
-	if (key == "escape") then setState(State.shipSelect) end
-
-	if keyboardPlayer then
-		if (key == "space") then
-			keyboardPlayer.firing = true
+	for _, player in pairs(players) do
+		local keyboard = player.components.keyboard
+		if keyboard ~= nil then
+			keyboard:keypressed(key, unicode)
 		end
-
-		if (key == "y") then
-	    	keyboardPlayer:selfDestruct()
-	    end
 	end
 end
 
-function Game.gamepadpressed(joystick, button)
-	local id, instanceid = joystick:getID()
-	local player = Game.getPlayer(id)
-	if player then
-	    if button == "a" then
-	    	player.firing = true
-	    end
+-- function Game.gamepadpressed(joystick, button)
+-- 	local id, instanceid = joystick:getID()
+-- 	local player = Game.getPlayer(id)
+-- 	if player then
+-- 	    if button == "a" then
+-- 	    	player.firing = true
+-- 	    end
 
-	    if button == "y" then
-	    	player:selfDestruct()
-	    end
-	end
-end
+-- 	    if button == "y" then
+-- 	    	player:selfDestruct()
+-- 	    end
+-- 	end
+-- end
 
-function Game.gamepadreleased(joystick, button)
-	local id, instanceid = joystick:getID()
-	local player = Game.getPlayer(id)
-	if player then
-	    if button == "a" then
-	    	player.firing = false
-	    end
-	end
-end
+-- function Game.gamepadreleased(joystick, button)
+-- 	local id, instanceid = joystick:getID()
+-- 	local player = Game.getPlayer(id)
+-- 	if player then
+-- 	    if button == "a" then
+-- 	    	player.firing = false
+-- 	    end
+-- 	end
+-- end
 
-function Game.gamepadaxis(joystick, axis, value)
+-- function Game.gamepadaxis(joystick, axis, value)
 
-end
+-- end
 
 function Game.getPlayer(id)
 	for i, player in pairs(players) do
@@ -193,34 +178,6 @@ function Game.update(dt)
 		end
 	end
 
-
-	if keyboardPlayer then
-		if (gKeyPressed.lshift) then
-			keyboardPlayer.shield = true
-		else
-			keyboardPlayer.shield = false
-		end
-		local leftDown = love.mouse.isDown(1)
-		if leftDown then
-			scaleFactor = width/1920
-
-			x, y = love.mouse.getPosition( )
-			Mover.MoveToPoint(keyboardPlayer,x,y,dt)
-		end
-		if (gKeyPressed.up) then
-			keyboardPlayer.throttle = 1
-		end
-
-		if (gKeyPressed.left) then
-			keyboardPlayer.angularInput = -1
-		end
-
-		if (gKeyPressed.right) then
-			keyboardPlayer.angularInput = 1
-		end
-	end
- 
-
 	for i, player in pairs(players) do
 		local joysticks = love.joystick.getJoysticks()
 		local joy = joysticks[player.player]
@@ -228,14 +185,6 @@ function Game.update(dt)
 		if joy then
 			-- local joyX = joy:getGamepadAxis("leftx")
 			-- local throttle = joy:getGamepadAxis("triggerright")
-
-			if keyboardPlayer.player ==  player.player then
-				if not gKeyPressed.up then
-					player.throttle = throttle
-				end
-			else
-				player.throttle = throttle
-			end
 
 
 			joyX = joy:getGamepadAxis("leftx")

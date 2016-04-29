@@ -4,10 +4,10 @@ ShipSelect.__index = ShipSelect
 
 gKeyPressed = {}
 
-local Ship = require('object/Ship')
-local Bullet = require('object/Bullet')
-local Beam = require('object/Beam')
-local MissileShot = require('object/MissileShot')
+require('object/Ship')
+require('object/Bullet')
+require('object/Beam')
+require('object/MissileShot')
 local t = 0
 
 SelectStep = {
@@ -55,12 +55,10 @@ function ShipSelect.load()
 	for i, player in pairs(selections) do
 		if player.ship then
 			oldship = player.ship
-			newShip = Ship.new(1,0,0)
+			newShip = Ship.new(oldship.player,0,0)
 
 			newShip.shipType = oldship.shipType
 			newShip.color = oldship.color
-			newShip.player = oldship.player
-
 			player.ship = newShip
 		end
 	end

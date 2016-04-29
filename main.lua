@@ -1,10 +1,9 @@
 require('helpers/PointWithinShape')
-
-local Game = require('scene/Game')
-local Title = require('scene/Title')
-local Settings = require('scene/Settings')
-local ShipSelect = require('scene/ShipSelect')
-local Score = require('scene/Score')
+require('scene/Game')
+require('scene/Title')
+require('scene/Settings')
+require('scene/ShipSelect')
+require('scene/Score')
 
 State = {
 	title = Title,

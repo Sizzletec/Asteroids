@@ -3,6 +3,7 @@ local shoot = love.audio.newSource("sounds/shoot.wav", "static")
 
 require('ship_types/ShipTypes')
 require('helpers/Mover')
+require('components/KeyboardInputComponent')
 
 Ship = {
   acceleration = 0,
@@ -41,8 +42,12 @@ function Ship.new(player,x,y,rotation,vx,vy, type)
   s.fireRate = s.shipType.fireRate
   s.health = s.shipType.health
   s.weaponDamage = s.shipType.weaponDamage
+  s.components = {}
 
   s.player = player
+  if player == 1 then
+    s.components["keyboard"] = KeyboardInputComponent.new(s)
+  end
   s.color = 0
   s.bullets = {}
   s.beams = {}
@@ -89,6 +94,12 @@ function Ship:setDefaults()
 end
 
 function Ship:update(dt)
+
+  for _, component in pairs(self.components) do
+    if component ~= nil then
+      component:update(dt)
+    end
+  end 
   -- check if dead
   if self.health <= 0 and not self.exploding then
     self.health = 0
