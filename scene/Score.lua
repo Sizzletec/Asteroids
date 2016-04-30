@@ -58,13 +58,13 @@ function Score.draw()
 			love.graphics.setColor(200, 200, 200)
 			love.graphics.setNewFont(30)
 
-			love.graphics.print("Kills\n" .. ship.kills, xOffset, 330)
-			love.graphics.print("Deaths\n" .. ship.deaths, xOffset, 410 )
-			love.graphics.print("Shots\n" .. ship.shots, xOffset, 490 )
-			love.graphics.print("Hits\n" .. ship.hits, xOffset, 570 )
-			love.graphics.print("Damage Given\n" .. ship.damageGiven, xOffset, 650 )
-			love.graphics.print("Damage Taken\n" .. ship.damageTaken, xOffset, 730 )
-			love.graphics.print("Walls Hit\n" .. ship.wallsRunInto, xOffset, 810 )
+			love.graphics.print("Kills\n" .. ship.components.score.kills, xOffset, 330)
+			love.graphics.print("Deaths\n" .. ship.components.score.deaths, xOffset, 410 )
+			love.graphics.print("Shots\n" .. ship.components.score.shots, xOffset, 490 )
+			love.graphics.print("Hits\n" .. ship.components.score.hits, xOffset, 570 )
+			love.graphics.print("Damage Given\n" .. ship.components.score.damageGiven, xOffset, 650 )
+			love.graphics.print("Damage Taken\n" .. ship.components.score.damageTaken, xOffset, 730 )
+			love.graphics.print("Walls Hit\n" .. ship.components.score.wallsRunInto, xOffset, 810 )
 		end
 	end
 

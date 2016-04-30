@@ -100,6 +100,7 @@ function Game.keyreleased(key)
 end
 
 function Game.keypressed(key, unicode)
+	if (key == "escape") then setState(State.shipSelect) end
 	for _, player in pairs(players) do
 		local keyboard = player.components.keyboard
 		if keyboard ~= nil then
@@ -146,7 +147,7 @@ end
 
 function Game.checkWin()
 	for i, player in pairs(players) do
-		if player.lives == 0 then
+		if player.components.life.lives == 0 then
 			if not player.place then
 				player.place = numberAlive
 				numberAlive = numberAlive - 1
@@ -155,8 +156,7 @@ function Game.checkWin()
 	end
 	if numberAlive == 1 then
 		for i, player in pairs(players) do
-
-			if player.lives > 0 then
+			if player.components.life.lives > 0 then
 				player.place = numberAlive
 			end
 			selections[player.player].ship = player
@@ -226,24 +226,8 @@ function Game.update(dt)
 						dist = math.sqrt(xPow + yPow)
 
 						if dist < 20 then
-							player.hits = player.hits + 1
-							if bullet.damage >= otherPlayer.health then
-								if otherPlayer.health ~= 0 then
-									player.kills = player.kills + 1
-								end
-								player.damageGiven = player.damageGiven + otherPlayer.health
-
-								otherPlayer.damageTaken = otherPlayer.damageTaken + otherPlayer.health
-							else
-								player.damageGiven = player.damageGiven + bullet.damage 
-								otherPlayer.damageTaken = otherPlayer.damageTaken + bullet.damage 
-							end
-
-							otherPlayer.health = otherPlayer.health - bullet.damage
-
-							if otherPlayer.health < 0 then
-								otherPlayer.health = 0
-							end
+							player.components.score.hits = player.components.score.hits + 1
+							otherPlayer.components.life:takeDamage(player, bullet.damage)
 							table.remove(player.bullets, b)
 						end
 					end
@@ -285,8 +269,8 @@ function Game.draw()
 		love.graphics.setShader()
 		player:drawLifeMarkers(xOffset+10,994)
 
-		if player.lives > 0 then
-			love.graphics.print(player.health .. " hp", xOffset+30, 1016)
+		if player.components.life.lives > 0 then
+			love.graphics.print(player.components.life.health .. " hp", xOffset+30, 1016)
 		end
 
 	end

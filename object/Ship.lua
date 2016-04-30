@@ -1,4 +1,4 @@
-local ShipsImage = love.graphics.newImage('images/ship-sprites.png')
+ShipsImage = love.graphics.newImage('images/ship-sprites.png')
 local shoot = love.audio.newSource("sounds/shoot.wav", "static")
 
 require('ship_types/ShipTypes')
@@ -6,15 +6,12 @@ require('helpers/Mover')
 require('components/KeyboardInputComponent')
 require('components/RenderComponent')
 require('components/ScoreComponent')
+require('components/LifeComponent')
 
 Ship = {
   acceleration = 0,
   shield = false,
-  alive = true,
-  exploding = false,
   explodingFrame = 0,
-  lives = 3,
-  -- for score
   attackFrame = 0
 }
 Ship.__index = Ship
@@ -34,18 +31,22 @@ function Ship.new(player,x,y,rotation,vx,vy, type)
   s.acceleration = s.shipType.acceleration
   s.rotationSpeed = s.shipType.rotationSpeed
   s.fireRate = s.shipType.fireRate
-  s.health = s.shipType.health
   s.weaponDamage = s.shipType.weaponDamage
+
   s.components = {
     render = RenderComponent.new(s),
-    score = ScoreComponent.new(s)
+    score = ScoreComponent.new(s),
+    life = LifeComponent.new(s)
   }
 
   s.player = player
+
   if player == 1 then
     s.components["keyboard"] = KeyboardInputComponent.new(s)
   end
+
   s.color = 0
+
   s.bullets = {}
   s.beams = {}
   s.gunCooldown = 0
@@ -65,7 +66,6 @@ function Ship:setDefaults()
   self.acceleration = self.shipType.acceleration
   self.rotationSpeed = self.shipType.rotationSpeed
   self.fireRate = self.shipType.fireRate
-  self.health = self.shipType.health
   self.weaponDamage = self.shipType.weaponDamage
 
   playerShip.firing = false
@@ -76,39 +76,21 @@ function Ship:setDefaults()
   self.angularInput = 0
 
   self.shield = false
-  self.alive = true
-  self.exploding = false
   self.explodingFrame = 0
   self.lives = Ship.lives
-
-  self.kills = 0
-  self.deaths = 0
-  self.shots = 0
-  self.hits = 0
-  self.damageGiven = 0
-  self.damageTaken = 0
-  self.wallsRunInto = 0
 end
 
 function Ship:update(dt)
-
   for _, component in pairs(self.components) do
     if component.update ~= nil then
       component:update(dt)
     end
   end
-  -- check if dead
-  if self.health <= 0 and not self.exploding then
-    self.health = 0
-    self.deaths = self.deaths + 1
-    self.lives = self.lives - 1
-    self.exploding = true
-  end
 
   -- when dead run exploding animation
-  if self.exploding then
+  if not self.components.life.alive then
     self.explodingFrame = self.explodingFrame + 8 * dt
-    if self.explodingFrame > 10 and self.lives > 0 then
+    if self.explodingFrame > 10 and self.components.life.lives > 0 then
       self:respawn()
     end
   end
@@ -128,21 +110,21 @@ function Ship:update(dt)
   if tileUp > 0 then
     self.vy = -self.vy/2
     self.y = self.y - 5
-    self.wallsRunInto = self.wallsRunInto + 1
+    self.components.score.wallsRunInto = self.components.score.wallsRunInto + 1
   elseif tileDown > 0 then
     self.vy = -self.vy/2
     self.y = self.y + 5
-    self.wallsRunInto = self.wallsRunInto + 1
+    self.components.score.wallsRunInto = self.components.score.wallsRunInto + 1
   end
 
   if tileLeft > 0 then
     self.vx = -self.vx/2
     self.x = self.x + 5
-    self.wallsRunInto = self.wallsRunInto + 1
+    self.components.score.wallsRunInto = self.components.score.wallsRunInto + 1
   elseif tileRight > 0 then
     self.vx = -self.vx/2
     self.x = self.x - 5
-    self.wallsRunInto = self.wallsRunInto + 1
+    self.components.score.wallsRunInto = self.components.score.wallsRunInto + 1
   end
 
 
@@ -167,20 +149,20 @@ function Ship:update(dt)
 end
 
 function Ship:fire()
-  if self.health <= 0 then
+  if self.components.life.health <= 0 then
     return
   end
 
-  self.shots = self.shots + 1
+  self.components.score.shots = self.components.score.shots + 1
   shoot:play()
   self.shipType.actionHandler.Fire(self)
 end
 
 function Ship:selfDestruct()
-  if self.health <= 0 then
+  if self.components.life.health <= 0 then
     return
   end
-  self.health = 0
+  self.components.life.health = 0
 
   local numBullets = 100
   local angleDiff = 2 * math.pi / numBullets
@@ -212,13 +194,18 @@ end
 function Ship:respawn()
   local spawnLocation = Game.GetSpawnLocation()
 
+  for _, component in pairs(self.components) do
+    if component.respawn ~= nil then
+      component:respawn()
+    end
+  end
+
   self.x = spawnLocation.x
   self.y = spawnLocation.y
   self.rotation = math.rad(spawnLocation.r)
   self.vx = 0
   self.vy = 0
-  self.health = self.shipType.health
-  self.exploding = false
+
   self.explodingFrame = 0
 end
 

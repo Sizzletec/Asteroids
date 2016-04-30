@@ -55,7 +55,7 @@ function Phaser.Fire(entity)
         inShape = PointWithinShape(entity.hitbox,otherPlayer.x,otherPlayer.y)
 
         if inShape then
-            otherPlayer.health = otherPlayer.health- entity.weaponDamage
+            otherPlayer.components.life:takeDamage(entity, entity.weaponDamage)
         end
       end
   end

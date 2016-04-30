@@ -11,7 +11,7 @@ function RenderComponent.new(entity)
 end
 
 function RenderComponent:drawLifeMarkers(x,y)
-  for live=self.entity.lives,1,-1 do
+  for live=self.entity.components.life.lives,1,-1 do
       local xFrame = 0
       if self.entity.engine then
         xFrame = 1
@@ -42,7 +42,7 @@ function RenderComponent:draw(dt)
     self.entity.shipType.actionHandler.Draw(self.entity)
   end
 
-  if self.entity.exploding then
+  if self.entity.components.life and not self.entity.components.life.alive then
     local top_left = love.graphics.newQuad(math.floor(self.entity.explodingFrame)*32, 4*32, 32, 32, ShipsImage:getDimensions())
     love.graphics.draw(ShipsImage, top_left,self.entity.x, self.entity.y, self.entity.rotation, 1,1 , 16,16)
   end
