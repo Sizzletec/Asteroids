@@ -7,9 +7,10 @@ require('components/KeyboardInputComponent')
 require('components/RenderComponent')
 require('components/ScoreComponent')
 require('components/LifeComponent')
+require('components/MoveComponent')
+require('components/WallCollisionComponent')
 
 Ship = {
-  acceleration = 0,
   shield = false,
   explodingFrame = 0,
   attackFrame = 0
@@ -21,22 +22,15 @@ function Ship.new(player,x,y,rotation,vx,vy, type)
   setmetatable(s, Ship)
 
   s.shipType = type or ShipType.standard
-  s.x = x
-  s.y = y
-  s.vx = vx or 0
-  s.vy = vy or 0
-  s.rotation = rotation or 0
-
-  s.topSpeed = s.shipType.topSpeed
-  s.acceleration = s.shipType.acceleration
-  s.rotationSpeed = s.shipType.rotationSpeed
   s.fireRate = s.shipType.fireRate
   s.weaponDamage = s.shipType.weaponDamage
 
   s.components = {
     render = RenderComponent.new(s),
     score = ScoreComponent.new(s),
-    life = LifeComponent.new(s)
+    life = LifeComponent.new(s),
+    move = MoveComponent.new(s),
+    wallCollision = WallCollisionComponent.new(s)
   }
 
   s.player = player
@@ -45,26 +39,13 @@ function Ship.new(player,x,y,rotation,vx,vy, type)
     s.components["keyboard"] = KeyboardInputComponent.new(s)
   end
 
-  s.color = 0
-
   s.bullets = {}
   s.beams = {}
   s.gunCooldown = 0
-  s.throttle = 0
-  s.angularInput = 0
   return s
 end
 
 function Ship:setDefaults()
-  self.x = 0
-  self.y = 0
-  self.vx = 0
-  self.vy = 0
-  self.rotation = 0
-
-  self.topSpeed = self.shipType.topSpeed
-  self.acceleration = self.shipType.acceleration
-  self.rotationSpeed = self.shipType.rotationSpeed
   self.fireRate = self.shipType.fireRate
   self.weaponDamage = self.shipType.weaponDamage
 
@@ -91,45 +72,9 @@ function Ship:update(dt)
   if not self.components.life.alive then
     self.explodingFrame = self.explodingFrame + 8 * dt
     if self.explodingFrame > 10 and self.components.life.lives > 0 then
-      self:respawn()
+      self:spawn()
     end
   end
-
-
-  Mover.ApplyAcceleration(self, dt)
-  Mover.ApplyVelocity(self, dt)
-
-
-  -- check wall collisions
-  tileUp = TiledMap_GetMapTile(math.floor(self.x/16),math.floor((self.y+16)/16),1)
-  tileDown = TiledMap_GetMapTile(math.floor(self.x/16),math.floor((self.y-16)/16),1)
-
-  tileLeft = TiledMap_GetMapTile(math.floor((self.x-16)/16),math.floor(self.y/16),1)
-  tileRight = TiledMap_GetMapTile(math.floor((self.x+16)/16),math.floor(self.y/16),1)
-
-  if tileUp > 0 then
-    self.vy = -self.vy/2
-    self.y = self.y - 5
-    self.components.score.wallsRunInto = self.components.score.wallsRunInto + 1
-  elseif tileDown > 0 then
-    self.vy = -self.vy/2
-    self.y = self.y + 5
-    self.components.score.wallsRunInto = self.components.score.wallsRunInto + 1
-  end
-
-  if tileLeft > 0 then
-    self.vx = -self.vx/2
-    self.x = self.x + 5
-    self.components.score.wallsRunInto = self.components.score.wallsRunInto + 1
-  elseif tileRight > 0 then
-    self.vx = -self.vx/2
-    self.x = self.x - 5
-    self.components.score.wallsRunInto = self.components.score.wallsRunInto + 1
-  end
-
-
-  Mover.ApplyRotation(self,dt)
-  Mover.StageWrap(self)
 
   self.shipType.actionHandler.Update(self,dt)
 
@@ -191,20 +136,23 @@ function Ship:draw()
   end
 end
 
-function Ship:respawn()
+function Ship:spawn()
   local spawnLocation = Game.GetSpawnLocation()
 
   for _, component in pairs(self.components) do
-    if component.respawn ~= nil then
-      component:respawn()
+    if component.spawn ~= nil then
+      component:spawn()
     end
   end
 
-  self.x = spawnLocation.x
-  self.y = spawnLocation.y
-  self.rotation = math.rad(spawnLocation.r)
-  self.vx = 0
-  self.vy = 0
+  local move = self.components.move
+  if move then
+    move.x = spawnLocation.x
+    move.y = spawnLocation.y
+    move.rotation = math.rad(spawnLocation.r)
+    move.vx = 0
+    move.vy = 0
+  end
 
   self.explodingFrame = 0
 end

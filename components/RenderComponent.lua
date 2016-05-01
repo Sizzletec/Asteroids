@@ -1,6 +1,8 @@
 local ShipsImage = love.graphics.newImage('images/ship-sprites.png')
 
-RenderComponent = {}
+RenderComponent = {
+  color = 0
+}
 RenderComponent.__index = RenderComponent
 
 function RenderComponent.new(entity)
@@ -18,7 +20,7 @@ function RenderComponent:drawLifeMarkers(x,y)
       end
 
       xFrame = xFrame + self.entity.shipType.frameOffset
-      local top_left = love.graphics.newQuad(xFrame*32, self.entity.color*32, 32, 32, ShipsImage:getDimensions())
+      local top_left = love.graphics.newQuad(xFrame*32, self.color*32, 32, 32, ShipsImage:getDimensions())
       love.graphics.draw(ShipsImage, top_left,x + 36 * live, y, 0, 1,1 , 16,16)
 
       if self.entity.shipType == ShipType.gunship then
@@ -29,6 +31,14 @@ function RenderComponent:drawLifeMarkers(x,y)
 end
 
 function RenderComponent:draw(dt)
+  local x,y,r = 0,0,0
+  local move = self.entity.components.move
+  if move then
+    x = move.x 
+    y = move.y
+    r = move.rotation
+  end
+
   if self.entity.explodingFrame < 3 then
     local xFrame = 0
     if self.entity.engine then
@@ -36,21 +46,23 @@ function RenderComponent:draw(dt)
     end
     xFrame = xFrame + self.entity.shipType.frameOffset
 
-    local top_left = love.graphics.newQuad(xFrame*32, self.entity.color*32, 32, 32, ShipsImage:getDimensions())
-    love.graphics.draw(ShipsImage, top_left,self.entity.x, self.entity.y, self.entity.rotation, 1,1 , 16,16)
+    local top_left = love.graphics.newQuad(xFrame*32, self.color*32, 32, 32, ShipsImage:getDimensions())
+    love.graphics.draw(ShipsImage, top_left,x, y, r, 1,1 , 16,16)
 
     self.entity.shipType.actionHandler.Draw(self.entity)
   end
 
-  if self.entity.components.life and not self.entity.components.life.alive then
+  local life = self.entity.components.life
+
+  if life and not life.alive then
     local top_left = love.graphics.newQuad(math.floor(self.entity.explodingFrame)*32, 4*32, 32, 32, ShipsImage:getDimensions())
-    love.graphics.draw(ShipsImage, top_left,self.entity.x, self.entity.y, self.entity.rotation, 1,1 , 16,16)
+    love.graphics.draw(ShipsImage, top_left,x, y, r, 1,1 , 16,16)
   end
 
   love.graphics.setColor(255, 255, 255)
 
   if self.entity.shield then
-    love.graphics.circle("line", self.entity.x, self.entity.y, 20)
+    love.graphics.circle("line", x, y, 20)
   end
 
   for b, beam in pairs(self.entity.beams) do

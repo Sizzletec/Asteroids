@@ -27,15 +27,13 @@ function Game.load()
 
 	spawn = TiledMap_GetSpawnLocations()
 
+
 	for i, player in pairs(selections) do
 		playerShip = player.ship
 		if playerShip then
+			
 			playerShip:setDefaults()
-
-			local spawnLocation = Game.GetSpawnLocation()
-			playerShip.x = spawnLocation.x
-			playerShip.y = spawnLocation.y
-			playerShip.rotation = math.rad(spawnLocation.r)
+			playerShip:spawn()
 			table.insert(players, playerShip)
 		end
 	end
@@ -55,7 +53,7 @@ function Game.GetSpawnLocation()
 
 	anyoneAlive = false
 	for p, player in pairs(players) do
-		if not player.exploding then
+		if player.components.life.alive then
 			anyoneAlive =true
 		end
 	end
@@ -68,9 +66,9 @@ function Game.GetSpawnLocation()
 		for l, location in pairs(spawn) do
 			local compDist
 			for p, player in pairs(players) do
-				if not player.exploding then
-					xPow = math.pow(player.x - location.x, 2)
-					yPow = math.pow(player.y - location.y, 2)
+				if player.components.life.alive then
+					xPow = math.pow(player.components.move.x - location.x, 2)
+					yPow = math.pow(player.components.move.y - location.y, 2)
 
 					local dist = math.sqrt(xPow + yPow)
 					if not compDist then
@@ -161,9 +159,7 @@ function Game.checkWin()
 			end
 			selections[player.player].ship = player
 		end
-
 		gameWon = true
-		-- setState(State.score)
 	end
 end
 
@@ -211,17 +207,14 @@ function Game.update(dt)
 		player:update(dt)
 
 		for b, bullet in pairs(player.bullets) do
-
-
-
 		    local hitWall = TiledMap_GetMapTile(math.floor(bullet.x/16),math.floor(bullet.y/16),1)
 		    if hitWall > 0 and (not bullet.bounce) then
 		    	table.remove(player.bullets, b)
 		    else
 				for p, otherPlayer in pairs(players) do
-					if player ~= otherPlayer and not otherPlayer.exploding then
-						xPow = math.pow(otherPlayer.x - bullet.x, 2)
-						yPow = math.pow(otherPlayer.y - bullet.y, 2)
+					if player ~= otherPlayer and otherPlayer.components.life.alive then
+						xPow = math.pow(otherPlayer.components.move.x - bullet.x, 2)
+						yPow = math.pow(otherPlayer.components.move.y - bullet.y, 2)
 
 						dist = math.sqrt(xPow + yPow)
 
@@ -250,7 +243,7 @@ function Game.draw()
 
 	lights = {}
 	for i, player in pairs(players) do
-		local pos  = {player.x*scaleFactor,player.y*scaleFactor}
+		local pos  = {player.components.move.x*scaleFactor,player.components.move.y*scaleFactor}
 		table.insert(lights,pos)
 	end
 

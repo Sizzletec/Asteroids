@@ -14,37 +14,34 @@ function LifeComponent.new(entity, health)
   return i
 end
 
-function LifeComponent:respawn()
+function LifeComponent:spawn()
   self.health = self.entity.shipType.health
   self.alive = true 
 end
 
 function LifeComponent:takeDamage(fromPlayer, damage)
-
-  if self.entity.components.score then 
+  local score = self.entity.components.score
+  if score then 
     if damage >= self.health then
-      self.entity.components.score.damageTaken = self.entity.components.score.damageTaken + self.entity.components.life.health
+      score.damageTaken = score.damageTaken + self.health
     else
-      self.entity.components.score.damageTaken = self.entity.components.score.damageTaken + damage
+      score.damageTaken = score.damageTaken + damage
     end
   end
 
-  if fromPlayer.components.score then
+  local otherScore = fromPlayer.components.score
+  if otherScore then
     if damage >= self.health then
       if self.health ~= 0 then
-        fromPlayer.components.score.kills = fromPlayer.components.score.kills + 1
+        otherScore.kills = otherScore.kills + 1
       end
-      fromPlayer.components.score.damageGiven = fromPlayer.components.score.damageGiven + self.entity.components.life.health
+      otherScore.damageGiven = otherScore.damageGiven + self.health
     else
-      fromPlayer.components.score.damageGiven = fromPlayer.components.score.damageGiven + damage
+      otherScore.damageGiven = otherScore.damageGiven + damage
     end
   end
 
   self.health = self.health - damage
-
-  if self.entity.components.score then
-    self.entity.components.score.damageTaken = self.entity.components.score.damageTaken + self.entity.components.life.health
-  end
 end
 
 function LifeComponent:update(dt)

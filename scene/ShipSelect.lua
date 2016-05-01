@@ -58,7 +58,7 @@ function ShipSelect.load()
 			newShip = Ship.new(oldship.player,0,0)
 
 			newShip.shipType = oldship.shipType
-			newShip.color = oldship.color
+			newShip.components.render.color = oldship.components.render.color
 			player.ship = newShip
 		end
 	end
@@ -67,7 +67,7 @@ end
 function ShipSelect.activate(player)
 	selections[player].step = SelectStep.active
 	selections[player].ship = Ship.new(player,0,0)
-	selections[player].ship.color = player - 1
+	selections[player].ship.components.render.color = player - 1
 end
 
 function ShipSelect.makeInactive(player)
@@ -121,9 +121,12 @@ function ShipSelect.keypressed(key, unicode)
 	    	ship = player.ship
 
 	    	if ship then
-				ship.color = ship.color + 1
-				if ship.color > 3 then
-					ship.color = 0
+	    		local render = ship.components.render
+	    		if render then
+					render.color = render.color + 1
+					if render.color > 3 then
+						render.color = 0
+					end
 				end
 			end
 	    end
@@ -186,9 +189,12 @@ function ShipSelect.gamepadpressed(joystick, button)
 	    	ship = player.ship
 
 	    	if ship then
-				ship.color = ship.color + 1
-				if ship.color > 3 then
-					ship.color = 0
+	    		local render = ship.components.render
+	    		if render then
+					render.color = render.color + 1
+					if render.color > 3 then
+						render.color = 0
+					end
 				end
 			end
 	    end
@@ -297,16 +303,16 @@ end
 
 function ShipSelect.updateActive(i, player, dt)
 	if t > 3 then
-		player.ship.throttle = 1
+		player.ship.components.move.throttle = 1
 	elseif t > 2 then
 		player.ship.firing = true
 	else
-		player.ship.throttle = 0
+		player.ship.components.move.throttle = 0
 		player.ship.firing = false
 	end
 
 	if not player.ship.engine then
-		player.ship.rotation = player.ship.rotation + 2 * dt
+		player.ship.components.move.rotation = player.ship.components.move.rotation + 2 * dt
 	end
 	player.ship:update(dt)
 end
@@ -316,9 +322,9 @@ function ShipSelect.updateReady(i, player, dt)
 	player.ship.engine = false
 	player.ship.firing = false
 
-	if not player.ship.engine then
-		player.ship.rotation = player.ship.rotation + -1 * dt
-	end
+	-- if not player.ship.engine then
+	-- 	player.ship.rotation = player.ship.rotation + -1 * dt
+	-- end
 	player.ship:update(dt)
 end
 
@@ -330,7 +336,7 @@ function ShipSelect.drawActive(i, player)
 	local yOffset = 1080/8
 	love.graphics.print("Player " .. i, xOffset+30, yOffset)
 
-	local playerColor = player.ship.color
+	local playerColor = player.ship.components.render.color
 	local yOffset = 1080/8 + 400
 
 	love.graphics.setColor(255, 255, 255)
@@ -343,8 +349,8 @@ function ShipSelect.drawActive(i, player)
 	love.graphics.scale(2,2)
 	local playerShip = player.ship
 	if playerShip then
-		playerShip.x = (xOffset+120)/2
-		playerShip.y = (yOffset-150)/2
+		playerShip.components.move.x = (xOffset+120)/2
+		playerShip.components.move.y = (yOffset-150)/2
 		playerShip:draw()
 	end
 	love.graphics.pop()
@@ -384,7 +390,7 @@ function ShipSelect.drawReady(i, player)
 	local yOffset = 1080/8
 	love.graphics.print("Player " .. i, xOffset+30, yOffset)
 
-	local playerColor = player.ship.color
+	local playerColor = player.ship.components.render.color
 
 	local yOffset = 1080/8 + 400
 	love.graphics.setColor(255, 255, 255)
@@ -393,8 +399,8 @@ function ShipSelect.drawReady(i, player)
 	love.graphics.scale(2,2)
 	local playerShip = player.ship
 	if playerShip then
-		playerShip.x = (xOffset+120)/2
-		playerShip.y = (yOffset-150)/2
+		playerShip.components.move.x = (xOffset+120)/2
+		playerShip.components.move.y = (yOffset-150)/2
 		playerShip:draw()
 	end
 	love.graphics.pop()

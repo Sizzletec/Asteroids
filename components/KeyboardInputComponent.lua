@@ -30,6 +30,7 @@ function KeyboardInputComponent:keypressed(key, unicode)
 end
 
 function KeyboardInputComponent:update(dt)
+  local move = self.entity.components.move
   if (self.keysPressed.lshift) then
     self.entity.shield = true
   else
@@ -42,16 +43,20 @@ function KeyboardInputComponent:update(dt)
     x, y = love.mouse.getPosition()
     Mover.MoveToPoint(self.entity,x,y,dt)
   end
-  if (self.keysPressed.up) then
-    self.entity.throttle = 1
-  end
 
-  if (self.keysPressed.left) then
-    self.entity.angularInput = -1
-  end
+  if move then 
+    if (self.keysPressed.up) then
 
-  if (self.keysPressed.right) then
-    self.entity.angularInput = 1
+      move.throttle = 1
+    end
+
+    if (self.keysPressed.left) then
+      move.angularInput = -1
+    end
+
+    if (self.keysPressed.right) then
+      move.angularInput = 1
+    end
   end
 end
 

@@ -16,6 +16,7 @@ function Mover.ApplyAcceleration(entity, dt)
     entity.engine = false
   end
 end
+
 function Mover.ApplyVelocity(entity, dt)
 
   if entity.topSpeed then 
@@ -31,17 +32,6 @@ function Mover.ApplyVelocity(entity, dt)
       entity.vy = -entity.topSpeed
     end
   end
-
-      -- local powX = math.pow(entity.vx, 2)
-      -- local powY = math.pow(entity.vy, 2)
-      -- local velocity = math.sqrt(powX + powY)
-
-      -- if velocity > entity.topSpeed then
-
-      --   entity.vx = entity.topSpeed * math.sin(entity.rotation)
-      --   entity.vy = entity.topSpeed * -math.cos(entity.rotation)
-      -- end
-
       
   entity.x = entity.x + entity.vx * dt
   entity.y = entity.y + entity.vy * dt
