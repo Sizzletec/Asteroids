@@ -231,7 +231,7 @@ function Game.update(dt)
 end
 
 function Game.draw()
-	love.graphics.setShader(myShader) --draw something here
+	love.graphics.setShader(myShader)
 
 	width = love.graphics.getWidth()
 	height = love.graphics.getHeight()

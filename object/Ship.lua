@@ -11,6 +11,7 @@ require('components/LifeComponent')
 require('components/MoveComponent')
 require('components/WallCollisionComponent')
 require('components/AlternatingFireComponent')
+require('components/ShotgunComponent')
 
 Ship = {
   shield = false,
@@ -33,7 +34,8 @@ function Ship.new(player,x,y,rotation,vx,vy, type)
     life = LifeComponent.new(s),
     move = MoveComponent.new(s),
     wallCollision = WallCollisionComponent.new(s),
-    primaryAttack = AlternatingFireComponent.new(s)
+    primaryAttack = AlternatingFireComponent.new(s),
+    secondaryAttack = ShotgunComponent.new(s)
   }
 
   s.player = player

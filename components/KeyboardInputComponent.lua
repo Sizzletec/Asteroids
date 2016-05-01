@@ -15,6 +15,10 @@ function KeyboardInputComponent:keyreleased(key)
   if (key == "space") then
       self.entity.components.primaryAttack.firing = false
   end
+
+  if (key == "a") and self.entity.components.secondaryAttack then
+    self.entity.components.secondaryAttack.firing = false
+  end
 end
 
 function KeyboardInputComponent:keypressed(key, unicode)
@@ -22,6 +26,10 @@ function KeyboardInputComponent:keypressed(key, unicode)
 
   if (key == "space") then
     self.entity.components.primaryAttack.firing = true
+  end
+
+  if (key == "a")  and self.entity.components.secondaryAttack  then
+    self.entity.components.secondaryAttack.firing = true
   end
 
   if (key == "y") then

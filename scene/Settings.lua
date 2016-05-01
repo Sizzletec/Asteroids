@@ -13,7 +13,6 @@ function Settings.keyreleased(key)
 end
 
 function Settings.keypressed(key, unicode)
-
 	if (key == "escape") then setState(State.title) end
 end
 
