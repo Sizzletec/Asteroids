@@ -13,7 +13,7 @@ end
 function KeyboardInputComponent:keyreleased(key)
   self.keysPressed[key] = nil
   if (key == "space") then
-      self.entity.firing = false
+      self.entity.components.primaryAttack.firing = false
   end
 end
 
@@ -21,7 +21,7 @@ function KeyboardInputComponent:keypressed(key, unicode)
   self.keysPressed[key] = true
 
   if (key == "space") then
-    self.entity.firing = true
+    self.entity.components.primaryAttack.firing = true
   end
 
   if (key == "y") then

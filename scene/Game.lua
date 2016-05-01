@@ -203,7 +203,6 @@ function Game.update(dt)
 			end
 		end
 
-		local s = 0
 		player:update(dt)
 
 		for b, bullet in pairs(player.bullets) do

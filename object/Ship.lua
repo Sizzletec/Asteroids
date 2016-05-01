@@ -1,5 +1,6 @@
 ShipsImage = love.graphics.newImage('images/ship-sprites.png')
 local shoot = love.audio.newSource("sounds/shoot.wav", "static")
+-- shoot:play()
 
 require('ship_types/ShipTypes')
 require('helpers/Mover')
@@ -9,11 +10,11 @@ require('components/ScoreComponent')
 require('components/LifeComponent')
 require('components/MoveComponent')
 require('components/WallCollisionComponent')
+require('components/AlternatingFireComponent')
 
 Ship = {
   shield = false,
   explodingFrame = 0,
-  attackFrame = 0
 }
 Ship.__index = Ship
 
@@ -21,6 +22,7 @@ function Ship.new(player,x,y,rotation,vx,vy, type)
   local s = {}
   setmetatable(s, Ship)
 
+  -- s.shipType = type or ShipType.standard
   s.shipType = type or ShipType.standard
   s.fireRate = s.shipType.fireRate
   s.weaponDamage = s.shipType.weaponDamage
@@ -30,7 +32,8 @@ function Ship.new(player,x,y,rotation,vx,vy, type)
     score = ScoreComponent.new(s),
     life = LifeComponent.new(s),
     move = MoveComponent.new(s),
-    wallCollision = WallCollisionComponent.new(s)
+    wallCollision = WallCollisionComponent.new(s),
+    primaryAttack = AlternatingFireComponent.new(s)
   }
 
   s.player = player
@@ -49,7 +52,6 @@ function Ship:setDefaults()
   self.fireRate = self.shipType.fireRate
   self.weaponDamage = self.shipType.weaponDamage
 
-  playerShip.firing = false
   self.bullets = {}
   self.beams = {}
   self.gunCooldown = 0
@@ -71,7 +73,7 @@ function Ship:update(dt)
   -- when dead run exploding animation
   if not self.components.life.alive then
     self.explodingFrame = self.explodingFrame + 8 * dt
-    if self.explodingFrame > 10 and self.components.life.lives > 0 then
+    if self.explodingFrame > 20 and self.components.life.lives > 0 then
       self:spawn()
     end
   end
@@ -84,23 +86,6 @@ function Ship:update(dt)
       table.remove(self.bullets, i)
     end
   end
-
-  if self.firing and self.gunCooldown <= 0 then
-    self:fire()
-    self.gunCooldown = 1/self.shipType.fireRate
-  elseif self.gunCooldown > 0 then
-    self.gunCooldown = self.gunCooldown - dt
-  end
-end
-
-function Ship:fire()
-  if self.components.life.health <= 0 then
-    return
-  end
-
-  self.components.score.shots = self.components.score.shots + 1
-  shoot:play()
-  self.shipType.actionHandler.Fire(self)
 end
 
 function Ship:selfDestruct()
@@ -112,9 +97,9 @@ function Ship:selfDestruct()
   local numBullets = 100
   local angleDiff = 2 * math.pi / numBullets
   for i=numBullets/2,-numBullets/2,-1 do
-    local rBullet = self.rotation + i * angleDiff
-    leftCannonOffsetX = self.x + (5 * math.sin(self.rotation))
-    leftCannonOffsetY = self.y + (5 * -math.cos(self.rotation))
+    local rBullet = self.components.move.rotation + i * angleDiff
+    leftCannonOffsetX = self.components.move.x + (5 * math.sin(self.components.move.rotation))
+    leftCannonOffsetY = self.components.move.y + (5 * -math.cos(self.components.move.rotation))
     bullet = Bullet.new(leftCannonOffsetX,leftCannonOffsetY,2*60,rBullet, 200)
     table.insert(self.bullets, bullet)
   end
