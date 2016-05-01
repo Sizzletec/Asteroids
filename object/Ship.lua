@@ -12,6 +12,7 @@ require('components/MoveComponent')
 require('components/WallCollisionComponent')
 require('components/AlternatingFireComponent')
 require('components/ShotgunComponent')
+require('components/VortexComponent')
 
 Ship = {
   shield = false,

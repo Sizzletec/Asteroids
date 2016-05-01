@@ -1,5 +1,4 @@
 ShotgunComponent = {
-  cannon = "right",
   gunCooldown = 0,
   weaponDamage = 0,
   fireRate = 0,
