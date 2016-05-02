@@ -30,7 +30,7 @@ function RenderComponent:drawLifeMarkers(x,y)
   end
 end
 
-function RenderComponent:draw(dt)
+function RenderComponent:draw()
   local x,y,r = 0,0,0
   local move = self.entity.components.move
   if move then
