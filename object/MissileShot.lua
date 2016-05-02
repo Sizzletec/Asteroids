@@ -35,19 +35,21 @@ function MissileShot:update(dt)
   local playerDist = 1920
 
   for p, otherPlayer in pairs(players) do
-    if otherPlayer ~= self.player then
-      xPow = math.pow(self.x - otherPlayer.x, 2)
-      yPow = math.pow(self.y - otherPlayer.y, 2)
+    if otherPlayer ~= self.player and otherPlayer.components.life.alive then
+      local otherMove = otherPlayer.components.move
+
+      xPow = math.pow(self.x - otherMove.x, 2)
+      yPow = math.pow(self.y - otherMove.y, 2)
 
       dist = math.sqrt(xPow + yPow)
 
       if moveToPoint then
         if playerDist > dist then
-          moveToPoint = {x = otherPlayer.x, y = otherPlayer.y}
+          moveToPoint = {x = otherMove.x, y = otherMove.y}
           playerDist = dist
         end
       else
-        moveToPoint = {x = otherPlayer.x, y = otherPlayer.y}
+        moveToPoint = {x = otherMove.x, y = otherMove.y}
         playerDist = dist
       end
 

@@ -15,6 +15,7 @@ require('components/ShotgunComponent')
 require('components/VortexComponent')
 require('components/BounceComponent')
 require('components/ChargeAttackComponent')
+require('components/AlternatingMissileComponent')
 
 Ship = {
   shield = false,
@@ -38,7 +39,7 @@ function Ship.new(player,x,y,rotation,vx,vy, type)
     move = MoveComponent.new(s),
     wallCollision = WallCollisionComponent.new(s),
     primaryAttack = AlternatingFireComponent.new(s),
-    secondaryAttack = ChargeAttackComponent.new(s)
+    secondaryAttack = AlternatingMissileComponent.new(s)
   }
 
   s.player = player
