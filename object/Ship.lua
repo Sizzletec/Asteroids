@@ -13,6 +13,7 @@ require('components/WallCollisionComponent')
 require('components/AlternatingFireComponent')
 require('components/ShotgunComponent')
 require('components/VortexComponent')
+require('components/BounceComponent')
 
 Ship = {
   shield = false,
@@ -36,7 +37,7 @@ function Ship.new(player,x,y,rotation,vx,vy, type)
     move = MoveComponent.new(s),
     wallCollision = WallCollisionComponent.new(s),
     primaryAttack = AlternatingFireComponent.new(s),
-    secondaryAttack = ShotgunComponent.new(s)
+    secondaryAttack = BounceComponent.new(s)
   }
 
   s.player = player
