@@ -1,7 +1,7 @@
 ChargeAttackComponent = {
   gunCooldown = 0,
-  weaponDamage = 0,
-  fireRate = 0,
+  weaponDamage = 20,
+  fireRate = 4,
   firing = false,
   chargeAmount = 0,
   charging = 0
@@ -13,8 +13,6 @@ function ChargeAttackComponent.new(entity)
   local i = {}
   setmetatable(i, ChargeAttackComponent)
   i.entity = entity
-  i.fireRate = entity.shipType.fireRate
-  i.weaponDamage = entity.shipType.weaponDamage
   return i
 end
 

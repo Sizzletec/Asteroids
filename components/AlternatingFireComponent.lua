@@ -1,8 +1,8 @@
 AlternatingFireComponent = {
   cannon = "right",
   gunCooldown = 0,
-  weaponDamage = 0,
-  fireRate = 0,
+  weaponDamage = 10,
+  fireRate = 12,
   firing = false
 }
 
@@ -12,8 +12,6 @@ function AlternatingFireComponent.new(entity)
   local i = {}
   setmetatable(i, AlternatingFireComponent)
   i.entity = entity
-  i.fireRate = entity.shipType.fireRate
-  i.weaponDamage = entity.shipType.weaponDamage
   return i
 end
 

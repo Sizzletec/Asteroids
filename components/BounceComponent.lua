@@ -1,7 +1,7 @@
 BounceComponent = {
   gunCooldown = 0,
-  weaponDamage = 0,
-  fireRate = 0,
+  weaponDamage = 20,
+  fireRate = 2,
   firing = false
 }
 
@@ -11,8 +11,6 @@ function BounceComponent.new(entity)
   local i = {}
   setmetatable(i, BounceComponent)
   i.entity = entity
-  i.fireRate = entity.shipType.fireRate
-  i.weaponDamage = entity.shipType.weaponDamage
   return i
 end
 
