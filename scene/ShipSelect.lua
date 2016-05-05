@@ -371,13 +371,15 @@ function ShipSelect.drawActive(i, player)
 	love.graphics.setNewFont(30)
 	love.graphics.setColor(200, 200, 200)
 
+	-- local weapon = player.ship.components.primary
+
 	string = "Color: " .. colorName .. "\n"
 	string = string .. "Top Speed: " .. playerType.topSpeed .. "\n"
 	string = string .. "Acceleration: " .. playerType.acceleration .. "\n"
 	string = string .. "Rotation Speed: " .. playerType.rotationSpeed .. "\n"
-	string = string .. "Fire Rate: " .. playerType.fireRate .. "\n"
+	-- string = string .. "Fire Rate: " .. weapon.fireRate .. "\n"
 	string = string .. "Health: " .. playerType.health .. "\n"
-	string = string .. "Weapon Damage: " .. playerType.weaponDamage .. "\n"
+	-- string = string .. "Weapon Damage: " .. weapon.weaponDamage .. "\n"
 
 	love.graphics.print(string, xOffset, yOffset + 80)
 end

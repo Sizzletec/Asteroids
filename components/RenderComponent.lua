@@ -34,7 +34,7 @@ function RenderComponent:draw()
   local x,y,r = 0,0,0
   local move = self.entity.components.move
   if move then
-    x = move.x 
+    x = move.x
     y = move.y
     r = move.rotation
   end
@@ -48,8 +48,6 @@ function RenderComponent:draw()
 
     local top_left = love.graphics.newQuad(xFrame*32, self.color*32, 32, 32, ShipsImage:getDimensions())
     love.graphics.draw(ShipsImage, top_left,x, y, r, 1,1 , 16,16)
-
-    self.entity.shipType.actionHandler.Draw(self.entity)
   end
 
   local life = self.entity.components.life

@@ -35,8 +35,6 @@ function Ship.new(player,x,y,rotation,vx,vy, type)
 
   -- s.shipType = type or ShipType.standard
   s.shipType = type or ShipType.standard
-  s.fireRate = s.shipType.fireRate
-  s.weaponDamage = s.shipType.weaponDamage
 
   s.components = {
     render = RenderComponent.new(s),
@@ -61,9 +59,6 @@ function Ship.new(player,x,y,rotation,vx,vy, type)
 end
 
 function Ship:setDefaults()
-  self.fireRate = self.shipType.fireRate
-  self.weaponDamage = self.shipType.weaponDamage
-
   self.bullets = {}
   self.beams = {}
 
@@ -86,8 +81,6 @@ function Ship:update(dt)
       self:spawn()
     end
   end
-
-  self.shipType.actionHandler.Update(self,dt)
 
   for i, bullet in pairs(self.bullets) do
     bullet:update(dt)
