@@ -31,7 +31,6 @@ function Game.load()
 	for i, player in pairs(selections) do
 		playerShip = player.ship
 		if playerShip then
-			
 			playerShip:setDefaults()
 			playerShip:spawn()
 			table.insert(players, playerShip)

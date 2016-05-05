@@ -1,16 +1,7 @@
 local Standard = require('ship_types/Standard')
-local Assault = require('ship_types/Assault')
 local Gunship = require('ship_types/Gunship')
 local Ray = require('ship_types/Ray')
 local Zap = require('ship_types/Zap')
-local Charge = require('ship_types/Charge')
-local Missile = require('ship_types/Missile')
-local Miner = require('ship_types/Miner')
-local Spreader = require('ship_types/Spreader')
-local Phaser = require('ship_types/Phaser')
-local Shockwave = require('ship_types/Shockwave')
-local Bounce = require('ship_types/Bounce')
-local Vortex = require('ship_types/Vortex')
 
 ShipType = {
   standard = {
@@ -28,7 +19,7 @@ ShipType = {
   },
   gunship = {
     name = "Gunship",
-    actionHandler = Gunship,
+    actionHandler = Standard,
     topSpeed = 120,
     acceleration = 180,
     rotationSpeed = 5,
@@ -42,7 +33,7 @@ ShipType = {
   },
   assalt = {
     name = "Assault",
-    actionHandler = Assault,
+    actionHandler = Standard,
     topSpeed = 300,
     acceleration = 400,
     rotationSpeed = 5,
@@ -55,7 +46,7 @@ ShipType = {
   },
   ray = {
     name = "Ray",
-    actionHandler = Ray,
+    actionHandler = Standard,
     topSpeed = 180,
     acceleration = 240,
     rotationSpeed = 4,
@@ -68,7 +59,7 @@ ShipType = {
   },
   zap = {
     name = "Zapper",
-    actionHandler = Zap,
+    actionHandler = Standard,
     topSpeed = 180,
     acceleration = 180,
     rotationSpeed = 5,
@@ -81,7 +72,7 @@ ShipType = {
   },
   charge = {
     name = "Charger",
-    actionHandler = Charge,
+    actionHandler = Standard,
     topSpeed = 240,
     acceleration = 240,
     rotationSpeed = 4,
@@ -94,7 +85,7 @@ ShipType = {
   },
   missile = {
     name = "Missile",
-    actionHandler = Missile,
+    actionHandler = Standard,
     topSpeed = 180,
     acceleration = 180,
     rotationSpeed = 4,
@@ -107,7 +98,7 @@ ShipType = {
   },
   miner = {
     name = "Miner",
-    actionHandler = Miner,
+    actionHandler = Standard,
     topSpeed = 200,
     acceleration = 200,
     rotationSpeed = 4,
@@ -120,7 +111,7 @@ ShipType = {
   },
   spreader = {
     name = "Spreader",
-    actionHandler = Spreader,
+    actionHandler = Standard,
     topSpeed = 240,
     acceleration = 360,
     rotationSpeed = 10,
@@ -133,7 +124,7 @@ ShipType = {
   },
   phaser = {
     name = "Phaser",
-    actionHandler = Phaser,
+    actionHandler = Standard,
     topSpeed = 240,
     acceleration = 360,
     rotationSpeed = 10,
@@ -146,7 +137,7 @@ ShipType = {
   },
   shockwave = {
     name = "Shockwave",
-    actionHandler = Shockwave,
+    actionHandler = Standard,
     topSpeed = 240,
     acceleration = 360,
     rotationSpeed = 10,
@@ -159,7 +150,7 @@ ShipType = {
   },
   bounce = {
     name = "Bounce",
-    actionHandler = Bounce,
+    actionHandler = Standard,
     topSpeed = 200,
     acceleration = 260,
     rotationSpeed = 5,
@@ -172,7 +163,7 @@ ShipType = {
   },
   vortex = {
     name = "Vortex",
-    actionHandler = Vortex,
+    actionHandler = Standard,
     topSpeed = 200,
     acceleration = 260,
     rotationSpeed = 5,

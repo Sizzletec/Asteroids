@@ -31,10 +31,6 @@ function KeyboardInputComponent:keypressed(key, unicode)
   if (key == "a")  and self.entity.components.secondaryAttack  then
     self.entity.components.secondaryAttack.firing = true
   end
-
-  if (key == "y") then
-    self.entity:selfDestruct()
-  end
 end
 
 function KeyboardInputComponent:update(dt)

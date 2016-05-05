@@ -1,7 +1,7 @@
 VortexComponent = {
   gunCooldown = 0,
-  weaponDamage = 0,
-  fireRate = 0,
+  weaponDamage = 40,
+  fireRate = 1,
   firing = false
 }
 
@@ -11,8 +11,6 @@ function VortexComponent.new(entity)
   local i = {}
   setmetatable(i, VortexComponent)
   i.entity = entity
-  i.fireRate = entity.shipType.fireRate
-  i.weaponDamage = entity.shipType.weaponDamage
   return i
 end
 

@@ -37,7 +37,6 @@ function WallCollisionComponent:update(dt)
       move.vx = -move.vx/2
       move.x = move.x - 5
       wallHit = true
-      
     end
 
     if self.entity.components.score and wallHit then

@@ -1,20 +1,21 @@
-ShotgunComponent = {
+SpreadShotComponent = {
+  cannon = "right",
   gunCooldown = 0,
-  weaponDamage = 10,
-  fireRate = 1,
+  weaponDamage = 5,
+  fireRate = 4,
   firing = false
 }
 
-ShotgunComponent.__index = ShotgunComponent
+SpreadShotComponent.__index = SpreadShotComponent
 
-function ShotgunComponent.new(entity)
+function SpreadShotComponent.new(entity)
   local i = {}
-  setmetatable(i, ShotgunComponent)
+  setmetatable(i, SpreadShotComponent)
   i.entity = entity
   return i
 end
 
-function ShotgunComponent:update(dt)
+function SpreadShotComponent:update(dt)
   if self.firing and self.gunCooldown <= 0 then
     self:fire()
     self.gunCooldown = 1/self.fireRate
@@ -23,24 +24,23 @@ function ShotgunComponent:update(dt)
   end
 end
 
-function ShotgunComponent:fire()
+function SpreadShotComponent:fire()
   if self.entity.components.life.health <= 0 then
     return
   end
   local move = self.entity.components.move
   self.entity.components.score.shots = self.entity.components.score.shots + 1
 
-
-  local numBullets = 7
-  local angleDiff = math.pi/4/numBullets
+  local numBullets = 4
+  local angleDiff = math.pi/8/numBullets
   for i=numBullets/2,-numBullets/2,-1 do
     local rBullet = move.rotation + i * angleDiff
-    x = move.x + (5 * math.sin(move.rotation))
-    y = move.y + (5 * -math.cos(move.rotation))
-    bullet = Bullet.new(x,y,300,rBullet, self.weaponDamage)
+    leftCannonOffsetX = move.x + (5 * math.sin(move.rotation))
+    leftCannonOffsetY = move.y + (5 * -math.cos(move.rotation))
+    bullet = Bullet.new(leftCannonOffsetX,leftCannonOffsetY,600,rBullet, self.weaponDamage)
     table.insert(self.entity.bullets, bullet)
   end
 end
 
 
-return ShotgunComponent
+return SpreadShotComponent

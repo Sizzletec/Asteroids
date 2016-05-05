@@ -16,6 +16,12 @@ require('components/VortexComponent')
 require('components/BounceComponent')
 require('components/ChargeAttackComponent')
 require('components/AlternatingMissileComponent')
+require('components/MineComponent')
+require('components/PhaseComponent')
+require('components/ShockwaveComponent')
+require('components/SpreadShotComponent')
+require('components/SelfDestructComponent')
+require('components/ZapComponent')
 
 Ship = {
   shield = false,
@@ -39,7 +45,7 @@ function Ship.new(player,x,y,rotation,vx,vy, type)
     move = MoveComponent.new(s),
     wallCollision = WallCollisionComponent.new(s),
     primaryAttack = AlternatingFireComponent.new(s),
-    secondaryAttack = AlternatingMissileComponent.new(s)
+    secondaryAttack = ZapComponent.new(s)
   }
 
   s.player = player
@@ -60,9 +66,6 @@ function Ship:setDefaults()
 
   self.bullets = {}
   self.beams = {}
-  self.gunCooldown = 0
-  self.throttle = 0
-  self.angularInput = 0
 
   self.shield = false
   self.explodingFrame = 0
@@ -91,23 +94,6 @@ function Ship:update(dt)
     if bullet.lifetime > bullet.bulletLife then
       table.remove(self.bullets, i)
     end
-  end
-end
-
-function Ship:selfDestruct()
-  if self.components.life.health <= 0 then
-    return
-  end
-  self.components.life.health = 0
-
-  local numBullets = 100
-  local angleDiff = 2 * math.pi / numBullets
-  for i=numBullets/2,-numBullets/2,-1 do
-    local rBullet = self.components.move.rotation + i * angleDiff
-    leftCannonOffsetX = self.components.move.x + (5 * math.sin(self.components.move.rotation))
-    leftCannonOffsetY = self.components.move.y + (5 * -math.cos(self.components.move.rotation))
-    bullet = Bullet.new(leftCannonOffsetX,leftCannonOffsetY,2*60,rBullet, 200)
-    table.insert(self.bullets, bullet)
   end
 end
 
