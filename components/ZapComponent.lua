@@ -59,7 +59,7 @@ function ZapComponent:update(dt)
         inShape = PointWithinShape(self.hitbox,otherMove.x,otherMove.y)
 
         if inShape then
-            otherPlayer.components.life:takeDamage(self.entity, self.weaponDamage)
+          otherPlayer.components.life:takeDamage(self.entity, self.weaponDamage)
         end
       end
     end

@@ -50,18 +50,15 @@ function Beam:update(dt)
     local players = Game.getPlayers()
 
     for p, otherPlayer in pairs(players) do
-      if otherPlayer ~= self.player then
-        xPow = math.pow(xBeam - otherPlayer.x, 2)
-        yPow = math.pow(yBeam - otherPlayer.y, 2)
+      if otherPlayer ~= self.player and otherPlayer.components.life.alive then
+        local otherMove = otherPlayer.components.move
+
+        xPow = math.pow(xBeam - otherMove.x, 2)
+        yPow = math.pow(yBeam - otherMove.y, 2)
 
         dist = math.sqrt(xPow + yPow)
         if dist < 10 then
-
-          otherPlayer.health = otherPlayer.health - self.damage
-
-          if otherPlayer.health < 0 then
-            otherPlayer.health = 0
-          end
+          otherPlayer.components.life:takeDamage(self.player, self.damage)
 
           playerHit = true
         end

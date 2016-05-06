@@ -22,6 +22,8 @@ require('components/ShockwaveComponent')
 require('components/SpreadShotComponent')
 require('components/SelfDestructComponent')
 require('components/ZapComponent')
+require('components/RotatingFireComponent')
+require('components/RayComponent')
 
 Ship = {
   shield = false,
@@ -43,7 +45,7 @@ function Ship.new(player,x,y,rotation,vx,vy, type)
     move = MoveComponent.new(s),
     wallCollision = WallCollisionComponent.new(s),
     primaryAttack = AlternatingFireComponent.new(s),
-    secondaryAttack = ZapComponent.new(s)
+    secondaryAttack = RayComponent.new(s)
   }
 
   s.player = player
