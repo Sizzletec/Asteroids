@@ -172,6 +172,7 @@ function ShipSelect.shipLeft(id)
 
 	if sel.ship then
   		sel.ship.shipType = ShipSelectOrder[sel.typeIndex]
+  		sel.ship:setDefaults()
 	end
 end
 
@@ -185,6 +186,7 @@ function ShipSelect.shipRight(id)
 
 	if sel.ship then
   		sel.ship.shipType = ShipSelectOrder[sel.typeIndex]
+  		sel.ship:setDefaults()
 	end
 end
 
@@ -317,19 +319,19 @@ function ShipSelect.draw()
 end
 
 function ShipSelect.updateActive(i, player, dt)
+	player.ship:update(dt)
 	if t > 3 then
 		player.ship.components.move.throttle = 1
 	elseif t > 2 then
-		player.ship.firing = true
+		player.ship.components.primaryAttack.firing = true
 	else
 		player.ship.components.move.throttle = 0
-		player.ship.firing = false
+		player.ship.components.primaryAttack.firing = false
 	end
 
 	if not player.ship.engine then
 		player.ship.components.move.rotation = player.ship.components.move.rotation + 2 * dt
 	end
-	player.ship:update(dt)
 end
 
 

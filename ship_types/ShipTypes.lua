@@ -1,6 +1,23 @@
+require('components/AlternatingFireComponent')
+require('components/ShotgunComponent')
+require('components/VortexComponent')
+require('components/BounceComponent')
+require('components/ChargeAttackComponent')
+require('components/AlternatingMissileComponent')
+require('components/MineComponent')
+require('components/PhaseComponent')
+require('components/ShockwaveComponent')
+require('components/SpreadShotComponent')
+require('components/SelfDestructComponent')
+require('components/ZapComponent')
+require('components/RotatingFireComponent')
+require('components/RayComponent')
+
 ShipType = {
   standard = {
     name = "Standard",
+    primaryAttack = AlternatingFireComponent,
+    secondaryAttack = SelfDestructComponent,
     topSpeed = 240,
     acceleration = 360,
     rotationSpeed = 8,
@@ -9,6 +26,8 @@ ShipType = {
   },
   gunship = {
     name = "Gunship",
+    primaryAttack = RotatingFireComponent,
+    secondaryAttack = SelfDestructComponent,
     topSpeed = 120,
     acceleration = 180,
     rotationSpeed = 5,
@@ -17,6 +36,8 @@ ShipType = {
   },
   assalt = {
     name = "Assault",
+    primaryAttack = ShotgunComponent,
+    secondaryAttack = SelfDestructComponent,
     topSpeed = 300,
     acceleration = 400,
     rotationSpeed = 5,
@@ -25,6 +46,8 @@ ShipType = {
   },
   ray = {
     name = "Ray",
+    primaryAttack = RayComponent,
+    secondaryAttack = SelfDestructComponent,
     topSpeed = 180,
     acceleration = 240,
     rotationSpeed = 4,
@@ -33,6 +56,8 @@ ShipType = {
   },
   zap = {
     name = "Zapper",
+    primaryAttack = ZapComponent,
+    secondaryAttack = SelfDestructComponent,
     topSpeed = 180,
     acceleration = 180,
     rotationSpeed = 5,
@@ -41,6 +66,8 @@ ShipType = {
   },
   charge = {
     name = "Charger",
+    primaryAttack = ChargeAttackComponent,
+    secondaryAttack = SelfDestructComponent,
     topSpeed = 240,
     acceleration = 240,
     rotationSpeed = 4,
@@ -49,6 +76,8 @@ ShipType = {
   },
   missile = {
     name = "Missile",
+    primaryAttack = AlternatingMissileComponent,
+    secondaryAttack = SelfDestructComponent,
     topSpeed = 180,
     acceleration = 180,
     rotationSpeed = 4,
@@ -57,6 +86,8 @@ ShipType = {
   },
   miner = {
     name = "Miner",
+    primaryAttack = MineComponent,
+    secondaryAttack = SelfDestructComponent,
     topSpeed = 200,
     acceleration = 200,
     rotationSpeed = 4,
@@ -65,6 +96,8 @@ ShipType = {
   },
   spreader = {
     name = "Spreader",
+    primaryAttack = SpreadShotComponent,
+    secondaryAttack = SelfDestructComponent,
     topSpeed = 240,
     acceleration = 360,
     rotationSpeed = 10,
@@ -73,6 +106,8 @@ ShipType = {
   },
   phaser = {
     name = "Phaser",
+    primaryAttack = PhaseComponent,
+    secondaryAttack = SelfDestructComponent,
     topSpeed = 240,
     acceleration = 360,
     rotationSpeed = 10,
@@ -81,6 +116,8 @@ ShipType = {
   },
   shockwave = {
     name = "Shockwave",
+    primaryAttack = ShockwaveComponent,
+    secondaryAttack = SelfDestructComponent,
     topSpeed = 240,
     acceleration = 360,
     rotationSpeed = 10,
@@ -89,6 +126,8 @@ ShipType = {
   },
   bounce = {
     name = "Bounce",
+    primaryAttack = BounceComponent,
+    secondaryAttack = SelfDestructComponent,
     topSpeed = 200,
     acceleration = 260,
     rotationSpeed = 5,
@@ -97,6 +136,8 @@ ShipType = {
   },
   vortex = {
     name = "Vortex",
+    primaryAttack = VortexComponent,
+    secondaryAttack = SelfDestructComponent,
     topSpeed = 200,
     acceleration = 260,
     rotationSpeed = 5,

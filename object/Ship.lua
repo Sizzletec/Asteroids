@@ -10,20 +10,6 @@ require('components/ScoreComponent')
 require('components/LifeComponent')
 require('components/MoveComponent')
 require('components/WallCollisionComponent')
-require('components/AlternatingFireComponent')
-require('components/ShotgunComponent')
-require('components/VortexComponent')
-require('components/BounceComponent')
-require('components/ChargeAttackComponent')
-require('components/AlternatingMissileComponent')
-require('components/MineComponent')
-require('components/PhaseComponent')
-require('components/ShockwaveComponent')
-require('components/SpreadShotComponent')
-require('components/SelfDestructComponent')
-require('components/ZapComponent')
-require('components/RotatingFireComponent')
-require('components/RayComponent')
 
 Ship = {
   shield = false,
@@ -37,25 +23,10 @@ function Ship.new(player,x,y,rotation,vx,vy, type)
 
   s.shipType = type or ShipType.standard
 
-  s.components = {
-    render = RenderComponent.new(s),
-    score = ScoreComponent.new(s),
-    life = LifeComponent.new(s),
-    move = MoveComponent.new(s),
-    wallCollision = WallCollisionComponent.new(s),
-    primaryAttack = AlternatingFireComponent.new(s),
-    secondaryAttack = RayComponent.new(s)
-  }
-
   s.player = player
+  s.components = {}
+  s:setDefaults()
 
-  if player == 1 then
-    s.components["keyboard"] = KeyboardInputComponent.new(s)
-  end
-
-  s.bullets = {}
-  s.beams = {}
-  s.gunCooldown = 0
   return s
 end
 
@@ -63,9 +34,29 @@ function Ship:setDefaults()
   self.bullets = {}
   self.beams = {}
 
-  self.shield = false
-  self.explodingFrame = 0
-  self.lives = Ship.lives
+  local r = self.components.render
+  local color = nil
+
+  if r then
+    color = r.color
+  end
+
+  self.components = {
+    render = RenderComponent.new(self),
+    score = ScoreComponent.new(self),
+    life = LifeComponent.new(self),
+    move = MoveComponent.new(self),
+    wallCollision = WallCollisionComponent.new(self),
+    primaryAttack = self.shipType.primaryAttack.new(self),
+    secondaryAttack = self.shipType.secondaryAttack.new(self)
+  }
+  if self.player == 1 then
+    self.components["keyboard"] = KeyboardInputComponent.new(self)
+  end
+
+  if color then
+    self.components.render.color = color
+  end
 end
 
 function Ship:update(dt)

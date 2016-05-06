@@ -6,7 +6,7 @@ LifeComponent = {
 
 LifeComponent.__index = LifeComponent
 
-function LifeComponent.new(entity, health)
+function LifeComponent.new(entity)
   local i = {}
   setmetatable(i, LifeComponent)
   i.entity = entity
@@ -16,7 +16,7 @@ end
 
 function LifeComponent:spawn()
   self.health = self.entity.shipType.health
-  self.alive = true 
+  self.alive = true
 end
 
 function LifeComponent:takeDamage(fromPlayer, damage)
