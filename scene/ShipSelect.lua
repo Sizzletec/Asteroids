@@ -21,19 +21,23 @@ local menuSpeed = 0.3
 selections = {
  	{
 		step = SelectStep.inactive,
-		menuCooldown = 0
+		menuCooldown = 0,
+		typeIndex = 1
 	},
 	{
 		step = SelectStep.inactive,
-		menuCooldown = 0
+		menuCooldown = 0,
+		typeIndex = 1
 	},
 	{
 		step = SelectStep.inactive,
-		menuCooldown = 0
+		menuCooldown = 0,
+		typeIndex = 1
 	},
 	{
 		step = SelectStep.inactive,
-		menuCooldown = 0
+		menuCooldown = 0,
+		typeIndex = 1
 	}
 }
 
@@ -158,18 +162,29 @@ function ShipSelect.keypressed(key, unicode)
 end
 
 function ShipSelect.shipLeft(id)
-	local ship = selections[id].ship
-	if ship then
-  		newType = ship.shipType.previousType 
-  		ship.shipType = ShipType[newType]
+
+	local sel = selections[id]
+	sel.typeIndex = sel.typeIndex - 1
+
+	if sel.typeIndex < 1 then
+		sel.typeIndex = #ShipSelectOrder
+	end
+
+	if sel.ship then
+  		sel.ship.shipType = ShipSelectOrder[sel.typeIndex]
 	end
 end
 
 function ShipSelect.shipRight(id)
-	local ship = selections[id].ship
-	if ship then
-  		newType = ship.shipType.nextType 
-  		ship.shipType =ShipType[newType]
+	local sel = selections[id]
+	sel.typeIndex = sel.typeIndex + 1
+
+	if sel.typeIndex > #ShipSelectOrder then
+		sel.typeIndex = 1
+	end
+
+	if sel.ship then
+  		sel.ship.shipType = ShipSelectOrder[sel.typeIndex]
 	end
 end
 

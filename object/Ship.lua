@@ -35,7 +35,6 @@ function Ship.new(player,x,y,rotation,vx,vy, type)
   local s = {}
   setmetatable(s, Ship)
 
-  -- s.shipType = type or ShipType.standard
   s.shipType = type or ShipType.standard
 
   s.components = {

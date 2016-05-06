@@ -5,9 +5,7 @@ ShipType = {
     acceleration = 360,
     rotationSpeed = 8,
     health = 150,
-    frameOffset = 0,
-    previousType = "vortex",
-    nextType = "gunship"
+    frameOffset = 0
   },
   gunship = {
     name = "Gunship",
@@ -15,9 +13,7 @@ ShipType = {
     acceleration = 180,
     rotationSpeed = 5,
     health = 130,
-    frameOffset = 2,
-    previousType = "standard",
-    nextType = "assalt"
+    frameOffset = 2
   },
   assalt = {
     name = "Assault",
@@ -25,33 +21,23 @@ ShipType = {
     acceleration = 400,
     rotationSpeed = 5,
     health = 170,
-    frameOffset = 4,
-    previousType = "gunship",
-    nextType = "ray"
+    frameOffset = 4
   },
   ray = {
     name = "Ray",
     topSpeed = 180,
     acceleration = 240,
     rotationSpeed = 4,
-    fireRate = 20,
     health = 150,
-    weaponDamage = 3,
-    frameOffset = 6,
-    previousType = "assalt",
-    nextType = "zap"
+    frameOffset = 6
   },
   zap = {
     name = "Zapper",
     topSpeed = 180,
     acceleration = 180,
     rotationSpeed = 5,
-    fireRate = 2,
     health = 160,
-    weaponDamage = 3,
-    frameOffset = 8,
-    previousType = "ray",
-    nextType = "charge"
+    frameOffset = 8
   },
   charge = {
     name = "Charger",
@@ -59,21 +45,15 @@ ShipType = {
     acceleration = 240,
     rotationSpeed = 4,
     health = 160,
-    frameOffset = 10,
-    previousType = "zap",
-    nextType = "missile"
+    frameOffset = 10
   },
   missile = {
     name = "Missile",
     topSpeed = 180,
     acceleration = 180,
     rotationSpeed = 4,
-    fireRate = 1,
     health = 150,
-    weaponDamage = 30,
-    frameOffset = 12,
-    previousType = "charge",
-    nextType = "miner"
+    frameOffset = 12
   },
   miner = {
     name = "Miner",
@@ -81,9 +61,7 @@ ShipType = {
     acceleration = 200,
     rotationSpeed = 4,
     health = 150,
-    frameOffset = 14,
-    previousType = "missile",
-    nextType = "spreader"
+    frameOffset = 14
   },
   spreader = {
     name = "Spreader",
@@ -91,9 +69,7 @@ ShipType = {
     acceleration = 360,
     rotationSpeed = 10,
     health = 150,
-    frameOffset = 0,
-    previousType = "miner",
-    nextType = "phaser"
+    frameOffset = 0
   },
   phaser = {
     name = "Phaser",
@@ -101,43 +77,46 @@ ShipType = {
     acceleration = 360,
     rotationSpeed = 10,
     health = 150,
-    frameOffset = 0,
-    previousType = "spreader",
-    nextType = "standard"
+    frameOffset = 0
   },
   shockwave = {
     name = "Shockwave",
     topSpeed = 240,
     acceleration = 360,
     rotationSpeed = 10,
-    fireRate = 1,
     health = 150,
-    frameOffset = 0,
-    previousType = "phaser",
-    nextType = "bounce"
+    frameOffset = 0
   },
   bounce = {
     name = "Bounce",
     topSpeed = 200,
     acceleration = 260,
     rotationSpeed = 5,
-    fireRate = 2,
     health = 150,
-    weaponDamage = 20,
-    frameOffset = 0,
-    previousType = "shockwave",
-    nextType = "standard"
+    frameOffset = 0
   },
   vortex = {
     name = "Vortex",
     topSpeed = 200,
     acceleration = 260,
     rotationSpeed = 5,
-    fireRate = 1,
     health = 150,
-    weaponDamage = 40,
-    frameOffset = 0,
-    previousType = "bounce",
-    nextType = "standard"
+    frameOffset = 0
   },
+}
+
+ShipSelectOrder = {
+  ShipType.standard,
+  ShipType.gunship,
+  ShipType.assalt,
+  ShipType.ray,
+  ShipType.zap,
+  ShipType.charge,
+  ShipType.missile,
+  ShipType.miner,
+  ShipType.spreader,
+  ShipType.phaser,
+  ShipType.shockwave,
+  ShipType.bounce,
+  ShipType.vortex
 }
