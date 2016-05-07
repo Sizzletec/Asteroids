@@ -338,10 +338,7 @@ end
 function ShipSelect.updateReady(i, player, dt)
 	player.ship.engine = false
 	player.ship.firing = false
-
-	-- if not player.ship.engine then
-	-- 	player.ship.rotation = player.ship.rotation + -1 * dt
-	-- end
+	player.ship.components.move.rotation = player.ship.components.move.rotation - 1 * dt
 	player.ship:update(dt)
 end
 
@@ -420,6 +417,7 @@ function ShipSelect.drawReady(i, player)
 	if playerShip then
 		playerShip.components.move.x = (xOffset+120)/2
 		playerShip.components.move.y = (yOffset-150)/2
+
 		playerShip:draw()
 	end
 	love.graphics.pop()

@@ -174,33 +174,33 @@ function Game.update(dt)
 	end
 
 	for i, player in pairs(players) do
-		local joysticks = love.joystick.getJoysticks()
-		local joy = joysticks[player.player]
+		-- local joysticks = love.joystick.getJoysticks()
+		-- local joy = joysticks[player.player]
 
-		if joy then
-			-- local joyX = joy:getGamepadAxis("leftx")
-			-- local throttle = joy:getGamepadAxis("triggerright")
+		-- if joy then
+		-- 	-- local joyX = joy:getGamepadAxis("leftx")
+		-- 	-- local throttle = joy:getGamepadAxis("triggerright")
 
 
-			joyX = joy:getGamepadAxis("leftx")
-			joyY = joy:getGamepadAxis("lefty")
+		-- 	joyX = joy:getGamepadAxis("leftx")
+		-- 	joyY = joy:getGamepadAxis("lefty")
 
-			if math.abs(joyX) > 0.5 or math.abs(joyY) > 0.5 then
-				Mover.MoveTowards(player,joyX,joyY,dt)
-			end
+		-- 	if math.abs(joyX) > 0.5 or math.abs(joyY) > 0.5 then
+		-- 		Mover.MoveTowards(player,joyX,joyY,dt)
+		-- 	end
 
-			if player.shipType == ShipType.gunship then
-				joyCannonX = joy:getGamepadAxis("rightx")
-				joyCannonY = joy:getGamepadAxis("righty")
+		-- 	if player.shipType == ShipType.gunship then
+		-- 		joyCannonX = joy:getGamepadAxis("rightx")
+		-- 		joyCannonY = joy:getGamepadAxis("righty")
 
-				if math.abs(joyCannonX) > 0.5 or math.abs(joyCannonY) > 0.5 then
-					local angle = math.atan2(joyCannonX,-joyCannonY)
+		-- 		if math.abs(joyCannonX) > 0.5 or math.abs(joyCannonY) > 0.5 then
+		-- 			local angle = math.atan2(joyCannonX,-joyCannonY)
 
-					player.cannonRotation = angle
-					player.firing = true
-				end
-			end
-		end
+		-- 			player.cannonRotation = angle
+		-- 			player.firing = true
+		-- 		end
+		-- 	end
+		-- end
 
 		player:update(dt)
 

@@ -35,14 +35,6 @@ function RotatingFireComponent:fire()
   local y = move.y + (3 * math.cos(move.rotation))
   bullet = Bullet.new(x,y,900,self.cannonRotation, self.weaponDamage)
   table.insert(self.entity.bullets, bullet)
-  self.firing = false
 end
-
-function RotatingFireComponent:draw()
-  local move = self.entity.components.move
-  local cannonQuad = love.graphics.newQuad(0, 160, 20, 20, ShipsImage:getDimensions())
-  love.graphics.draw(ShipsImage,cannonQuad,move.x - (3 * math.sin(move.rotation)), move.y + (3 * math.cos(move.rotation)), self.cannonRotation, 1,1 , 10, 10)
-end
-
 
 return RotatingFireComponent
