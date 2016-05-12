@@ -7,7 +7,6 @@ InputComponent = {
   secondary = false,
   throttle = 0,
   angularInput = 0,
-  components = {},
   activeComponent = nil
 }
 InputComponent.__index = InputComponent
@@ -16,20 +15,20 @@ function InputComponent.new(entity)
   local i = {}
   setmetatable(i, InputComponent)
   i.entity = entity
+  i.components = {}
 
   if entity.player == 1 then
     i.components["keyboard"] = KeyboardInputComponent.new(i)
-    i.components["joystick"] = JoystickInputComponent.new(i)
   end
+  i.components["joystick"] = JoystickInputComponent.new(i)
 
-  -- i.components["joystick"] = JoystickInputComponent.new(i)
   return i
 end
 
 function InputComponent:update(dt)
   if self.activeComponent then
     self.activeComponent:update(dt)
-  end 
+  end
 
 
   local comp = self.entity.components
