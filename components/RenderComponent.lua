@@ -73,6 +73,7 @@ function RenderComponent:draw()
   for b, beam in pairs(self.entity.beams) do
     beam:draw()
   end
+  love.graphics.draw(self.entity.engineParticle, x - (13 * math.sin(move.rotation)), y + (13 * math.cos(move.rotation)))
 end
 
 return RenderComponent

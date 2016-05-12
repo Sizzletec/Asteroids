@@ -78,17 +78,17 @@ function ZapComponent:draw()
 
     love.graphics.draw(lightning, top_left,move.x, move.y, move.rotation, 1,1 , 50,70)
 
-    if self.hitbox then
-        love.graphics.push()
-        local hitbox = {}
-        for i=1,#self.hitbox do
-            local vert = self.hitbox[i]
-            table.insert(hitbox,vert.x)
-            table.insert(hitbox,vert.y)
-        end
-        love.graphics.polygon('line', hitbox)
-        love.graphics.pop()
-    end
+    -- if self.hitbox then
+    --     love.graphics.push()
+    --     local hitbox = {}
+    --     for i=1,#self.hitbox do
+    --         local vert = self.hitbox[i]
+    --         table.insert(hitbox,vert.x)
+    --         table.insert(hitbox,vert.y)
+    --     end
+    --     love.graphics.polygon('line', hitbox)
+    --     love.graphics.pop()
+    -- end
   end
 end
 

@@ -3,7 +3,8 @@ ShockwaveComponent = {
   gunCooldown = 0,
   weaponDamage = 100,
   fireRate = 1,
-  firing = false
+  firing = false,
+  rad
 }
 
 ShockwaveComponent.__index = ShockwaveComponent
