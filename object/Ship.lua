@@ -4,7 +4,7 @@ local shoot = love.audio.newSource("sounds/shoot.wav", "static")
 
 require('ship_types/ShipTypes')
 require('helpers/Mover')
-require('components/KeyboardInputComponent')
+require('components/InputComponent')
 require('components/RenderComponent')
 require('components/ScoreComponent')
 require('components/LifeComponent')
@@ -48,11 +48,9 @@ function Ship:setDefaults()
     move = MoveComponent.new(self),
     wallCollision = WallCollisionComponent.new(self),
     primaryAttack = self.shipType.primaryAttack.new(self),
-    secondaryAttack = self.shipType.secondaryAttack.new(self)
+    secondaryAttack = self.shipType.secondaryAttack.new(self),
+    input = InputComponent.new(self)
   }
-  if self.player == 1 then
-    self.components["keyboard"] = KeyboardInputComponent.new(self)
-  end
 
   if color then
     self.components.render.color = color

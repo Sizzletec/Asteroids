@@ -25,6 +25,14 @@ function MoveComponent.new(entity)
 end
 
 function MoveComponent:update(dt)
+  local input = self.entity.components.input
+
+  if input then
+    self.angularInput = input.angularInput
+    self.throttle = input.throttle
+  end
+
+
   self:ApplyAcceleration(dt)
   self:ApplyVelocity(dt)
   self:ApplyRotation(dt)

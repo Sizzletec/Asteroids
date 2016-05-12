@@ -2,8 +2,7 @@ RotatingFireComponent = {
   gunCooldown = 0,
   weaponDamage = 40,
   fireRate = 2,
-  firing = false,
-  cannonRotation = 0
+  firing = false
 }
 
 RotatingFireComponent.__index = RotatingFireComponent
@@ -31,9 +30,11 @@ function RotatingFireComponent:fire()
   local move = self.entity.components.move
   self.entity.components.score.shots = self.entity.components.score.shots + 1
 
+  local angle = self.entity.components.input.fireAngle
+
   local x = move.x - (3 * math.sin(move.rotation))
   local y = move.y + (3 * math.cos(move.rotation))
-  bullet = Bullet.new(x,y,900,self.cannonRotation, self.weaponDamage)
+  bullet = Bullet.new(x,y,900,angle, self.weaponDamage)
   table.insert(self.entity.bullets, bullet)
 end
 

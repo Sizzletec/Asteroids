@@ -89,7 +89,7 @@ end
 
 function Game.keyreleased(key)
 	for _, player in pairs(players) do
-		local keyboard = player.components.keyboard
+		local keyboard = player.components.input.components.keyboard
 		if keyboard ~= nil then
 			keyboard:keyreleased(key)
 		end
@@ -99,40 +99,45 @@ end
 function Game.keypressed(key, unicode)
 	if (key == "escape") then setState(State.shipSelect) end
 	for _, player in pairs(players) do
-		local keyboard = player.components.keyboard
+		local keyboard = player.components.input.components.keyboard
 		if keyboard ~= nil then
 			keyboard:keypressed(key, unicode)
 		end
 	end
 end
 
--- function Game.gamepadpressed(joystick, button)
--- 	local id, instanceid = joystick:getID()
--- 	local player = Game.getPlayer(id)
--- 	if player then
--- 	    if button == "a" then
--- 	    	player.firing = true
--- 	    end
+function Game.gamepadpressed(joystick, button)
+	local id, instanceid = joystick:getID()
+	local player = Game.getPlayer(id)
+	if player then
+		local joystick = player.components.input.components.joystick
+		if joystick ~= nil then
+			joystick:gamepadpressed(joystick, button)
+		end
+	end
+end
 
--- 	    if button == "y" then
--- 	    	player:selfDestruct()
--- 	    end
--- 	end
--- end
+function Game.gamepadreleased(joystick, button)
+	local id, instanceid = joystick:getID()
+	local player = Game.getPlayer(id)
+	if player then
+		local joystick = player.components.input.components.joystick
+		if joystick ~= nil then
+			joystick:gamepadreleased(joystick, button)
+		end
+	end
+end
 
--- function Game.gamepadreleased(joystick, button)
--- 	local id, instanceid = joystick:getID()
--- 	local player = Game.getPlayer(id)
--- 	if player then
--- 	    if button == "a" then
--- 	    	player.firing = false
--- 	    end
--- 	end
--- end
-
--- function Game.gamepadaxis(joystick, axis, value)
-
--- end
+function Game.gamepadaxis(joystick, axis, value)
+	local id, instanceid = joystick:getID()
+	local player = Game.getPlayer(id)
+	if player then
+		local joystick = player.components.input.components.joystick
+		if joystick ~= nil then
+			joystick:gamepadaxis(joystick, axis, value)
+		end
+	end
+end
 
 function Game.getPlayer(id)
 	for i, player in pairs(players) do
