@@ -250,7 +250,7 @@ function Game.draw()
 		table.insert(lights,pos)
 	end
 
-	myShader:send("lightArray", lights[1],lights[2],lights[3],lights[4])
+	myShader:send("lightArray", lights[1],lights[2])
 
 	love.graphics.scale(scaleFactor, scaleFactor)
 
