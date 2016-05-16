@@ -18,9 +18,11 @@ function MoveComponent.new(entity)
   setmetatable(i, MoveComponent)
   i.entity = entity
 
-  i.topSpeed = entity.shipType.topSpeed
-  i.acceleration = entity.shipType.acceleration
-  i.rotationSpeed = entity.shipType.rotationSpeed
+  if entity.shipType then
+    i.topSpeed = entity.shipType.topSpeed
+    i.acceleration = entity.shipType.acceleration
+    i.rotationSpeed = entity.shipType.rotationSpeed
+  end
   return i
 end
 
@@ -58,7 +60,7 @@ end
 
 function MoveComponent:ApplyVelocity(dt)
 
-  if self.topSpeed then 
+  if self.topSpeed then
     if self.vx > self.topSpeed then
       self.vx = self.topSpeed
     elseif self.vx < -self.topSpeed  then
@@ -71,7 +73,7 @@ function MoveComponent:ApplyVelocity(dt)
       self.vy = -self.topSpeed
     end
   end
-      
+
   self.x = self.x + self.vx * dt
   self.y = self.y + self.vy * dt
 end
