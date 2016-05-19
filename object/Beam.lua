@@ -16,6 +16,7 @@ function Beam.new(player,damage)
   s.startPointY = 0
   s.endPointX = 0
   s.endPointY = 0
+  s.offset = 0
 
   s.partSys = love.graphics.newParticleSystem(part1, 1000)
   return s
@@ -106,31 +107,38 @@ function Beam:update(x,y,rotation,dt)
 
 
 
-  speed = 2000
+  -- speed = 2000
 
-  self.partSys:setParticleLifetime(dist/speed, dist/speed/2) -- Particles live at least 2s and at most 5s.
-  self.partSys:setEmissionRate(5000)
+  self.partSys:setParticleLifetime(.3, .3) -- Particles live at least 2s and at most 5s.
+  -- self.partSys:setEmissionRate(500)
   self.partSys:setSizeVariation(1)
 
-  self.partSys:setPosition(self.startPointX,self.startPointY)
-  self.partSys:setSpeed(speed)
-  self.partSys:setDirection(self.rotation -math.pi/2)
+  -- self.partSys:setPosition(self.startPointX,self.startPointY)
+  -- self.partSys:setSpeed(speed)
+  -- self.partSys:setDirection(self.rotation -math.pi/2)
 
-  -- self.partSys:setEmissionRate(5*dist)
-  self.partSys:setRelativeRotation(true)
-  -- self.partSys:setOffset( -dist/2, 0)
+  self.partSys:setEmissionRate(5*dist)
+  -- self.partSys:setRelativeRotation(true)
 
-  -- self.partSys:setAreaSpread("uniform", dist/2,0)
 
-  -- self.partSys:setLinearAcceleration(20, 100, 0, -100) -- Random movement in all directions.
+    -- if self.offset ~=  -dist/2 then
+    --    self.partSys:reset()
+       self.offset = -dist/2
+    -- end
+
+  self.partSys:setOffset(self.offset, 0)
+
+  self.partSys:setAreaSpread("uniform", dist/2,0)
+
+  self.partSys:setLinearAcceleration(20, 200, 0, -200) -- Random movement in all directions.
   self.partSys:setColors(255, 255, 255, 255, 255, 255, 255, 0) -- Fade to transparency.
   self.partSys:update(dt)
 end
 
 function Beam:draw()
-  love.graphics.draw(self.partSys)
+  love.graphics.draw(self.partSys,self.startPointX,self.startPointY,self.rotation-math.pi/2)
 
-  love.graphics.line(self.startPointX, self.startPointY, self.endPointX,self.endPointY)
+  -- love.graphics.line(self.startPointX, self.startPointY, self.endPointX,self.endPointY)
   -- beamBatch:flush()
   -- love.graphics.draw(beamBatch)
   -- beamBatch:clear()
