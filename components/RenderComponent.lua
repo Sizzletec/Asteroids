@@ -38,8 +38,8 @@ function RenderComponent:draw()
     y = move.y
     r = move.rotation
   end
-
-  if self.entity.explodingFrame < 3 then
+ 
+   if self.entity.explodingFrame < 3 then
     local xFrame = 0
     if self.entity.engine then
       xFrame = 1
@@ -73,7 +73,7 @@ function RenderComponent:draw()
   for b, beam in pairs(self.entity.beams) do
     beam:draw()
   end
-  love.graphics.draw(self.entity.engineParticle, x - (13 * math.sin(move.rotation)), y + (13 * math.cos(move.rotation)))
+  -- love.graphics.draw(self.entity.engineParticle, x - (13 * math.sin(move.rotation)), y + (13 * math.cos(move.rotation)))
 end
 
 return RenderComponent

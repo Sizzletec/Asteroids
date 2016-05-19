@@ -18,8 +18,10 @@ function RayComponent:update(dt)
   end
   local move = self.entity.components.move
   if self.firing then
-    self.beam = Beam.new(self.entity,move.x,move.y,0,move.rotation, self.weaponDamage,0.1)
-    self.beam:update(dt)
+    if not self.beam  then
+      self.beam = Beam.new(self.entity, self.weaponDamage)
+    end
+    self.beam:update(move.x,move.y,move.rotation,dt)
     else
       self.beam = nil
   end
