@@ -22,6 +22,19 @@ function love.load()
 	-- love.mouse.setVisible(false)
 end
 
+-- function love.resize(w, h)
+--   print(("Window resized to width: %d and height: %d."):format(love.window.fromPixels(w, h)))
+
+--   sixteen = love.window.fromPixels(w) % 16
+--   if sixteen ~= 0 then
+--   	w =  love.window.fromPixels(w) - sixteen
+--   	print("width is not even")
+
+--   	width, height, flags = love.window.getMode( )
+--   	love.window.setMode(w, love.window.fromPixels(h), {fullscreen=false, resizable=true, highdpi=true})
+--   end
+-- end
+
 function love.keyreleased(key)
 	if currentState.keyreleased then
 		currentState.keyreleased(key)

@@ -27,6 +27,7 @@ function TiledMap_Load (filepath,tilesize,spritepath_removeold,spritepath_prefix
         local gid = first_gid
         local e = kTileSize
         local image = love.graphics.newImage(raw)
+        -- image:setFilter('nearest', 'nearest')
         tilesetBatch = love.graphics.newSpriteBatch(image, 120 * 90)
 
         for y=0,floor(h/kTileSize)-1 do
