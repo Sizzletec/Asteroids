@@ -8,9 +8,6 @@ require('object/Bullet')
 require('object/MissileShot')
 
 local myShader = love.graphics.newShader( "shaders/lighting.glsl" )
-
-gKeyPressed = {}
-
 local players = {}
 
 gCamX,gCamY = 0,0
@@ -168,7 +165,6 @@ function Game.checkWin()
 end
 
 function Game.update(dt)
-
 	if gameWon then
 		winCount = winCount - 3 * dt
 		dt = dt / winCount
@@ -179,57 +175,7 @@ function Game.update(dt)
 	end
 
 	for i, player in pairs(players) do
-		-- local joysticks = love.joystick.getJoysticks()
-		-- local joy = joysticks[player.player]
-
-		-- if joy then
-		-- 	-- local joyX = joy:getGamepadAxis("leftx")
-		-- 	-- local throttle = joy:getGamepadAxis("triggerright")
-
-
-		-- 	joyX = joy:getGamepadAxis("leftx")
-		-- 	joyY = joy:getGamepadAxis("lefty")
-
-		-- 	if math.abs(joyX) > 0.5 or math.abs(joyY) > 0.5 then
-		-- 		Mover.MoveTowards(player,joyX,joyY,dt)
-		-- 	end
-
-		-- 	if player.shipType == ShipType.gunship then
-		-- 		joyCannonX = joy:getGamepadAxis("rightx")
-		-- 		joyCannonY = joy:getGamepadAxis("righty")
-
-		-- 		if math.abs(joyCannonX) > 0.5 or math.abs(joyCannonY) > 0.5 then
-		-- 			local angle = math.atan2(joyCannonX,-joyCannonY)
-
-		-- 			player.cannonRotation = angle
-		-- 			player.firing = true
-		-- 		end
-		-- 	end
-		-- end
-
 		player:update(dt)
-
-		for b, bullet in pairs(player.bullets) do
-		    local hitWall = TiledMap_GetMapTile(math.floor(bullet.x/16),math.floor(bullet.y/16),1)
-		    if hitWall > 0 and (not bullet.bounce) then
-		    	table.remove(player.bullets, b)
-		    else
-				for p, otherPlayer in pairs(players) do
-					if player ~= otherPlayer and otherPlayer.components.life.alive then
-						xPow = math.pow(otherPlayer.components.move.x - bullet.x, 2)
-						yPow = math.pow(otherPlayer.components.move.y - bullet.y, 2)
-
-						dist = math.sqrt(xPow + yPow)
-
-						if dist < 20 then
-							player.components.score.hits = player.components.score.hits + 1
-							otherPlayer.components.life:takeDamage(player, bullet.damage)
-							table.remove(player.bullets, b)
-						end
-					end
-			   end
-			end
-		end
 	end
 	Game.checkWin()
 end
@@ -250,7 +196,7 @@ function Game.draw()
 		table.insert(lights,pos)
 	end
 
-	myShader:send("lightArray", lights[1],lights[2],lights[3],lights[4])
+	myShader:send("lightArray", lights[1],lights[2])
 
 	love.graphics.scale(scaleFactor, scaleFactor)
 

@@ -37,7 +37,7 @@ function MineComponent:fire()
     local rBullet = move.rotation + i * angleDiff
     local x = move.x + (5 * math.sin(move.rotation))
     local y = move.y + (5 * -math.cos(move.rotation))
-    bullet = Bullet.new(x,y,10,rBullet, self.weaponDamage)
+    bullet = Bullet.new(self.entity,x,y,10,rBullet, self.weaponDamage)
     table.insert(self.entity.bullets, bullet)
   end
 end

@@ -73,7 +73,7 @@ function Ship:update(dt)
 
   self.engineParticle:update(dt)
   for _, component in pairs(self.components) do
-    if component.update ~= nil then
+    if component.update then
       component:update(dt)
     end
   end
@@ -104,7 +104,7 @@ end
 
 function Ship:draw()
   for _, component in pairs(self.components) do
-    if component.draw ~= nil then
+    if component.draw then
       component:draw()
     end
   end
@@ -114,7 +114,7 @@ function Ship:spawn()
   local spawnLocation = Game.GetSpawnLocation()
 
   for _, component in pairs(self.components) do
-    if component.spawn ~= nil then
+    if component.spawn then
       component:spawn()
     end
   end

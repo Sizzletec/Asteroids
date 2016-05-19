@@ -40,7 +40,7 @@ function AlternatingFireComponent:fire()
     y = move.y + (10 * -math.cos(move.rotation)) + (-7 * math.sin(move.rotation))
   end
 
-  local bullet = Bullet.new(x,y,600,move.rotation, self.weaponDamage)
+  local bullet = Bullet.new(self.entity, x,y,600,move.rotation, self.weaponDamage)
   table.insert(self.entity.bullets, bullet)
 
   if self.cannon == "right" then

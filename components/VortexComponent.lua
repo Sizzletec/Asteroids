@@ -46,7 +46,7 @@ function VortexComponent:fire()
   self.entity.components.score.shots = self.entity.components.score.shots + 1
 
   for i=1,8 do
-      bullet = Bullet.new(move.x,move.y,0,move.rotation + math.pi/4 * i, self.weaponDamage)
+      bullet = Bullet.new(self.entity, move.x,move.y,0,move.rotation + math.pi/4 * i, self.weaponDamage)
       table.insert(self.entity.bullets, bullet)
   end
 end

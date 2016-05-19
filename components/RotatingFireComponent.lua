@@ -34,7 +34,7 @@ function RotatingFireComponent:fire()
 
   local x = move.x - (3 * math.sin(move.rotation))
   local y = move.y + (3 * math.cos(move.rotation))
-  bullet = Bullet.new(x,y,900,angle, self.weaponDamage)
+  bullet = Bullet.new(self.entity,x,y,900,angle, self.weaponDamage)
   table.insert(self.entity.bullets, bullet)
 end
 

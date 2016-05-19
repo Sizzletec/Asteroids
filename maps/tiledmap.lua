@@ -27,7 +27,8 @@ function TiledMap_Load (filepath,tilesize,spritepath_removeold,spritepath_prefix
         local gid = first_gid
         local e = kTileSize
         local image = love.graphics.newImage(raw)
-        tilesetBatch = love.graphics.newSpriteBatch(image, w * h)
+        -- image:setFilter('nearest', 'nearest')
+        tilesetBatch = love.graphics.newSpriteBatch(image, 120 * 90)
 
         for y=0,floor(h/kTileSize)-1 do
         for x=0,floor(w/kTileSize)-1 do
@@ -44,15 +45,15 @@ function TiledMap_Unload()
     gMapObjects = nil
 end
 
- 
+
 function TiledMap_GetMapW () return gMapLayers.width end
 function TiledMap_GetMapH () return gMapLayers.height end
- 
+
 function TiledMap_GetMapWUsed ()
 	local maxx = 0
 	local miny = 0
 	local maxy = 0
-	for layerid,layer in pairs(gMapLayers) do 
+	for layerid,layer in pairs(gMapLayers) do
 		if (type(layer) == "table") then for ty,row in pairs(layer) do
 			if (type(row) == "table") then for tx,t in pairs(row) do 
 				if (t and t ~= kMapTileTypeEmpty) then 
@@ -166,6 +167,7 @@ function TiledMap_AllAtCam (camx,camy,fun_layercallback)
             tilesetBatch:flush()
             love.graphics.setColor(255, 255, 255)
             love.graphics.draw(tilesetBatch)
+            -- tilesetBatch:flush()
         end
     end
 end
