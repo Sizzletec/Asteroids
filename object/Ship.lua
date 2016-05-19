@@ -1,4 +1,5 @@
 ShipsImage = love.graphics.newImage('images/ship-sprites.png')
+part = love.graphics.newImage('images/part.png')
 local shoot = love.audio.newSource("sounds/shoot.wav", "static")
 -- shoot:play()
 
@@ -25,6 +26,8 @@ function Ship.new(player,x,y,rotation,vx,vy, type)
 
   s.player = player
   s.components = {}
+  s.engineParticle = love.graphics.newParticleSystem(part, 500)
+
   s:setDefaults()
 
   return s
@@ -52,12 +55,23 @@ function Ship:setDefaults()
     input = InputComponent.new(self)
   }
 
+
+
   if color then
     self.components.render.color = color
   end
 end
 
 function Ship:update(dt)
+
+  local move = self.components.move
+  self.engineParticle:setParticleLifetime(0.1, 0.3) -- Particles live at least 2s and at most 5s.
+  self.engineParticle:setEmissionRate(100)
+  self.engineParticle:setSizeVariation(.5)
+  self.engineParticle:setLinearAcceleration(1000* math.sin(move.rotation+math.pi), -1000*math.cos(move.rotation+math.pi), 1000* math.sin(move.rotation+math.pi), -1000*math.cos(move.rotation+math.pi)) -- Random movement in all directions.
+  self.engineParticle:setColors(255, 0, 0,255, 255, 0,30, 0) -- Fade to transparency.
+
+  self.engineParticle:update(dt)
   for _, component in pairs(self.components) do
     if component.update then
       component:update(dt)

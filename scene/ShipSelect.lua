@@ -324,10 +324,10 @@ function ShipSelect.updateActive(i, player, dt)
 	if t > 3 then
 		player.ship.components.move.throttle = 1
 	elseif t > 2 then
-		player.ship.components.primaryAttack.firing = true
+		player.ship.components.input.primary = true
 	else
 		player.ship.components.move.throttle = 0
-		player.ship.components.primaryAttack.firing = false
+		player.ship.components.input.primary = false
 	end
 
 	if not player.ship.engine then
