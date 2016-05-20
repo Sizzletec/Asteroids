@@ -17,7 +17,7 @@ ShipType = {
   standard = {
     name = "Standard",
     primaryAttack = AlternatingFireComponent,
-    secondaryAttack = PhaseComponent,
+    secondaryAttack = MineComponent,
     topSpeed = 240,
     acceleration = 360,
     rotationSpeed = 8,
@@ -27,7 +27,7 @@ ShipType = {
   gunship = {
     name = "Gunship",
     primaryAttack = RotatingFireComponent,
-    secondaryAttack = PhaseComponent,
+    secondaryAttack = VortexComponent,
     topSpeed = 120,
     acceleration = 180,
     rotationSpeed = 5,
@@ -47,7 +47,7 @@ ShipType = {
   ray = {
     name = "Ray",
     primaryAttack = RayComponent,
-    secondaryAttack = PhaseComponent,
+    secondaryAttack = MineComponent,
     topSpeed = 180,
     acceleration = 240,
     rotationSpeed = 4,
@@ -58,8 +58,8 @@ ShipType = {
     name = "Zapper",
     primaryAttack = ZapComponent,
     secondaryAttack = PhaseComponent,
-    topSpeed = 180,
-    acceleration = 180,
+    topSpeed = 240,
+    acceleration = 300,
     rotationSpeed = 5,
     health = 160,
     frameOffset = 8
@@ -153,11 +153,11 @@ ShipSelectOrder = {
   ShipType.ray,
   ShipType.zap,
   ShipType.charge,
-  ShipType.missile,
-  ShipType.miner,
-  ShipType.spreader,
+  -- ShipType.missile,
+  -- ShipType.miner,
+  -- ShipType.spreader,
   -- ShipType.phaser,
-  ShipType.shockwave,
-  ShipType.bounce,
-  ShipType.vortex
+  -- ShipType.shockwave,
+  -- ShipType.bounce,
+  -- ShipType.vortex
 }

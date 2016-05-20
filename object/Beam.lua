@@ -131,7 +131,8 @@ function Beam:update(x,y,rotation,dt)
   self.partSys:setAreaSpread("uniform", dist/2,0)
 
   self.partSys:setLinearAcceleration(20, 200, 0, -200) -- Random movement in all directions.
-  self.partSys:setColors(255, 255, 255, 255, 255, 255, 255, 0) -- Fade to transparency.
+  self.partSys:setColors(0, 200, 255,255, 0,200,255, 0) -- Fade to transparency.
+-- Fade to transparency.
   self.partSys:update(dt)
 end
 

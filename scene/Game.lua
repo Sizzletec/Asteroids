@@ -181,22 +181,22 @@ function Game.update(dt)
 end
 
 function Game.draw()
-	love.graphics.setShader(myShader)
+	-- love.graphics.setShader(myShader)
 
 	width = love.graphics.getWidth()
 	height = love.graphics.getHeight()
 
 	scaleFactor = width/1920
 
-	myShader:send("numLights",table.getn(players))
+	-- myShader:send("numLights",table.getn(players))
 
-	lights = {}
-	for i, player in pairs(players) do
-		local pos  = {player.components.move.x*scaleFactor,player.components.move.y*scaleFactor}
-		table.insert(lights,pos)
-	end
+	-- lights = {}
+	-- for i, player in pairs(players) do
+	-- 	local pos  = {player.components.move.x*scaleFactor,player.components.move.y*scaleFactor}
+	-- 	table.insert(lights,pos)
+	-- end
 
-	myShader:send("lightArray", lights[1],lights[2])
+	-- myShader:send("lightArray", lights[1],lights[2])
 
 	love.graphics.scale(scaleFactor, scaleFactor)
 
@@ -204,7 +204,7 @@ function Game.draw()
 	TiledMap_AllAtCam(gCamX,gCamY)
 	love.graphics.setNewFont(40)
 	for i, player in pairs(players) do
-		love.graphics.setShader(myShader)
+		-- love.graphics.setShader(myShader)
 		player:draw()
 
 		local xOffset = 1920/4 * (i-1) + 100

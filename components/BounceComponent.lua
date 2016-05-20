@@ -1,7 +1,7 @@
 BounceComponent = {
   gunCooldown = 0,
   weaponDamage = 20,
-  fireRate = 2,
+  fireRate = 10,
   firing = false
 }
 
@@ -33,7 +33,7 @@ function BounceComponent:fire()
 
   local x = move.x + (10 * math.sin(move.rotation)) 
   local y = move.y + (10 * -math.cos(move.rotation))
-  bullet = Bullet.new(self.entity,x,y,700,move.rotation, self.weaponDamage,2)
+  bullet = Bullet.new(self.entity, x,y,700,move.rotation, self.weaponDamage,2,2)
   bullet.bounce = true
   table.insert(self.entity.bullets, bullet)
 end

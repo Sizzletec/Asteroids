@@ -1,7 +1,7 @@
 PhaseComponent = {
   cannon = "right",
   gunCooldown = 0,
-  weaponDamage = 100,
+  weaponDamage = 20,
   fireRate = 1,
   firing = false
 }

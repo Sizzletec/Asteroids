@@ -1,7 +1,7 @@
 local lightning = love.graphics.newImage('images/lightnings.png')
 
 ZapComponent = {
-  weaponDamage = 3,
+  weaponDamage = 7,
   firing = false,
   attackFrame = 0
 }

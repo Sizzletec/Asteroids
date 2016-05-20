@@ -1,4 +1,4 @@
-local image = love.graphics.newImage('images/bullet.png')
+local image = love.graphics.newImage('images/newBullet.png')
 
 Bullet = {}
 Bullet.__index = Bullet
@@ -39,20 +39,22 @@ function Bullet:update(dt)
 
   self.lifetime = self.lifetime + dt
 
-  -- if self.bounce then
-  --   local hitWallY = TiledMap_GetMapTile(math.floor((self.x - self.vx * dt)/16),math.floor(self.y/16),1)
-  --   local hitWallX = TiledMap_GetMapTile(math.floor(self.x/16),math.floor((self.y - self.vy * dt)/16),1)
-  --   if hitWallX > 0 then
-  --     self.vx = -self.vx
-  --     self.x = self.x + self.vx * dt
-  --   end
-  --   if hitWallY > 0 then
-  --     self.vy = -self.vy
-  --     self.y = self.y + self.vy * dt
-  --   end
-  -- end
-
   local m = self.components.move
+
+  if self.bounce then
+    local hitWallY = TiledMap_GetMapTile(math.floor((m.x - m.vx * dt)/16),math.floor(m.y/16),1)
+    local hitWallX = TiledMap_GetMapTile(math.floor(m.x/16),math.floor((m.y - m.vy * dt)/16),1)
+    if hitWallX > 0 then
+      m.vx = -m.vx
+      m.x = m.x + m.vx * dt
+    end
+    if hitWallY > 0 then
+      m.vy = -m.vy
+      m.y = m.y + m.vy * dt
+    end
+  end
+
+  
   local hitWall = TiledMap_GetMapTile(math.floor(m.x/16),math.floor(m.y/16),1)
 
   if hitWall > 0 and not self.bounce then
@@ -73,9 +75,13 @@ function Bullet:update(dt)
        end
      end
     end
- end
 
- tilesetBatch:add(m.x, m.y, m.rotation, 1,1 , 3,3)
+    m.rotation = math.atan2(m.vx,-m.vy)
+
+  end
+
+  -- Mover.StageWrap(self)
+  tilesetBatch:add(m.x, m.y, m.rotation, 1,1 , 6,6)
 end
 
 function Bullet.draw()

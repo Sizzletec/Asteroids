@@ -25,15 +25,17 @@ function VortexComponent:update(dt)
 
   for b, bullet in pairs(self.entity.bullets) do
 
-    bullet.rotation = bullet.rotation + 2 * math.pi * dt
+    local m = bullet.components.move
 
-    local powX = math.pow(bullet.vx, 2)
-    local powY = math.pow(bullet.vy, 2)
+    m.rotation = m.rotation + 2 * math.pi * dt
+
+    local powX = math.pow(m.vx, 2)
+    local powY = math.pow(m.vy, 2)
     local velocity = math.sqrt(powX + powY)
     velocity = velocity + 700 * dt
 
-    bullet.vx = velocity * math.sin(bullet.rotation)
-    bullet.vy = velocity * -math.cos(bullet.rotation)
+    m.vx = velocity * math.sin(m.rotation)
+    m.vy = velocity * -math.cos(m.rotation)
 
   end
 end
@@ -46,7 +48,7 @@ function VortexComponent:fire()
   self.entity.components.score.shots = self.entity.components.score.shots + 1
 
   for i=1,8 do
-      bullet = Bullet.new(self.entity, move.x,move.y,0,move.rotation + math.pi/4 * i, self.weaponDamage)
+      bullet = Bullet.new(self.entity, move.x,move.y,200,move.rotation + math.pi/4 * i, self.weaponDamage)
       table.insert(self.entity.bullets, bullet)
   end
 end
