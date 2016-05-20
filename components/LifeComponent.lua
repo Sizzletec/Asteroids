@@ -1,3 +1,6 @@
+local hit = love.audio.newSource("sounds/hit.wav", "static")
+local explode = love.audio.newSource("sounds/death.wav", "static")
+
 LifeComponent = {
   lives = 2,
   health = 100,
@@ -20,6 +23,8 @@ function LifeComponent:spawn()
 end
 
 function LifeComponent:takeDamage(fromPlayer, damage)
+  hit:stop()
+  hit:play()
   local score = self.entity.components.score
   if score then 
     if damage >= self.health then
@@ -48,6 +53,7 @@ function LifeComponent:update(dt)
   if self.health <= 0 then
     self.health = 0
     if self.alive then
+      explode:play()
       self.entity.components.score.deaths = self.entity.components.score.deaths + 1
       self.lives = self.lives - 1
       self.alive = false

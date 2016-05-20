@@ -1,3 +1,5 @@
+menuSound = love.audio.newSource("sounds/select.wav", "static")
+
 require('helpers/PointWithinShape')
 require('scene/Game')
 require('scene/Title')

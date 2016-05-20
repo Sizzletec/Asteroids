@@ -1,6 +1,6 @@
 ShipsImage = love.graphics.newImage('images/ship-sprites.png')
 part = love.graphics.newImage('images/part.png')
-local shoot = love.audio.newSource("sounds/shoot.wav", "static")
+
 -- shoot:play()
 
 require('ship_types/ShipTypes')

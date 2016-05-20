@@ -21,23 +21,6 @@ function VortexComponent:update(dt)
   elseif self.gunCooldown > 0 then
     self.gunCooldown = self.gunCooldown - dt
   end
-
-
-  for b, bullet in pairs(self.entity.bullets) do
-
-    local m = bullet.components.move
-
-    m.rotation = m.rotation + 2 * math.pi * dt
-
-    local powX = math.pow(m.vx, 2)
-    local powY = math.pow(m.vy, 2)
-    local velocity = math.sqrt(powX + powY)
-    velocity = velocity + 700 * dt
-
-    m.vx = velocity * math.sin(m.rotation)
-    m.vy = velocity * -math.cos(m.rotation)
-
-  end
 end
 
 function VortexComponent:fire()
@@ -49,6 +32,7 @@ function VortexComponent:fire()
 
   for i=1,8 do
       bullet = Bullet.new(self.entity, move.x,move.y,200,move.rotation + math.pi/4 * i, self.weaponDamage)
+      bullet.vortex = true
       table.insert(self.entity.bullets, bullet)
   end
 end

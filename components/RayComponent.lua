@@ -1,3 +1,5 @@
+
+
 RayComponent = {
   weaponDamage = 3,
   firing = false,

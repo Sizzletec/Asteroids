@@ -1,3 +1,5 @@
+local shoot = love.audio.newSource("sounds/shoot.wav", "static")
+
 RotatingFireComponent = {
   gunCooldown = 0,
   weaponDamage = 40,
@@ -27,6 +29,7 @@ function RotatingFireComponent:fire()
   if self.entity.components.life.health <= 0 then
     return
   end
+  shoot:play()
   local move = self.entity.components.move
   self.entity.components.score.shots = self.entity.components.score.shots + 1
 

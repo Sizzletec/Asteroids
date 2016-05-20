@@ -101,7 +101,7 @@ function PhaseComponent:fire()
   -- self.partSys:setSpeed(speed)
   -- self.partSys:setDirection(self.rotation -math.pi/2)
 
-  self.partSys:setEmissionRate(5)
+  self.partSys:setEmissionRate(100)
   -- self.partSys:setRelativeRotation(true)
 
 
@@ -112,7 +112,7 @@ function PhaseComponent:fire()
 
   -- self.partSys:setOffset(self.offset, 0)
 
-  -- self.partSys:setAreaSpread("uniform", dist/2,0)
+  self.partSys:setAreaSpread("uniform", 30,0)
 
   self.partSys:setLinearAcceleration(20, 200, 0, -200) -- Random movement in all directions.
   self.partSys:setColors(0, 200, 255,255, 0,200,255, 0) -- Fade to transparency.
@@ -131,7 +131,7 @@ function PhaseComponent:draw()
     love.graphics.polygon('line', hitbox)
     love.graphics.pop()
 
-    love.graphics.draw(self.partSys,self.hitbox[1].x,self.hitbox[2].y)
+    love.graphics.draw(self.partSys,self.hitbox[1].x - 30 ,self.hitbox[2].y)
   end
 
 

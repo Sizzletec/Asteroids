@@ -1,3 +1,5 @@
+local shoot = love.audio.newSource("sounds/death2.wav", "static")
+
 ShotgunComponent = {
   gunCooldown = 0,
   weaponDamage = 10,
@@ -27,6 +29,7 @@ function ShotgunComponent:fire()
   if self.entity.components.life.health <= 0 then
     return
   end
+  shoot:play()
   local move = self.entity.components.move
   self.entity.components.score.shots = self.entity.components.score.shots + 1
 

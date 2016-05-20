@@ -54,7 +54,20 @@ function Bullet:update(dt)
     end
   end
 
-  
+
+  if self.vortex then
+    m.rotation = m.rotation + 2 * math.pi * dt
+
+    local powX = math.pow(m.vx, 2)
+    local powY = math.pow(m.vy, 2)
+    local velocity = math.sqrt(powX + powY)
+    velocity = velocity + 700 * dt
+
+    m.vx = velocity * math.sin(m.rotation)
+    m.vy = velocity * -math.cos(m.rotation)
+  end
+
+
   local hitWall = TiledMap_GetMapTile(math.floor(m.x/16),math.floor(m.y/16),1)
 
   if hitWall > 0 and not self.bounce then

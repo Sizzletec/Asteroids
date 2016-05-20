@@ -1,4 +1,4 @@
-
+local shoot = love.audio.newSource("sounds/Laser_Shoot50.wav", "static")
 
 AlternatingFireComponent = {
   cannon = "right",
@@ -44,6 +44,9 @@ function AlternatingFireComponent:fire()
 
   local bullet = Bullet.new(self.entity, x,y,600,move.rotation, self.weaponDamage)
   table.insert(self.entity.bullets, bullet)
+
+  shoot:rewind()
+  shoot:play()
 
   if self.cannon == "right" then
     self.cannon = "left"
