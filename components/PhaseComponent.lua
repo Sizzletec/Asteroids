@@ -1,3 +1,5 @@
+local part1 = love.graphics.newImage('images/part.png')
+
 PhaseComponent = {
   cannon = "right",
   gunCooldown = 0,
@@ -12,6 +14,7 @@ function PhaseComponent.new(entity)
   local i = {}
   setmetatable(i, PhaseComponent)
   i.entity = entity
+  i.partSys = love.graphics.newParticleSystem(part1, 1000)
   return i
 end
 
@@ -22,6 +25,10 @@ function PhaseComponent:update(dt)
   elseif self.gunCooldown > 0 then
     self.gunCooldown = self.gunCooldown - dt
   end
+
+
+-- Fade to transparency.
+  self.partSys:update(dt)
 end
 
 function PhaseComponent:fire()
@@ -84,6 +91,31 @@ function PhaseComponent:fire()
         end
       end
   end
+
+
+  self.partSys:setParticleLifetime(.3, .3) -- Particles live at least 2s and at most 5s.
+  -- self.partSys:setEmissionRate(500)
+  self.partSys:setSizeVariation(1)
+
+  -- self.partSys:setPosition(self.startPointX,self.startPointY)
+  -- self.partSys:setSpeed(speed)
+  -- self.partSys:setDirection(self.rotation -math.pi/2)
+
+  self.partSys:setEmissionRate(5)
+  -- self.partSys:setRelativeRotation(true)
+
+
+    -- if self.offset ~=  -dist/2 then
+    --    self.partSys:reset()
+       -- self.offset = -dist/2
+    -- end
+
+  -- self.partSys:setOffset(self.offset, 0)
+
+  -- self.partSys:setAreaSpread("uniform", dist/2,0)
+
+  self.partSys:setLinearAcceleration(20, 200, 0, -200) -- Random movement in all directions.
+  self.partSys:setColors(0, 200, 255,255, 0,200,255, 0) -- Fade to transparency.
 end
 
 function PhaseComponent:draw()
@@ -98,7 +130,11 @@ function PhaseComponent:draw()
     end
     love.graphics.polygon('line', hitbox)
     love.graphics.pop()
+
+    love.graphics.draw(self.partSys,self.hitbox[1].x,self.hitbox[2].y)
   end
+
+
 end
 
 return PhaseComponent

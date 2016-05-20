@@ -1,5 +1,7 @@
 local part1 = love.graphics.newImage('images/part.png')
 
+part1:setFilter('nearest', 'nearest')
+
 Beam = {}
 Beam.__index = Beam
 
