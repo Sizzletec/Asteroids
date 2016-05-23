@@ -1,6 +1,6 @@
 ChargeAttackComponent = {
   gunCooldown = 0,
-  weaponDamage = 20,
+  weaponDamage = 10,
   fireRate = 4,
   firing = false,
   chargeAmount = 0,
@@ -24,6 +24,12 @@ function ChargeAttackComponent:update(dt)
     self.gunCooldown = self.gunCooldown - dt
   end
 
+  local life = self.entity.components.life
+
+  if not life.alive then
+    charging = 0
+  end
+
   local move = self.entity.components.move
   if not self.firing and self.charging then
     self.entity.components.score.shots = self.entity.components.score.shots + 1
@@ -40,7 +46,7 @@ function ChargeAttackComponent:update(dt)
 
     local x = move.x + (10 * math.sin(move.rotation)) 
     local y = move.y + (10 * -math.cos(move.rotation))
-    bullet = Bullet.new(self.entity, x,y,400,move.rotation, self.chargeAmount * self.weaponDamage,2)
+    bullet = Bullet.new(self.entity, x,y,400 + self.chargeAmount * 30,move.rotation, self.chargeAmount * self.weaponDamage,.5+self.chargeAmount * 0.15)
     bullet.bounce = true
     table.insert(self.entity.bullets, bullet)
     self.charging=false

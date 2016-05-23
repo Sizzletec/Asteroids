@@ -20,11 +20,18 @@ function RayComponent:update(dt)
   if self.entity.components.life.health <= 0 then
     return
   end
+
+  local life = self.entity.components.life
+
+  if not life.alive then
+    self.beam = nil
+  end
+
   local move = self.entity.components.move
   if self.firing and not self.cooldown then
-    self.heat = self.heat + 1
+    self.heat = self.heat + 0.6
 
-    if self.heat == 100 then
+    if self.heat >= 100 then
       self.cooldown = true
     end
     if not self.beam  then

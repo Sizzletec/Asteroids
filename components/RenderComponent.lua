@@ -57,7 +57,7 @@ function RenderComponent:draw()
     love.graphics.draw(ShipsImage, top_left,x, y, r, 1,1 , 16,16)
   end
 
-  if self.entity.shipType == ShipType.gunship then
+  if self.entity.shipType == ShipType.gunship and life.alive then
 
     local angle = self.entity.components.input.fireAngle
     local cannonQuad = love.graphics.newQuad(0, 160, 20, 20, ShipsImage:getDimensions())

@@ -93,15 +93,15 @@ function PhaseComponent:fire()
   end
 
 
-  self.partSys:setParticleLifetime(.3, .3) -- Particles live at least 2s and at most 5s.
+  self.partSys:setParticleLifetime(.2, .3) -- Particles live at least 2s and at most 5s.
   -- self.partSys:setEmissionRate(500)
   self.partSys:setSizeVariation(1)
 
   -- self.partSys:setPosition(self.startPointX,self.startPointY)
   -- self.partSys:setSpeed(speed)
-  -- self.partSys:setDirection(self.rotation -math.pi/2)
+  self.partSys:setDirection(move.rotation -math.pi/2)
 
-  self.partSys:setEmissionRate(100)
+  -- self.partSys:setEmissionRate(500)
   -- self.partSys:setRelativeRotation(true)
 
 
@@ -112,10 +112,12 @@ function PhaseComponent:fire()
 
   -- self.partSys:setOffset(self.offset, 0)
 
-  self.partSys:setAreaSpread("uniform", 30,0)
+  self.partSys:setAreaSpread("uniform", 30/2,(distanceTraveled+30)/2)
 
-  self.partSys:setLinearAcceleration(20, 200, 0, -200) -- Random movement in all directions.
-  self.partSys:setColors(0, 200, 255,255, 0,200,255, 0) -- Fade to transparency.
+  self.partSys:setLinearAcceleration(1000, 0, -1000, 2000) -- Random movement in all directions.
+  self.partSys:setColors(255, 0, 255,255, 255,0,255, 0) -- Fade to transparency.
+
+  self.partSys:emit(1000)
 end
 
 function PhaseComponent:draw()
@@ -131,7 +133,14 @@ function PhaseComponent:draw()
     love.graphics.polygon('line', hitbox)
     love.graphics.pop()
 
-    love.graphics.draw(self.partSys,self.hitbox[1].x - 30 ,self.hitbox[2].y)
+
+    local xMid = (self.hitbox[1].x + self.hitbox[2].x)/2
+    local yMid = (self.hitbox[3].y + self.hitbox[4].y)/2
+    local offset = (self.hitbox[1].y - self.hitbox[3].y + 30)/2
+    local offsetX = xMid + offset * math.sin(move.rotation)
+    local offsetY = yMid + offset * math.cos(move.rotation)
+
+    love.graphics.draw(self.partSys,offsetX,offsetY,move.rotation)
   end
 
 

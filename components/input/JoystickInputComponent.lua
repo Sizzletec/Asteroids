@@ -74,7 +74,7 @@ function JoystickInputComponent:update(dt)
       self.entity.angularInput = self.entity.angularInput * math.abs(moveAngle)/(move.rotationSpeed* dt)
     end
 
-    if math.abs(moveAngle) < math.pi/8 then
+    if math.abs(moveAngle) < math.pi/8 and (math.abs(self.leftx) > 0.9 or math.abs(self.lefty) > 0.9) then
       self.entity.throttle = 1
     end
   else
