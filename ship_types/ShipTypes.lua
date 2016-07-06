@@ -12,12 +12,13 @@ require('components/SelfDestructComponent')
 require('components/ZapComponent')
 require('components/RotatingFireComponent')
 require('components/RayComponent')
+require('components/BoostComponent')
 
 ShipType = {
   standard = {
     name = "Standard",
     primaryAttack = AlternatingFireComponent,
-    secondaryAttack = MineComponent,
+    secondaryAttack = BoostComponent,
     topSpeed = 240,
     acceleration = 360,
     rotationSpeed = 8,

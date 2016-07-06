@@ -8,7 +8,8 @@ MoveComponent = {
   acceleration = 0,
   topSpeed = 0,
   rotationSpeed = 0,
-  angularInput = 0
+  angularInput = 0,
+  speedModifier = 1
 }
 
 MoveComponent.__index = MoveComponent
@@ -45,8 +46,8 @@ end
 
 function MoveComponent:ApplyAcceleration(dt)
   if self.throttle > 0 then
-    local xAccel = self.throttle * self.acceleration * dt * math.sin(self.rotation)
-    local yAccel = self.throttle * self.acceleration * dt * -math.cos(self.rotation)
+    local xAccel = self.throttle * self.acceleration * dt * math.sin(self.rotation) * self.speedModifier
+    local yAccel = self.throttle * self.acceleration * dt * -math.cos(self.rotation) * self.speedModifier
 
     self.vx = self.vx + xAccel
     self.vy = self.vy + yAccel
@@ -61,16 +62,17 @@ end
 function MoveComponent:ApplyVelocity(dt)
 
   if self.topSpeed then
-    if self.vx > self.topSpeed then
-      self.vx = self.topSpeed
-    elseif self.vx < -self.topSpeed  then
-      self.vx = -self.topSpeed
+    ts = self.topSpeed * self.speedModifier
+    if self.vx > ts then
+      self.vx = ts
+    elseif self.vx < -ts  then
+      self.vx = -ts
     end
 
-    if self.vy > self.topSpeed then
-      self.vy = self.topSpeed
-    elseif self.vy < -self.topSpeed then
-      self.vy = -self.topSpeed
+    if self.vy > ts then
+      self.vy = ts
+    elseif self.vy < -ts then
+      self.vy = -ts
     end
   end
 
