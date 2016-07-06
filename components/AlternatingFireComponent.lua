@@ -55,7 +55,7 @@ function AlternatingFireComponent:fire()
 
   local random = love.math.random(200) - 100
 
-  local heatOffset = self.heat/100 * math.pi/20 * random/100
+  local heatOffset = self.heat/100 * math.pi/40 * random/100
 
   local bullet = Bullet.new(self.entity, x,y,600,move.rotation + heatOffset , self.weaponDamage)
   table.insert(self.entity.bullets, bullet)
