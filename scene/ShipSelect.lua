@@ -45,7 +45,7 @@ function ShipSelect.load()
 	TiledMap_Load("maps/empty.tmx",16)
 
 	if not selections[1].ship then
-
+		ShipSelect.activate(1)
 		ShipSelect.activate(2)
 		ShipSelect.makeReady(2)
 

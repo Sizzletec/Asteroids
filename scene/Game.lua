@@ -3,6 +3,7 @@ Game.__index = Game
 
 love.filesystem.load("maps/tiledmap.lua")()
 
+require('object/Map')
 require('object/Ship')
 require('object/Bullet')
 require('object/MissileShot')
@@ -20,6 +21,8 @@ function Game.load()
 	players = {}
 	-- math.randomseed(os.time())
 	local level = "maps/arena" .. tostring(love.math.random(4)) .. ".tmx"
+
+	map = Map.new(level)
 	TiledMap_Load(level,16)
 
 	spawn = TiledMap_GetSpawnLocations()

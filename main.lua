@@ -19,8 +19,8 @@ State = {
 currentState = State.title
 
 function love.load()
-	love.window.setMode(1920, 1080, {fullscreen=false, resizable=true, highdpi=true})
-	setState(currentState)
+	love.window.setMode(1920/2, 1080/2, {fullscreen=false, resizable=false, highdpi=true})
+	setState(ShipSelect)
 	-- love.mouse.setVisible(false)
 end
 

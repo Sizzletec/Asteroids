@@ -49,7 +49,7 @@ function Ship:setDefaults()
     score = ScoreComponent.new(self),
     life = LifeComponent.new(self),
     move = MoveComponent.new(self),
-    wallCollision = WallCollisionComponent.new(self),
+    -- wallCollision = WallCollisionComponent.new(self),
     primaryAttack = self.shipType.primaryAttack.new(self),
     secondaryAttack = self.shipType.secondaryAttack.new(self),
     input = InputComponent.new(self)

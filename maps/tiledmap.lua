@@ -1,3 +1,5 @@
+require('object/Tile')
+
 kTileSize = 32
 kMapTileTypeEmpty = 0
 local floor = math.floor
@@ -27,7 +29,6 @@ function TiledMap_Load (filepath,tilesize,spritepath_removeold,spritepath_prefix
         local gid = first_gid
         local e = kTileSize
         local image = love.graphics.newImage(raw)
-        -- image:setFilter('nearest', 'nearest')
         tilesetBatch = love.graphics.newSpriteBatch(image, 120 * 90)
 
         for y=0,floor(h/kTileSize)-1 do
@@ -56,7 +57,7 @@ function TiledMap_GetMapWUsed ()
 	for layerid,layer in pairs(gMapLayers) do
 		if (type(layer) == "table") then for ty,row in pairs(layer) do
 			if (type(row) == "table") then for tx,t in pairs(row) do 
-				if (t and t ~= kMapTileTypeEmpty) then 
+				if (t.id and t.id ~= kMapTileTypeEmpty) then 
 					miny = min(miny,ty)
 					maxy = max(maxy,ty)
 					maxx = max(maxx,tx)
@@ -84,7 +85,11 @@ end
  
 function TiledMap_GetMapTile (tx,ty,layerid)
     local row = gMapLayers[layerid][ty]
-    return row and row[tx] or kMapTileTypeEmpty
+
+    if row and row[tx] then
+        return row[tx].id
+    end
+    return kMapTileTypeEmpty
 end
  
 function TiledMap_SetMapTile (tx,ty,layerid,v)
@@ -229,7 +234,7 @@ local function getTilesets(node)
     end
     return tiles
 end
- 
+
 local function getLayers(node)
     local layers = {}
 	layers.width = 0
@@ -248,7 +253,7 @@ local function getLayers(node)
                 if (j == 0) then
                     layer[i] = {}
                 end
-                layer[i][j] = tonumber(child.xarg.gid)
+                layer[i][j] = Tile.new(tonumber(child.xarg.gid))
                 j = j + 1
                 if j >= width then
                     j = 0
