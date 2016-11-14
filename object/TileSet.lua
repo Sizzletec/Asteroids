@@ -28,7 +28,7 @@ function TileSet.new(filename,firstGid,tileCount,tileSize)
 end
 
 function TileSet:addTile(id,x,y)
-  quad = self.tileQuads[id]
+  quad = self.tileQuads[id - self.firstGid+1]
   if quad ~= nil then
     local screen_w = love.graphics.getWidth()
     local screen_h = love.graphics.getHeight()

@@ -1,15 +1,15 @@
-JoystickInputComponent = {
-  leftx = 0,
-  lefty = 0,
-  rightx = 0,
-  righty = 0,
-  triggerright = 0,
-  triggerleft = 0
-}
+JoystickInputComponent = {}
 JoystickInputComponent.__index = JoystickInputComponent
 
 function JoystickInputComponent.new(entity)
-  local i = {}
+  local i = {
+    leftx = 0,
+    lefty = 0,
+    rightx = 0,
+    righty = 0,
+    triggerright = 0,
+    triggerleft = 0
+  }
   setmetatable(i, JoystickInputComponent)
   i.entity = entity
   return i

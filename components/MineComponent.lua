@@ -1,15 +1,14 @@
-MineComponent = {
-  cannon = "right",
-  gunCooldown = 0,
-  weaponDamage = 10,
-  fireRate = 1,
-  firing = false
-}
-
+MineComponent = {}
 MineComponent.__index = MineComponent
 
 function MineComponent.new(entity)
-  local i = {}
+  local i = {
+    cannon = "right",
+    gunCooldown = 0,
+    weaponDamage = 10,
+    fireRate = 1,
+    firing = false
+  }
   setmetatable(i, MineComponent)
   i.entity = entity
   return i

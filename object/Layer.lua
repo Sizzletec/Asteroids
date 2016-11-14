@@ -1,11 +1,12 @@
 require('object/Tile')
-Layer = {
-  tiles = {}
-}
+Layer = {}
 Layer.__index = Layer
 
-function Layer.new(map)
-  local t = {}
+function Layer.new(map,name)
+  local t = {
+    tiles = {},
+    name = name
+  }
   setmetatable(t, Layer)
   t.components = {}
   t.map = map

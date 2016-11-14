@@ -12,14 +12,14 @@ require('components/LifeComponent')
 require('components/MoveComponent')
 require('components/WallCollisionComponent')
 
-Ship = {
-  shield = false,
-  explodingFrame = 0,
-}
+Ship = {}
 Ship.__index = Ship
 
 function Ship.new(player,x,y,rotation,vx,vy, type)
-  local s = {}
+  local s = {
+    shield = false,
+    explodingFrame = 0,
+  }
   setmetatable(s, Ship)
 
   s.shipType = type or ShipType.standard

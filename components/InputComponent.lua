@@ -1,18 +1,18 @@
 require('components/input/KeyboardInputComponent')
 require('components/input/JoystickInputComponent')
 
-InputComponent = {
-  fireAngle = 0,
-  primary = false,
-  secondary = false,
-  throttle = 0,
-  angularInput = 0,
-  activeComponent = nil
-}
+InputComponent = {}
 InputComponent.__index = InputComponent
 
 function InputComponent.new(entity)
-  local i = {}
+  local i = {
+    fireAngle = 0,
+    primary = false,
+    secondary = false,
+    throttle = 0,
+    angularInput = 0,
+    activeComponent = nil
+  }
   setmetatable(i, InputComponent)
   i.entity = entity
   i.components = {}

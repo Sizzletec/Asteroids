@@ -68,32 +68,22 @@ function Bullet:update(dt)
   end
 
 
-  -- local hitWall = TiledMap_GetMapTile(math.floor(m.x/16),math.floor(m.y/16),1)
+  for _, otherPlayer in pairs(Game.getPlayers()) do
+   if self.entity ~= otherPlayer and otherPlayer.components.life.alive then
+     xPow = math.pow(otherPlayer.components.move.x - m.x, 2)
+     yPow = math.pow(otherPlayer.components.move.y - m.y, 2)
 
-  -- if hitWall > 0 and not self.bounce then
-  --   -- self.bulletLife = 0
-  -- else
+     dist = math.sqrt(xPow + yPow)
 
-    for _, otherPlayer in pairs(Game.getPlayers()) do
-     if self.entity ~= otherPlayer and otherPlayer.components.life.alive then
-       xPow = math.pow(otherPlayer.components.move.x - m.x, 2)
-       yPow = math.pow(otherPlayer.components.move.y - m.y, 2)
-
-       dist = math.sqrt(xPow + yPow)
-
-       if dist < 20 then
-         self.entity.components.score.hits = self.entity.components.score.hits + 1
-         otherPlayer.components.life:takeDamage(self.entity, self.damage)
-         self.bulletLife = 0
-       end
+     if dist < 20 then
+       self.entity.components.score.hits = self.entity.components.score.hits + 1
+       otherPlayer.components.life:takeDamage(self.entity, self.damage)
+       self.bulletLife = 0
      end
-    end
+   end
+  end
 
-    m.rotation = math.atan2(m.vx,-m.vy)
-
-  -- end
-
-  -- Mover.StageWrap(self)
+  m.rotation = math.atan2(m.vx,-m.vy)
   tilesetBatch:add(m.x, m.y, m.rotation, 1,1 , 6,6)
 end
 

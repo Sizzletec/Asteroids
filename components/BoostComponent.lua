@@ -1,15 +1,14 @@
 local part1 = love.graphics.newImage('images/part.png')
 
-BoostComponent = {
-  gunCooldown = 0,
-  fireRate = 1,
-  firing = false
-}
-
+BoostComponent = {}
 BoostComponent.__index = BoostComponent
 
 function BoostComponent.new(entity)
-  local i = {}
+  local i = {
+    gunCooldown = 0,
+    fireRate = 1,
+    firing = false
+  }
   setmetatable(i, BoostComponent)
   i.entity = entity
   return i

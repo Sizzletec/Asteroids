@@ -23,7 +23,7 @@ function Game.load()
 	players = {}
 	-- math.randomseed(os.time())
 	local level = "maps/arena" .. tostring(love.math.random(4)) .. ".tmx"
-
+	map = nil
 	map = Map.new(level)
 	TiledMap_Load(level,16)
 
@@ -206,7 +206,7 @@ function Game.draw()
 
 	love.graphics.scale(scaleFactor, scaleFactor)
 
-	map:draw()
+	map:drawBackground()
 
 	love.graphics.setNewFont(40)
 	for i, player in pairs(players) do
@@ -224,6 +224,8 @@ function Game.draw()
 	end
 	Bullet.draw()
 	MissileShot.draw()
+
+	map:drawForeground()
 	-- Beam.draw()
 	-- fps = love.timer.getFPS()
     -- love.graphics.print(winCount, 50, 50)

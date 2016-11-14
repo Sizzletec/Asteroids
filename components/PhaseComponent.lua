@@ -1,17 +1,18 @@
 local part1 = love.graphics.newImage('images/part.png')
 
-PhaseComponent = {
-  cannon = "right",
-  gunCooldown = 0,
-  weaponDamage = 20,
-  fireRate = 1,
-  firing = false
-}
+PhaseComponent = {}
 
 PhaseComponent.__index = PhaseComponent
 
 function PhaseComponent.new(entity)
-  local i = {}
+  local i = {
+    cannon = "right",
+    gunCooldown = 0,
+    weaponDamage = 20,
+    fireRate = 1,
+    firing = false
+  }
+
   setmetatable(i, PhaseComponent)
   i.entity = entity
   i.partSys = love.graphics.newParticleSystem(part1, 1000)

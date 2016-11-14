@@ -1,21 +1,21 @@
-MoveComponent = {
-  x = 0,
-  y = 0,
-  vx = 0,
-  vy = 0,
-  rotation = 0,
-  throttle = 0,
-  acceleration = 0,
-  topSpeed = 0,
-  rotationSpeed = 0,
-  angularInput = 0,
-  speedModifier = 1
-}
-
+MoveComponent = {}
 MoveComponent.__index = MoveComponent
 
 function MoveComponent.new(entity)
-  local i = {}
+  local i = {
+    x = 0,
+    y = 0,
+    vx = 0,
+    vy = 0,
+    rotation = 0,
+    throttle = 0,
+    acceleration = 0,
+    topSpeed = 0,
+    rotationSpeed = 0,
+    angularInput = 0,
+    speedModifier = 1
+  }
+
   setmetatable(i, MoveComponent)
   i.entity = entity
 

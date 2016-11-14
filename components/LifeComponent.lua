@@ -1,16 +1,16 @@
 local hit = love.audio.newSource("sounds/hit.wav", "static")
 local explode = love.audio.newSource("sounds/death.wav", "static")
 
-LifeComponent = {
-  lives = 2,
-  health = 100,
-  alive = true
-}
+LifeComponent = {}
 
 LifeComponent.__index = LifeComponent
 
 function LifeComponent.new(entity)
-  local i = {}
+  local i = {
+    lives = 2,
+    health = 100,
+    alive = true
+  }
   setmetatable(i, LifeComponent)
   i.entity = entity
   i.health = entity.shipType.health

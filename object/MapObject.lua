@@ -1,10 +1,9 @@
-MapObject = {
-  Layers = {}
-}
+MapObject = {}
 MapObject.__index = MapObject
 
 function MapObject.new(id)
   local t = {
+    layers = {}
     id = id
   }
   setmetatable(t, MapObject)

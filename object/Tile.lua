@@ -10,10 +10,11 @@ function Tile.new(id,tileset,x,y)
     tileset = tileset,
     x = x,
     y = y,
+    t = 0
   }
   setmetatable(t, Tile)
   t.components = {}
-  if t.id ~= 0 then
+  if t.id ~= 0 and t.id < 7 then
     t.components["wall"] = WallTileComponent.new(t)
     t.components["blocking"] = BlockingTileComponent.new(t)
   end
@@ -27,13 +28,26 @@ function Tile:update(dt)
       component:update(dt)
     end
   end
+
+  self.t = self.t + dt
+  if self.id == 3 then
+    if self.t < 1 then
+      self.x = self.x + 1
+    elseif self.t < 2  then
+      self.x = self.x -1
+    else
+      self.t = 0
+    end
+  end
 end
 
 function Tile:draw()
-  self.tileset:addTile(self.id, self.x, self.y)
-  for _, component in pairs(self.components) do
-    if component.draw then
-      component:draw()
+  if self.tileset then
+    self.tileset:addTile(self.id, self.x, self.y)
+    for _, component in pairs(self.components) do
+      if component.draw then
+        component:draw()
+      end
     end
   end
 end

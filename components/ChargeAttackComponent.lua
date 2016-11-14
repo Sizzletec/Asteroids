@@ -1,16 +1,16 @@
-ChargeAttackComponent = {
-  gunCooldown = 0,
-  weaponDamage = 10,
-  fireRate = 4,
-  firing = false,
-  chargeAmount = 0,
-  charging = 0
-}
+ChargeAttackComponent = {}
 
 ChargeAttackComponent.__index = ChargeAttackComponent
 
 function ChargeAttackComponent.new(entity)
-  local i = {}
+  local i = {
+    gunCooldown = 0,
+    weaponDamage = 10,
+    fireRate = 4,
+    firing = false,
+    chargeAmount = 0,
+    charging = 0
+  }
   setmetatable(i, ChargeAttackComponent)
   i.entity = entity
   return i

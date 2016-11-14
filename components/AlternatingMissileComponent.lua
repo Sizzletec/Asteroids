@@ -1,15 +1,15 @@
-AlternatingMissileComponent = {
-  cannon = "right",
-  gunCooldown = 0,
-  weaponDamage = 30,
-  fireRate=1,
-  firing = false
-}
+AlternatingMissileComponent = {}
 
 AlternatingMissileComponent.__index = AlternatingMissileComponent
 
 function AlternatingMissileComponent.new(entity)
-  local i = {}
+  local i = {
+    cannon = "right",
+    gunCooldown = 0,
+    weaponDamage = 30,
+    fireRate=1,
+    firing = false
+  }
   setmetatable(i, AlternatingMissileComponent)
   i.entity = entity
   return i

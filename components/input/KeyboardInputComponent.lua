@@ -1,10 +1,10 @@
-KeyboardInputComponent = {
-  keysPressed = {}
-}
+KeyboardInputComponent = {}
 KeyboardInputComponent.__index = KeyboardInputComponent
 
 function KeyboardInputComponent.new(entity)
-  local i = {}
+  local i = {
+    keysPressed = {}
+  }
   setmetatable(i, KeyboardInputComponent)
   i.entity = entity
   return i

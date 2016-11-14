@@ -1,14 +1,15 @@
-BounceComponent = {
-  gunCooldown = 0,
-  weaponDamage = 20,
-  fireRate = 10,
-  firing = false
-}
+BounceComponent = {}
 
 BounceComponent.__index = BounceComponent
 
 function BounceComponent.new(entity)
-  local i = {}
+  local i = {
+    gunCooldown = 0,
+    weaponDamage = 20,
+    fireRate = 10,
+    firing = false
+  }
+
   setmetatable(i, BounceComponent)
   i.entity = entity
   return i
