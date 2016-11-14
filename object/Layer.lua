@@ -13,16 +13,10 @@ function Layer.new(map)
   return t
 end
 
-function Layer:createTileBatches()
-end
-
-
-
-
-function Layer:update()
+function Layer:update(dt)
   for _,row in pairs(self.tiles) do
     for _,t in pairs(row) do
-      t:update()
+      t:update(dt)
     end
   end
 end

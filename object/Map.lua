@@ -88,7 +88,7 @@ end
 
 function Map:update(dt)
   for _,layer in pairs(self.layers) do
-    layer:update()
+    layer:update(dt)
   end
 end
 

@@ -41,18 +41,18 @@ function Bullet:update(dt)
 
   local m = self.components.move
 
-  if self.bounce then
-    local hitWallY = TiledMap_GetMapTile(math.floor((m.x - m.vx * dt)/16),math.floor(m.y/16),1)
-    local hitWallX = TiledMap_GetMapTile(math.floor(m.x/16),math.floor((m.y - m.vy * dt)/16),1)
-    if hitWallX > 0 then
-      m.vx = -m.vx
-      m.x = m.x + m.vx * dt
-    end
-    if hitWallY > 0 then
-      m.vy = -m.vy
-      m.y = m.y + m.vy * dt
-    end
-  end
+  -- if self.bounce then
+  --   local hitWallY = TiledMap_GetMapTile(math.floor((m.x - m.vx * dt)/16),math.floor(m.y/16),1)
+  --   local hitWallX = TiledMap_GetMapTile(math.floor(m.x/16),math.floor((m.y - m.vy * dt)/16),1)
+  --   if hitWallX > 0 then
+  --     m.vx = -m.vx
+  --     m.x = m.x + m.vx * dt
+  --   end
+  --   if hitWallY > 0 then
+  --     m.vy = -m.vy
+  --     m.y = m.y + m.vy * dt
+  --   end
+  -- end
 
 
   if self.vortex then
@@ -68,13 +68,13 @@ function Bullet:update(dt)
   end
 
 
-  local hitWall = TiledMap_GetMapTile(math.floor(m.x/16),math.floor(m.y/16),1)
+  -- local hitWall = TiledMap_GetMapTile(math.floor(m.x/16),math.floor(m.y/16),1)
 
-  if hitWall > 0 and not self.bounce then
-    self.bulletLife = 0
-  else
+  -- if hitWall > 0 and not self.bounce then
+  --   -- self.bulletLife = 0
+  -- else
 
-  for _, otherPlayer in pairs(Game.getPlayers()) do
+    for _, otherPlayer in pairs(Game.getPlayers()) do
      if self.entity ~= otherPlayer and otherPlayer.components.life.alive then
        xPow = math.pow(otherPlayer.components.move.x - m.x, 2)
        yPow = math.pow(otherPlayer.components.move.y - m.y, 2)
@@ -91,7 +91,7 @@ function Bullet:update(dt)
 
     m.rotation = math.atan2(m.vx,-m.vy)
 
-  end
+  -- end
 
   -- Mover.StageWrap(self)
   tilesetBatch:add(m.x, m.y, m.rotation, 1,1 , 6,6)

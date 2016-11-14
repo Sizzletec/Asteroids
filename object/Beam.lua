@@ -77,31 +77,6 @@ function Beam:update(x,y,rotation,dt)
   end
 
 
-
-  -- -- self.x = self.x + self.vx
-  -- -- self.y = self.y + self.vy
-
-  -- if self.y > (TiledMap_GetMapH() * 16) then
-  --   self.y = self.y - TiledMap_GetMapH() * 16
-  -- end
-
-  -- if self.y < 0 then
-  --   self.y = self.y + TiledMap_GetMapH() * 16
-  -- end
-
-
-  -- if self.x > 1920 then
-  --   self.x = self.x - 1920
-  -- end
-
-  -- if self.x < 0 then
-  --   self.x = self.x + 1920
-  -- end
-
-
-  -- tilesetBatch:add(self.x, self.y, self.rotation, 1,1 , 3,3)
-
-
   xPow = math.pow(self.startPointX - self.endPointX, 2)
   yPow = math.pow(self.startPointY - self.endPointY, 2)
 

@@ -170,7 +170,7 @@ function Game.checkWin()
 end
 
 function Game.update(dt)
-	map:update()
+	map:update(dt)
 	if gameWon then
 		winCount = winCount - 3 * dt
 		dt = dt / winCount
@@ -206,8 +206,6 @@ function Game.draw()
 
 	love.graphics.scale(scaleFactor, scaleFactor)
 
-	gCamX,gCamY = width/2,height/2
-	TiledMap_AllAtCam(gCamX,gCamY)
 	map:draw()
 
 	love.graphics.setNewFont(40)

@@ -91,9 +91,7 @@ function Title.draw()
 
 	love.graphics.scale(scaleFactor, scaleFactor)
 
-	gCamX,gCamY = width/2,height/2
 	love.graphics.setColor(255, 255, 255)
-	TiledMap_AllAtCam(gCamX,gCamY)
 
 	local menuString = ""
 	for i, option in ipairs(menuOptions) do
