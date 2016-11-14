@@ -33,15 +33,23 @@ function Map.new(filename)
 
   id = m.layers[1].tiles[20][0].id
 
-  print(m.tileSets[1]:GetImage(id))
+
   return m
 end
+
+
 
 function Map:LoadTileset(xml)
   for k, sub in ipairs(xml) do
     if (sub.label == "tileset") then
       imagePath = "maps/".. sub[1].xarg.source
-      tileset = TileSet.new(imagePath,self.tileSize)
+
+      firstGid = sub.xarg.firstgid
+
+      tileCount = sub.xarg.tilecount
+
+      tileset = TileSet.new(imagePath,firstGid,tileCount,self.tileSize)
+
       self.tileSets[tonumber(sub.xarg.firstgid)] = tileset
       print(self.tileSets[1])
     end
@@ -54,7 +62,7 @@ function Map:LoadLayers(xml)
       self.width = max(self.width,tonumber(sub.xarg.width) or 0)
       self.height = max(self.height,tonumber(sub.xarg.height) or 0)
 
-      layer = Layer.new()
+      layer = Layer.new(self)
       table.insert(self.layers,layer)
 
       layer.name = sub.xarg.name
@@ -65,13 +73,34 @@ function Map:LoadLayers(xml)
         if (j == 0) then
           layer.tiles[i] = {}
         end
-        layer.tiles[i][j] = Tile.new(tonumber(child.xarg.gid))
+        tileset = self.tileSets[1]
+        layer.tiles[i][j] = Tile.new(tonumber(child.xarg.gid), tileset,j*self.tileSize,i*self.tileSize)
         j = j + 1
         if j >= width then
           j = 0
           i = i + 1
         end
       end
+    end
+  end
+end
+
+
+function Map:update(dt)
+  for _,layer in pairs(self.layers) do
+    layer:update()
+  end
+end
+
+function Map:draw()
+  for _,layer in pairs(self.layers) do
+    for _,ts in pairs(self.tileSets) do
+      ts.batch:clear()
+    end
+    layer:draw()
+    for _,ts in pairs(self.tileSets) do
+      love.graphics.draw(ts.batch)
+      ts.batch:flush()
     end
   end
 end

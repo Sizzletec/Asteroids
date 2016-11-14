@@ -21,6 +21,7 @@ currentState = State.title
 function love.load()
 	love.window.setMode(1920/2, 1080/2, {fullscreen=false, resizable=false, highdpi=true})
 	setState(ShipSelect)
+	canvas = love.graphics.newCanvas( 600, 600 )
 	-- love.mouse.setVisible(false)
 end
 
@@ -79,9 +80,18 @@ function love.draw()
 	-- 	 love.graphics.print("NOPE!!", 1200, 850)
 	-- end
 
+	
+	-- love.graphics.setCanvas(canvas)
+	-- love.graphics.clear()
+
 	if currentState.draw then
 		currentState.draw()
 	end
+	-- love.graphics.setCanvas()
+	-- if (Game.getPlayers()[1]) then
+	-- 	m = Game.getPlayers()[1].components.move
+	-- 	love.graphics.draw(canvas, m.x -50, m.y -50)
+	-- end	
 end
 
 function setState(newState)

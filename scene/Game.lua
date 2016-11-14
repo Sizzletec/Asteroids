@@ -17,6 +17,8 @@ local numberAlive = 0
 local gameWon = false
 local winCount = 10
 
+local map
+
 function Game.load()
 	players = {}
 	-- math.randomseed(os.time())
@@ -168,6 +170,7 @@ function Game.checkWin()
 end
 
 function Game.update(dt)
+	map:update()
 	if gameWon then
 		winCount = winCount - 3 * dt
 		dt = dt / winCount
@@ -205,6 +208,8 @@ function Game.draw()
 
 	gCamX,gCamY = width/2,height/2
 	TiledMap_AllAtCam(gCamX,gCamY)
+	map:draw()
+
 	love.graphics.setNewFont(40)
 	for i, player in pairs(players) do
 		-- love.graphics.setShader(myShader)
