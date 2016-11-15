@@ -108,6 +108,12 @@ function Ship:draw()
       component:draw()
     end
   end
+
+  for _, bullet in pairs(self.bullets) do
+    if bullet then
+      bullet:draw()
+    end
+  end
 end
 
 function Ship:spawn()

@@ -311,7 +311,7 @@ function ShipSelect.draw()
 
 	love.graphics.push()
 	love.graphics.scale(2,2)
-	Bullet.draw()
+	Bullet.drawBatch()
 	MissileShot.draw()
 	-- Beam.draw()
 	love.graphics.pop()

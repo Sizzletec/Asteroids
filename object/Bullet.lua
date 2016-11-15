@@ -84,12 +84,16 @@ function Bullet:update(dt)
   end
 
   m.rotation = math.atan2(m.vx,-m.vy)
-  tilesetBatch:add(m.x, m.y, m.rotation, 1,1 , 6,6)
 end
 
-function Bullet.draw()
-  tilesetBatch:flush()
+function Bullet:draw()
+    local m = self.components.move
+    tilesetBatch:add(m.x, m.y, m.rotation, 1,1 , 6,6)
+end
+
+function Bullet.drawBatch()
   love.graphics.draw(tilesetBatch)
+  tilesetBatch:flush()
   tilesetBatch:clear()
 end
 

@@ -19,9 +19,9 @@ State = {
 currentState = State.title
 
 function love.load()
-	love.window.setMode(1920/2, 1080/2, {fullscreen=false, resizable=false, highdpi=true})
+	love.window.setMode(1920/2, 1080/2, {fullscreen=false, resizable=true, highdpi=true})
 	setState(ShipSelect)
-	canvas = love.graphics.newCanvas( 600, 600 )
+
 	-- love.mouse.setVisible(false)
 end
 
@@ -80,7 +80,7 @@ function love.draw()
 	-- 	 love.graphics.print("NOPE!!", 1200, 850)
 	-- end
 
-	
+	-- canvas = love.graphics.newCanvas( 600, 600 )
 	-- love.graphics.setCanvas(canvas)
 	-- love.graphics.clear()
 
