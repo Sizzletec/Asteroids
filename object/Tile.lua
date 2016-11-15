@@ -3,6 +3,7 @@ Tile.__index = Tile
 
 require('components/WallTileComponent')
 require('components/BlockingTileComponent')
+require('components/ShieldTileComponent')
 
 function Tile.new(id,tileset,x,y)
   local t = {
@@ -17,6 +18,7 @@ function Tile.new(id,tileset,x,y)
   if t.id ~= 0 and t.id < 7 then
     t.components["wall"] = WallTileComponent.new(t)
     t.components["blocking"] = BlockingTileComponent.new(t)
+    -- t.components["shield"] = ShieldTileComponent.new(t,"right")
   end
 
   return t
