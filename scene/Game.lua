@@ -11,6 +11,7 @@ require('object/MissileShot')
 local myShader = love.graphics.newShader( "shaders/lighting.glsl" )
 local players = {}
 
+
 gCamX,gCamY = 0,0
 
 local numberAlive = 0

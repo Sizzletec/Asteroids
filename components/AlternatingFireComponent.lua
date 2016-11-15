@@ -1,19 +1,19 @@
 local shoot = love.audio.newSource("sounds/Laser_Shoot50.wav", "static")
 
-AlternatingFireComponent = {
-  cannon = "right",
-  weaponDamage = 10,
-  fireRate = 12,
-  firing = false,
-  gunCooldown = 0,
-  heat = 0,
-  cooldown = false
-}
+AlternatingFireComponent = {}
 
 AlternatingFireComponent.__index = AlternatingFireComponent
 
 function AlternatingFireComponent.new(entity)
-  local i = {}
+  local i = {
+    cannon = "right",
+    weaponDamage = 10,
+    fireRate = 12,
+    firing = false,
+    gunCooldown = 0,
+    heat = 0,
+    cooldown = false
+  }
   setmetatable(i, AlternatingFireComponent)
   i.entity = entity
   return i
@@ -37,11 +37,12 @@ function AlternatingFireComponent:fire()
   if self.entity.components.life.health <= 0 then
     return
   end
+
   local move = self.entity.components.move
   self.entity.components.score.shots = self.entity.components.score.shots + 1
 
-  
   local x,y = 0,0
+
   if self.cannon == "right" then
     x = move.x + (10 * math.sin(move.rotation)) + (8 * math.cos(move.rotation))
     y = move.y + (10 * -math.cos(move.rotation)) + (8 * math.sin(move.rotation))
@@ -50,14 +51,12 @@ function AlternatingFireComponent:fire()
     y = move.y + (10 * -math.cos(move.rotation)) + (-7 * math.sin(move.rotation))
   end
 
-
-
-
   local random = love.math.random(200) - 100
 
   local heatOffset = self.heat/100 * math.pi/40 * random/100
 
   local bullet = Bullet.new(self.entity, x,y,600,move.rotation + heatOffset , self.weaponDamage)
+
   table.insert(self.entity.bullets, bullet)
 
   shoot:rewind()

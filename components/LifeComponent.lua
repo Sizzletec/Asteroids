@@ -26,6 +26,12 @@ function LifeComponent:takeDamage(fromPlayer, damage)
   hit:stop()
   hit:play()
   local score = self.entity.components.score
+  local armor = self.entity.components.armor
+
+  if armor then
+    damage = armor:apply(damage)
+  end
+
   if score then 
     if damage >= self.health then
       score.damageTaken = score.damageTaken + self.health
@@ -57,6 +63,7 @@ function LifeComponent:update(dt)
       self.entity.components.score.deaths = self.entity.components.score.deaths + 1
       self.lives = self.lives - 1
       self.alive = false
+      self.entity.components.status:Clear()
     end
   end
 end

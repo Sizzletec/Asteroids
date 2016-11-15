@@ -11,6 +11,8 @@ require('components/ScoreComponent')
 require('components/LifeComponent')
 require('components/MoveComponent')
 require('components/WallCollisionComponent')
+require('components/StatusComponent')
+require('components/ArmorComponent')
 
 Ship = {}
 Ship.__index = Ship
@@ -47,6 +49,7 @@ function Ship:setDefaults()
   self.components = {
     render = RenderComponent.new(self),
     score = ScoreComponent.new(self),
+    status = StatusComponent.new(self),
     life = LifeComponent.new(self),
     move = MoveComponent.new(self),
     wallCollision = WallCollisionComponent.new(self),

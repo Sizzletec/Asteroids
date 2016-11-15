@@ -16,16 +16,13 @@ function Bullet.new(entity,x,y,speed,rotation,damage,bulletLife)
   s.components = {
     move = MoveComponent.new(s),
   }
-
   local m = s.components.move
-
   m.x = x
   m.y = y
   m.rotation = rotation or 0
   m.vx = speed * math.sin(m.rotation)
   m.vy = speed * -math.cos(m.rotation)
   m.topSpeed = speed
-
 
   return s
 end
@@ -41,20 +38,6 @@ function Bullet:update(dt)
 
   local m = self.components.move
 
-  -- if self.bounce then
-  --   local hitWallY = TiledMap_GetMapTile(math.floor((m.x - m.vx * dt)/16),math.floor(m.y/16),1)
-  --   local hitWallX = TiledMap_GetMapTile(math.floor(m.x/16),math.floor((m.y - m.vy * dt)/16),1)
-  --   if hitWallX > 0 then
-  --     m.vx = -m.vx
-  --     m.x = m.x + m.vx * dt
-  --   end
-  --   if hitWallY > 0 then
-  --     m.vy = -m.vy
-  --     m.y = m.y + m.vy * dt
-  --   end
-  -- end
-
-
   if self.vortex then
     m.rotation = m.rotation + 2 * math.pi * dt
 
@@ -67,7 +50,6 @@ function Bullet:update(dt)
     m.vy = velocity * -math.cos(m.rotation)
   end
 
-
   for _, otherPlayer in pairs(Game.getPlayers()) do
    if self.entity ~= otherPlayer and otherPlayer.components.life.alive then
      xPow = math.pow(otherPlayer.components.move.x - m.x, 2)
@@ -77,7 +59,11 @@ function Bullet:update(dt)
 
      if dist < 20 then
        self.entity.components.score.hits = self.entity.components.score.hits + 1
+       -- otherPlayer.components.armor = ArmorComponent.new(otherPlayer,30)
        otherPlayer.components.life:takeDamage(self.entity, self.damage)
+       -- otherPlayer.components.status:ApplyDot(self.entity,10,5)
+
+       -- self.entity.components.status:Disable(5)
        self.bulletLife = 0
      end
    end

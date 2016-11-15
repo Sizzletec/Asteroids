@@ -11,7 +11,8 @@ function InputComponent.new(entity)
     secondary = false,
     throttle = 0,
     angularInput = 0,
-    activeComponent = nil
+    activeComponent = nil,
+    disabled = false
   }
   setmetatable(i, InputComponent)
   i.entity = entity
@@ -26,8 +27,16 @@ function InputComponent.new(entity)
 end
 
 function InputComponent:update(dt)
+
   if self.activeComponent then
     self.activeComponent:update(dt)
+  end
+
+  if self.disabled then
+    self.throttle = 0
+    self.angularInput = 0
+    self.primary = false
+    self.secondary = false
   end
 
 
