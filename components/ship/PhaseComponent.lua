@@ -64,6 +64,12 @@ function PhaseComponent:fire()
     move.vx = velocity * math.sin(move.rotation)
     move.vy = velocity * -math.cos(move.rotation)
 
+
+
+
+
+
+
     self.hitbox = {
       { x = -30, y = -30 },
       { x = 30, y = -30 },

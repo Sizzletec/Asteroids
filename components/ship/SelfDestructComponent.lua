@@ -31,15 +31,8 @@ function SelfDestructComponent:fire()
   local move = self.entity.components.move
   self.entity.components.life.health = 0
 
-  local numBullets = 100
-  local angleDiff = 2 * math.pi / numBullets
-  for i=numBullets/2,-numBullets/2,-1 do
-    local rBullet = move.rotation + i * angleDiff
-    local x = move.x + (5 * math.sin(move.rotation))
-    local y = move.y + (5 * -math.cos(move.rotation))
-    bullet = Bullet.new(self.entity,x,y,2*60,rBullet, self.weaponDamage)
-    table.insert(self.entity.bullets, bullet)
-  end
+  local sw = AoE.new(self.entity, move.x,move.y,10,500,4,self.weaponDamage)
+  table.insert(self.entity.AoE, sw)
 end
 
 

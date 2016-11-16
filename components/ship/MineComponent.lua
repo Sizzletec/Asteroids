@@ -30,15 +30,9 @@ function MineComponent:fire()
   local move = self.entity.components.move
   self.entity.components.score.shots = self.entity.components.score.shots + 1
 
-  local numBullets = 100
-  local angleDiff = math.pi*2/numBullets
-  for i=numBullets/2,-numBullets/2,-1 do
-    local rBullet = move.rotation + i * angleDiff
-    local x = move.x + (5 * math.sin(move.rotation))
-    local y = move.y + (5 * -math.cos(move.rotation))
-    bullet = Bullet.new(self.entity,x,y,10,rBullet, self.weaponDamage)
-    table.insert(self.entity.bullets, bullet)
-  end
+  local bullet = Bullet.new(self.entity, move.x,move.y,0,move.rotation, self.weaponDamage)
+  bullet.components.exploding = ExplodingBulletComponent.new(bullet)
+  table.insert(self.entity.bullets, bullet)
 end
 
 

@@ -1,5 +1,9 @@
 local image = love.graphics.newImage('images/newBullet.png')
 
+require('components/bullet/BouncingBulletComponent')
+require('components/bullet/YieldingBulletComponent')
+require('components/bullet/ExplodingBulletComponent')
+
 Bullet = {}
 Bullet.__index = Bullet
 
@@ -15,6 +19,7 @@ function Bullet.new(entity,x,y,speed,rotation,damage,bulletLife)
 
   s.components = {
     move = MoveComponent.new(s),
+    yield = YieldingBulletComponent.new(s),
   }
   local m = s.components.move
   m.x = x
@@ -38,6 +43,8 @@ function Bullet:update(dt)
 
   local m = self.components.move
 
+  self:DistanceCovered()
+
   if self.vortex then
     m.rotation = m.rotation + 2 * math.pi * dt
 
@@ -58,13 +65,7 @@ function Bullet:update(dt)
      dist = math.sqrt(xPow + yPow)
 
      if dist < 20 then
-       self.entity.components.score.hits = self.entity.components.score.hits + 1
-       -- otherPlayer.components.armor = ArmorComponent.new(otherPlayer,30)
-       otherPlayer.components.life:takeDamage(self.entity, self.damage)
-       -- otherPlayer.components.status:ApplyDot(self.entity,10,5)
-
-       -- self.entity.components.status:Disable(5)
-       self.bulletLife = 0
+      self:OnPlayerHit(otherPlayer)
      end
    end
   end
@@ -72,10 +73,67 @@ function Bullet:update(dt)
   m.rotation = math.atan2(m.vx,-m.vy)
 end
 
+
+function Bullet:OnPlayerHit(player)
+  self.entity.components.score.hits = self.entity.components.score.hits + 1
+  player.components.life:takeDamage(self.entity, self.damage)
+
+  for _, component in pairs(self.components) do
+    if component.OnPlayerHit then
+      component:OnPlayerHit(player)
+    end
+  end
+end
+
+function Bullet:OnWallHit(tile,dt)
+  for _, component in pairs(self.components) do
+    if component.OnWallHit then
+      component:OnWallHit(tile,dt)
+    end
+  end
+  -- local move = self.components.move
+  -- local sw = AoE.new(self.entity, move.x,move.y,10,30,0.5,self.damage)
+  -- table.insert(self.entity.AoE, sw)
+  -- self.bulletLife = 0
+end
+
+
+function Bullet:Remove()
+  for _, component in pairs(self.components) do
+    if component.Remove then
+      component:Remove(player)
+    end
+  end
+  self.bulletLife = 0
+end
+
+
 function Bullet:draw()
     local m = self.components.move
     tilesetBatch:add(m.x, m.y, m.rotation, 1,1 , 6,6)
 end
+
+
+function Bullet:DistanceCovered()
+    -- local move = self.components.move
+    -- if move.distance >= 600 then
+    --   move.distance = 0
+
+
+    --   -- local bullet = Bullet.new(self.entity, move.x,move.y,600,move.rotation+math.pi/2, self.damage)
+    --   -- table.insert(self.entity.bullets, bullet)
+
+
+    --   -- local bullet = Bullet.new(self.entity, move.x,move.y,600,move.rotation-math.pi/2, self.damage)
+    --   -- table.insert(self.entity.bullets, bullet)
+
+
+
+    --   -- local sw = AoE.new(self.entity, move.x,move.y,10,30,0.5,self.damage)
+    --   -- table.insert(self.entity.AoE, sw)
+    -- end
+end
+
 
 function Bullet.drawBatch()
   love.graphics.draw(tilesetBatch)

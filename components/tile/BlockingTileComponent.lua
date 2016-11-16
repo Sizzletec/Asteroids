@@ -22,29 +22,13 @@ function BlockingTileComponent:update(dt)
 
         local move = bullet.components.move
 
-
-
         local powX = math.pow(cx - move.x, 2)
         local powY = math.pow(cy - move.y, 2)
         local dist = math.sqrt(powX + powY)
 
-        if dist < 30 and self.id ~= 0 then
+        if dist < 16 and self.id ~= 0 then
           self.wall = true
-
-
-            if bullet.bounce then
-              xAngle = self.entity.x - move.x
-              yAngle = self.entity.y - move.y
-              if math.abs(yAngle) < math.abs(xAngle) then
-                move.vx = -move.vx
-                move.x = move.x + move.vx * dt
-              else
-                move.vy = -move.vy
-                move.y = move.y + move.vy * dt
-              end
-            else
-              bullet.bulletLife = 0
-            end
+          bullet:OnWallHit(self.entity,dt)
         end
       end
     end
@@ -56,8 +40,8 @@ function BlockingTileComponent:draw()
     ts = self.entity.tileset.tileSize
     love.graphics.rectangle("fill", self.entity.x-2, self.entity.y-2, ts+4, ts+4)
     self.wall = false
-    self.entity.id = 0
-    self.entity.components = {}
+    -- self.entity.id = 0
+    -- self.entity.components = {}
   end
 end
 

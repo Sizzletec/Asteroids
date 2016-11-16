@@ -51,7 +51,7 @@ function ShieldTileComponent:update(dt)
                   move.y = move.y + move.vy * dt
                 end
               else
-                bullet.bulletLife = 0
+                bullet:Remove()
               end
           end
         end

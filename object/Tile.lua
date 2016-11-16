@@ -1,9 +1,9 @@
 Tile = {}
 Tile.__index = Tile
 
-require('components/WallTileComponent')
-require('components/BlockingTileComponent')
-require('components/ShieldTileComponent')
+require('components/tile/WallTileComponent')
+require('components/tile/BlockingTileComponent')
+require('components/tile/ShieldTileComponent')
 
 function Tile.new(id,tileset,x,y)
   local t = {

@@ -1,18 +1,20 @@
-require('components/AlternatingFireComponent')
-require('components/ShotgunComponent')
-require('components/VortexComponent')
-require('components/BounceComponent')
-require('components/ChargeAttackComponent')
-require('components/AlternatingMissileComponent')
-require('components/MineComponent')
-require('components/PhaseComponent')
-require('components/ShockwaveComponent')
-require('components/SpreadShotComponent')
-require('components/SelfDestructComponent')
-require('components/ZapComponent')
-require('components/RotatingFireComponent')
-require('components/RayComponent')
-require('components/BoostComponent')
+require('components/ship/AlternatingFireComponent')
+require('components/ship/ShotgunComponent')
+require('components/ship/VortexComponent')
+require('components/ship/BounceComponent')
+require('components/ship/ChargeAttackComponent')
+require('components/ship/AlternatingMissileComponent')
+require('components/ship/MineComponent')
+require('components/ship/PhaseComponent')
+require('components/ship/ShockwaveComponent')
+require('components/ship/SpreadShotComponent')
+require('components/ship/SelfDestructComponent')
+require('components/ship/ZapComponent')
+require('components/ship/RotatingFireComponent')
+require('components/ship/RayComponent')
+require('components/ship/BoostComponent')
+require('components/ship/RocketShotComponent')
+
 
 ShipType = {
   standard = {
@@ -105,6 +107,16 @@ ShipType = {
     health = 150,
     frameOffset = 0
   },
+  rocket = {
+    name = "Rocket",
+    primaryAttack = RocketShotComponent,
+    secondaryAttack = PhaseComponent,
+    topSpeed = 240,
+    acceleration = 360,
+    rotationSpeed = 10,
+    health = 150,
+    frameOffset = 0
+  },
   -- phaser = {
   --   name = "Phaser",
   --   primaryAttack = PhaseComponent,
@@ -154,11 +166,12 @@ ShipSelectOrder = {
   ShipType.ray,
   ShipType.zap,
   ShipType.charge,
+  ShipType.rocket,
   -- ShipType.missile,
-  -- ShipType.miner,
+  ShipType.miner,
   -- ShipType.spreader,
   -- ShipType.phaser,
-  -- ShipType.shockwave,
+  ShipType.shockwave,
   -- ShipType.bounce,
   -- ShipType.vortex
 }

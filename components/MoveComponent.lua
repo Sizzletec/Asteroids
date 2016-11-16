@@ -13,7 +13,8 @@ function MoveComponent.new(entity)
     topSpeed = 0,
     rotationSpeed = 0,
     angularInput = 0,
-    speedModifier = 1
+    speedModifier = 1,
+    distance = 0
   }
 
   setmetatable(i, MoveComponent)
@@ -78,6 +79,8 @@ function MoveComponent:ApplyVelocity(dt)
 
   self.x = self.x + self.vx * dt
   self.y = self.y + self.vy * dt
+
+  self.distance = self.distance + math.abs(self.vx * dt) + math.abs(self.vy * dt)
 end
 
 function MoveComponent:ApplyRotation(dt)

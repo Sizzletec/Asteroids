@@ -6,6 +6,7 @@ love.filesystem.load("maps/tiledmap.lua")()
 require('object/Map')
 require('object/Ship')
 require('object/Bullet')
+require('object/AoE')
 require('object/MissileShot')
 
 local myShader = love.graphics.newShader( "shaders/lighting.glsl" )
@@ -22,6 +23,7 @@ local map
 
 local canvases = {}
 local split = false
+
 
 function Game.load()
 	players = {}
@@ -297,7 +299,9 @@ function Game.drawBase()
 
 	love.graphics.scale(scaleFactor, scaleFactor)
 
+	-- love.graphics.setColor(255, 255, 255, alpha)
 	map:drawBackground()
+	-- love.graphics.setColor(255, 255, 255, 255)
 
 	love.graphics.setNewFont(40)
 	for i, player in pairs(players) do
