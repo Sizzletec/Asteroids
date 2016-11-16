@@ -149,7 +149,7 @@ local function getObjects(node)
             for l, child in ipairs(sub) do
                 objectX = tonumber(child.xarg.x)
                 objectY = tonumber(child.xarg.y)
-                objectR = tonumber(child.xarg.rotation)
+                objectR = tonumber(child.xarg.rotation) or 0
                 objectId = tonumber(child.xarg.id)
                 layer.objects[objectId] = { x = objectX, y = objectY,r = objectR}
             end
