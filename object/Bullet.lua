@@ -1,4 +1,4 @@
-local image = love.graphics.newImage('images/newBullet.png')
+local image = love.graphics.newImage('images/bullets.png')
 
 require('components/bullet/BouncingBulletComponent')
 require('components/bullet/YieldingBulletComponent')
@@ -110,7 +110,9 @@ end
 
 function Bullet:draw()
     local m = self.components.move
-    tilesetBatch:add(m.x, m.y, m.rotation, 1,1 , 6,6)
+
+    q = love.graphics.newQuad(0, 0, 12, 12, 48, 48)
+    tilesetBatch:add(q,m.x, m.y, m.rotation, 1,1 , 6,6)
 end
 
 

@@ -13,7 +13,7 @@ end
 function ExplodingTileComponent:update(dt)
   players = Game.getPlayers()
   for _, player in pairs(players) do
-    for _, bullet in pairs(player.bullets) do
+    for i, bullet in pairs(player.bullets) do
 
       local ts = self.entity.tileset
       if ts then
@@ -31,6 +31,11 @@ function ExplodingTileComponent:update(dt)
           bullet:OnWallHit(self.entity,dt)
           local sw = AoE.new(bullet.entity,move.x,move.y,10,100,0.5,10000)
           table.insert(bullet.entity.AoE, sw)
+
+          if bullet.lifetime > bullet.bulletLife then
+            bullet:Remove()
+            table.remove(player.bullets, i)
+          end
         end
       end
     end

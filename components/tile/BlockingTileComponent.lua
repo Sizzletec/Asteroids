@@ -13,7 +13,7 @@ end
 function BlockingTileComponent:update(dt)
   players = Game.getPlayers()
   for _, player in pairs(players) do
-    for _, bullet in pairs(player.bullets) do
+    for i, bullet in pairs(player.bullets) do
 
       local ts = self.entity.tileset
       if ts then
@@ -28,7 +28,12 @@ function BlockingTileComponent:update(dt)
 
         if dist < 16 and self.id ~= 0 then
           self.wall = true
+
           bullet:OnWallHit(self.entity,dt)
+          if bullet.lifetime > bullet.bulletLife then
+            bullet:Remove()
+            table.remove(player.bullets, i)
+          end
         end
       end
     end
