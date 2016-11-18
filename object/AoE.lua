@@ -25,14 +25,14 @@ function AoE:update(dt)
   if self.radius >= self.endR then
     self.remove = true
   end
-  local move = self.entity.components.move
+  -- local move = self.entity.components.move
 
   local players = Game.getPlayers()
   for p, otherPlayer in pairs(players) do
     if otherPlayer ~= self.entity then
       local otherMove = otherPlayer.components.move
-      local xPow = math.pow(otherMove.x - move.x, 2)
-      local yPow = math.pow(otherMove.y - move.y, 2)
+      local xPow = math.pow(otherMove.x - self.x, 2)
+      local yPow = math.pow(otherMove.y - self.y, 2)
       local dist = math.sqrt(xPow + yPow)
 
       if dist <= self.radius then

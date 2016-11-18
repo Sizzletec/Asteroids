@@ -4,14 +4,14 @@ Tile.__index = Tile
 require('components/tile/WallTileComponent')
 require('components/tile/BlockingTileComponent')
 require('components/tile/ShieldTileComponent')
+require('components/tile/ExplodingTileComponent')
 
 function Tile.new(id,tileset,x,y)
   local t = {
     id = tonumber(id),
     tileset = tileset,
     x = x,
-    y = y,
-    t = 0
+    y = y
   }
   setmetatable(t, Tile)
   t.components = {}
@@ -19,6 +19,10 @@ function Tile.new(id,tileset,x,y)
     t.components["wall"] = WallTileComponent.new(t)
     t.components["blocking"] = BlockingTileComponent.new(t)
     -- t.components["shield"] = ShieldTileComponent.new(t,"right")
+
+    if t.id == 3 then
+      t.components["blocking"] = ExplodingTileComponent.new(t)
+    end
   end
 
   return t
@@ -28,17 +32,6 @@ function Tile:update(dt)
   for _, component in pairs(self.components) do
     if component.update then
       component:update(dt)
-    end
-  end
-
-  self.t = self.t + dt
-  if self.id == 3 then
-    if self.t < 1 then
-      self.x = self.x + 1
-    elseif self.t < 2  then
-      self.x = self.x -1
-    else
-      self.t = 0
     end
   end
 end
