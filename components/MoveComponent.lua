@@ -29,6 +29,8 @@ function MoveComponent.new(entity)
 end
 
 function MoveComponent:update(dt)
+
+
   local input = self.entity.components.input
 
   if input then
@@ -112,5 +114,44 @@ function MoveComponent:StageWrap()
     self.x = self.x + 1920
   end
 end
+
+
+function MoveComponent:MoveTowards(x,y,dt)
+  local angle = math.atan2(x,-y)
+
+  if angle < 0 then
+    angle = angle + 2 * math.pi
+
+  elseif angle > math.pi then
+    angle = angle - 2 * math.pi
+  end
+
+  moveAngle = angle - self.rotation
+
+
+  if (moveAngle < 0 and moveAngle > -math.pi) or moveAngle > math.pi then
+    self.angularInput = -1
+  elseif moveAngle > 0 or moveAngle < -math.pi then
+      self.angularInput = 1
+  else
+      self.angularInput = 0
+  end
+
+  if math.abs(moveAngle) > math.pi and (2*math.pi - math.abs(moveAngle)) < self.rotationSpeed * dt then
+    self.angularInput = self.angularInput * (2*math.pi - math.abs(moveAngle))/(self.rotationSpeed* dt)
+  elseif math.abs(moveAngle) < self.rotationSpeed * dt then
+    self.angularInput = self.angularInput * math.abs(moveAngle)/(self.rotationSpeed* dt)
+  end
+  if math.abs(moveAngle) < math.pi/8 then
+    local xPow = math.pow(x, 2)
+    local yPow = math.pow(y, 2)
+    local dist = math.sqrt(xPow + yPow)
+      if dist > 1 then
+        dist = 1
+      end
+      self.throttle = dist
+  end
+end
+
 
 return MoveComponent
