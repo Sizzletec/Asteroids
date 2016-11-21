@@ -1,21 +1,21 @@
-BounceComponent = {}
+IonComponent = {}
 
-BounceComponent.__index = BounceComponent
+IonComponent.__index = IonComponent
 
-function BounceComponent.new(entity)
+function IonComponent.new(entity)
   local i = {
     gunCooldown = 0,
-    weaponDamage = 20,
-    fireRate = 5,
+    weaponDamage = 10,
+    fireRate = 1,
     firing = false
   }
 
-  setmetatable(i, BounceComponent)
+  setmetatable(i, IonComponent)
   i.entity = entity
   return i
 end
 
-function BounceComponent:update(dt)
+function IonComponent:update(dt)
   if self.firing and self.gunCooldown <= 0 then
     self:fire()
     self.gunCooldown = 1/self.fireRate
@@ -24,7 +24,7 @@ function BounceComponent:update(dt)
   end
 end
 
-function BounceComponent:fire()
+function IonComponent:fire()
   if self.entity.components.life.health <= 0 then
     return
   end
@@ -34,10 +34,10 @@ function BounceComponent:fire()
 
   local x = move.x + (10 * math.sin(move.rotation)) 
   local y = move.y + (10 * -math.cos(move.rotation))
-  bullet = Bullet.new(self.entity, x,y,700,move.rotation, self.weaponDamage,2,2)
-  bullet.components.yield = BouncingBulletComponent.new(bullet)
+  bullet = Bullet.new(self.entity, x,y,500,move.rotation, self.weaponDamage,2,2)
+  bullet.components.ion = IonBulletComponent.new(bullet)
   table.insert(self.entity.bullets, bullet)
 end
 
 
-return BounceComponent
+return IonComponent

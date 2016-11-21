@@ -23,6 +23,7 @@ function RenderComponent:drawLifeMarkers(x,y)
       local top_left = love.graphics.newQuad(xFrame*32, self.color*32, 32, 32, ShipsImage:getDimensions())
       love.graphics.draw(ShipsImage, top_left,x + 36 * live, y, 0, 1,1 , 16,16)
 
+
       if self.entity.shipType == ShipType.gunship then
         local cannonQuad = love.graphics.newQuad(0, 160, 20, 20, ShipsImage:getDimensions())
         love.graphics.draw(ShipsImage,cannonQuad,x + 36 * live - (3 * math.sin(0)), y + (3 * math.cos(0)), 0, 1,1 , 10, 10)
@@ -68,6 +69,29 @@ function RenderComponent:draw()
 
   if self.entity.shield then
     love.graphics.circle("line", x, y, 20)
+  end
+
+  local numBullets = math.ceil(life.health/15)
+  local angleDiff = math.pi/4/numBullets
+
+
+
+  love.graphics.setLineWidth(7)
+  love.graphics.setColor(200, 0, 0)
+  for i=1,numBullets,1 do
+    love.graphics.setLineWidth(7)
+      love.graphics.arc("line", "open", x, y, 30,-math.pi/12*(i+1)+math.pi/20,-math.pi/12*i-math.pi/20)
+  end
+  love.graphics.setLineWidth(1)
+  love.graphics.setColor(255, 255, 255)
+
+
+
+
+
+  dis = self.entity.components.status:GetDisabled()
+  if dis then
+    love.graphics.print(dis, x, y)
   end
 
   for b, beam in pairs(self.entity.beams) do

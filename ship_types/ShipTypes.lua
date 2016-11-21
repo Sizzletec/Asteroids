@@ -14,7 +14,8 @@ require('components/ship/RotatingFireComponent')
 require('components/ship/RayComponent')
 require('components/ship/BoostComponent')
 require('components/ship/RocketShotComponent')
-
+require('components/ship/GrenadeComponent')
+require('components/ship/IonComponent')
 
 ShipType = {
   standard = {
@@ -60,7 +61,7 @@ ShipType = {
   zap = {
     name = "Zapper",
     primaryAttack = ZapComponent,
-    secondaryAttack = PhaseComponent,
+    secondaryAttack = IonComponent,
     topSpeed = 240,
     acceleration = 300,
     rotationSpeed = 5,
@@ -70,7 +71,7 @@ ShipType = {
   charge = {
     name = "Charger",
     primaryAttack = ChargeAttackComponent,
-    secondaryAttack = PhaseComponent,
+    secondaryAttack = IonComponent,
     topSpeed = 240,
     acceleration = 240,
     rotationSpeed = 4,
@@ -94,7 +95,7 @@ ShipType = {
     topSpeed = 200,
     acceleration = 200,
     rotationSpeed = 4,
-    health = 150,
+    health = 300,
     frameOffset = 14
   },
   spreader = {
@@ -110,12 +111,12 @@ ShipType = {
   rocket = {
     name = "Rocket",
     primaryAttack = RocketShotComponent,
-    secondaryAttack = PhaseComponent,
+    secondaryAttack = IonComponent,
     topSpeed = 240,
     acceleration = 360,
     rotationSpeed = 10,
     health = 150,
-    frameOffset = 0
+    frameOffset = 16
   },
   -- phaser = {
   --   name = "Phaser",
@@ -140,7 +141,7 @@ ShipType = {
   bounce = {
     name = "Bounce",
     primaryAttack = BounceComponent,
-    secondaryAttack = PhaseComponent,
+    secondaryAttack = GrenadeComponent,
     topSpeed = 200,
     acceleration = 260,
     rotationSpeed = 5,
@@ -172,6 +173,6 @@ ShipSelectOrder = {
   -- ShipType.spreader,
   -- ShipType.phaser,
   ShipType.shockwave,
-  -- ShipType.bounce,
+  ShipType.bounce,
   -- ShipType.vortex
 }

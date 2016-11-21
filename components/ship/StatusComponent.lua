@@ -26,6 +26,12 @@ function StatusComponent:Disable(time)
   }
 end
 
+function StatusComponent:GetDisabled()
+  d = self.statusList.disable
+  if d then
+    return d.time
+  end
+end
 
 function StatusComponent:Armored(time)
   self.statusList["disable"] = {
@@ -40,11 +46,11 @@ end
 
 function StatusComponent:update(dt)
   self.time = self.time + dt
-  if self.time >= 1 then
+  -- if self.time >= 1 then
     self.time = 0
     for key,status in pairs(self.statusList) do
       if status.time > 0 then
-        status.time = status.time -1
+        status.time = status.time -dt
         if key == "DoT" then
             self.entity.components.life:takeDamage(status.entity,status.damage)
         elseif key == "disable" then
@@ -53,11 +59,12 @@ function StatusComponent:update(dt)
       else
         if key == "disable" then
           self.entity.components.input.disabled = false
+          status.time = 0
         end
-        status = nil
+        -- status = nil
       end
     end
-  end
+  -- end
 end
 
 return StatusComponent

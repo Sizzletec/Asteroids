@@ -4,6 +4,7 @@ require('components/bullet/BouncingBulletComponent')
 require('components/bullet/YieldingBulletComponent')
 require('components/bullet/ExplodingBulletComponent')
 require('components/bullet/HomingBulletComponent')
+require('components/bullet/IonBulletComponent')
 
 Bullet = {}
 Bullet.__index = Bullet
@@ -23,14 +24,8 @@ function Bullet.new(entity,x,y,speed,rotation,damage,bulletLife)
   s.components = {
     move = MoveComponent.new(s),
     yield = YieldingBulletComponent.new(s),
-    homing = HomingBulletComponent.new(s)
+    -- exploding = BallBulletComponent.new(s)
   }
-
-  s.components.move.throttle = 1
-  s.components.move.topSpeed = 600
-  s.rotationSpeed = 3
-  s.components.move.acceleration = 3000000
-
 
 
   local m = s.components.move

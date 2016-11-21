@@ -34,20 +34,10 @@ function ChargeAttackComponent:update(dt)
   if not self.firing and self.charging then
     self.entity.components.score.shots = self.entity.components.score.shots + 1
     local numBullets = math.floor(self.chargeAmount)
-    -- local angleDiff = math.pi/4/numBullets
-    -- for i=numBullets/2,-numBullets/2,-1 do
-    --   local rBullet = move.rotation + i * angleDiff
-    --   local x = move.x + (5 * math.sin(move.rotation))
-    --   local y = move.y + (5 * -math.cos(move.rotation))
-    --   bullet = Bullet.new(self.entity,x,y,300,rBullet, self.weaponDamage)
-    --   table.insert(self.entity.bullets, bullet)
-    -- end
-
-
     local x = move.x + (10 * math.sin(move.rotation)) 
     local y = move.y + (10 * -math.cos(move.rotation))
     bullet = Bullet.new(self.entity, x,y,400 + self.chargeAmount * 30,move.rotation, self.chargeAmount * self.weaponDamage,.5+self.chargeAmount * 0.15)
-    bullet.components.bounce = BouncingBulletComponent.new(bullet)
+    bullet.components.yield = BouncingBulletComponent.new(bullet)
     table.insert(self.entity.bullets, bullet)
     self.charging=false
   end
