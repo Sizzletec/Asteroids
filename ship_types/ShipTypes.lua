@@ -170,9 +170,9 @@ ShipSelectOrder = {
   ShipType.rocket,
   -- ShipType.missile,
   ShipType.miner,
-  -- ShipType.spreader,
+  ShipType.spreader,
   -- ShipType.phaser,
   ShipType.shockwave,
   ShipType.bounce,
-  -- ShipType.vortex
+  ShipType.vortex
 }
