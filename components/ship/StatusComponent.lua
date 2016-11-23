@@ -34,7 +34,7 @@ function StatusComponent:GetDisabled()
 end
 
 function StatusComponent:Armored(time)
-  self.statusList["disable"] = {
+  self.statusList["armored"] = {
     time = time
   }
 end
@@ -46,7 +46,6 @@ end
 
 function StatusComponent:update(dt)
   self.time = self.time + dt
-  -- if self.time >= 1 then
     self.time = 0
     for key,status in pairs(self.statusList) do
       if status.time > 0 then
@@ -61,10 +60,8 @@ function StatusComponent:update(dt)
           self.entity.components.input.disabled = false
           status.time = 0
         end
-        -- status = nil
       end
     end
-  -- end
 end
 
 return StatusComponent

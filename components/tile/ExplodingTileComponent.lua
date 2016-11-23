@@ -14,7 +14,6 @@ function ExplodingTileComponent:update(dt)
   players = Game.getPlayers()
   for _, player in pairs(players) do
     for i, bullet in pairs(player.bullets) do
-
       local ts = self.entity.tileset
       if ts then
         cx = self.entity.x + ts.tileSize/2
@@ -29,7 +28,7 @@ function ExplodingTileComponent:update(dt)
         if dist < 16 and self.id ~= 0 then
           self.wall = true
           bullet:OnWallHit(self.entity,dt)
-          local sw = AoE.new(bullet.entity,move.x,move.y,10,100,0.5,10000)
+          local sw = AoE.new(bullet.entity,cx,cy,10,40,1,10000)
           table.insert(bullet.entity.AoE, sw)
 
           if bullet.lifetime > bullet.bulletLife then
@@ -39,6 +38,27 @@ function ExplodingTileComponent:update(dt)
         end
       end
     end
+
+    for i, aoe in pairs(player.AoE) do
+      local ts = self.entity.tileset
+      if ts then
+        cx = self.entity.x + ts.tileSize/2
+        cy = self.entity.y + ts.tileSize/2
+
+        local powX = math.pow(cx - aoe.x, 2)
+        local powY = math.pow(cy - aoe.y, 2)
+        local dist = math.sqrt(powX + powY)
+
+        if dist < (16 + aoe.radius) and self.id ~= 0 and not self.wall  then
+          self.wall = true
+          -- aoe:OnWallHit(self.entity,dt)
+          local sw = AoE.new(aoe.entity,cx,cy,10,40,1,10000)
+          table.insert(aoe.entity.AoE, sw)
+        end
+      end
+    end
+
+
   end
 end
 
