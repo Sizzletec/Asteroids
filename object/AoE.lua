@@ -1,4 +1,7 @@
 local part1 = love.graphics.newImage('images/part.png')
+
+require('components/aoe/ShieldComponent')
+
 AoE = {}
 AoE.__index = AoE
 
@@ -17,7 +20,13 @@ function AoE.new(entity,x,y,startR,endR,time,damage)
   setmetatable(s, AoE)
 
   s.partSys = love.graphics.newParticleSystem(part1, 1500)
-  s.components = {}
+
+  s.components = {
+    shield = ShieldComponent.new(s)
+    -- exploding = BallBulletComponent.new(s)
+  }
+
+
   s.partSys:setParticleLifetime(time) -- Particles live at least 2s and at most 5s.
   s.partSys:setPosition(s.x,s.y)
   s.partSys:setSpeed((s.rate+s.radius/time) *.9,s.rate+s.radius/time)
@@ -31,6 +40,14 @@ function AoE.new(entity,x,y,startR,endR,time,damage)
 end
 
 function AoE:update(dt)
+
+  for _, component in pairs(self.components) do
+    if component.update then
+      component:update(dt)
+    end
+  end
+
+
   self.radius = self.radius + self.rate * dt
 
   if self.radius >= self.endR then

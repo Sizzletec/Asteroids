@@ -156,7 +156,7 @@ ShipType = {
     acceleration = 260,
     rotationSpeed = 5,
     health = 150,
-    frameOffset = 0
+    frameOffset = 18
   },
 }
 

@@ -118,7 +118,7 @@ end
 function Bullet:draw()
     local m = self.components.move
 
-    q = love.graphics.newQuad(0, 0, 12, 12, 48, 48)
+    q = love.graphics.newQuad(24, 24, 12, 12, 48, 48)
     tilesetBatch:add(q,m.x, m.y, m.rotation, 1,1 , 6,6)
 end
 
