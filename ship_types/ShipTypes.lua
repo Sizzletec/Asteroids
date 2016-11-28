@@ -16,12 +16,13 @@ require('components/ship/BoostComponent')
 require('components/ship/RocketShotComponent')
 require('components/ship/GrenadeComponent')
 require('components/ship/IonComponent')
+require('components/ship/ShieldDropComponent')
 
 ShipType = {
   standard = {
     name = "Standard",
     primaryAttack = AlternatingFireComponent,
-    secondaryAttack = BoostComponent,
+    secondaryAttack = ShieldDropComponent,
     topSpeed = 240,
     acceleration = 360,
     rotationSpeed = 8,

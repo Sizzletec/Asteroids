@@ -22,7 +22,7 @@ function AoE.new(entity,x,y,startR,endR,time,damage)
   s.partSys = love.graphics.newParticleSystem(part1, 1500)
 
   s.components = {
-    shield = ShieldComponent.new(s)
+    -- shield = ShieldComponent.new(s)
     -- exploding = BallBulletComponent.new(s)
   }
 
@@ -33,8 +33,19 @@ function AoE.new(entity,x,y,startR,endR,time,damage)
   s.partSys:setRotation( 0, math.pi/2)
   s.partSys:setSpread( math.pi * 2 )
   s.partSys:setColors(255, 255, 255, 255, 255, 100, 100, 255, 255, 200, 100, 255, 255, 255, 0, 0) -- Fade to transparency.
-  s.partSys:emit(s.endR*5)
+ 
 
+
+  -- s.partSys:setParticleLifetime(time) -- Particles live at least 2s and at most 5s.
+  -- s.partSys:setPosition(s.x,s.y)
+  -- -- s.partSys:setSpeed(s.rate*.9,s.rate)
+  -- s.partSys:setSpeed(10,10)
+  -- s.partSys:setRotation( 0, 2 * math.pi)
+  -- s.partSys:setSpread(math.pi * 2 )
+  -- s.partSys:setOffset(100,0)
+  -- s.partSys:setColors(200, 200, 255, 255, 0, 0, 255, 0) -- Fade to transparency.
+ 
+  s.partSys:emit(s.endR*5)
 
   return s
 end
