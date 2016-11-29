@@ -3,6 +3,9 @@ part = love.graphics.newImage('images/part.png')
 
 -- shoot:play()
 
+
+
+
 require('ship_types/ShipTypes')
 require('helpers/Mover')
 require('components/ship/InputComponent')
@@ -14,7 +17,7 @@ require('components/ship/WallCollisionComponent')
 require('components/ship/StatusComponent')
 require('components/ship/ArmorComponent')
 
-Ship = {}
+Ship = Object.new()
 Ship.__index = Ship
 
 function Ship.new(player,x,y,rotation,vx,vy, type)
@@ -36,9 +39,8 @@ function Ship.new(player,x,y,rotation,vx,vy, type)
 end
 
 function Ship:setDefaults()
-  self.bullets = {}
+  -- self.bullets = {}
   self.beams = {}
-  self.AoE = {}
 
   local r = self.components.render
   local color = nil
@@ -66,6 +68,16 @@ function Ship:setDefaults()
   end
 end
 
+function Ship:getObjectMask()
+  return Collision.ship
+end
+
+function Ship:getCollisonMask()
+  cm = bit.bor(Collision.aoe,Collision.bullet,Collision.beam,Collision.tile)
+  return cm
+end
+
+
 function Ship:update(dt)
 
   local move = self.components.move
@@ -89,21 +101,6 @@ function Ship:update(dt)
       self:spawn()
     end
   end
-
-  for i, bullet in pairs(self.bullets) do
-    bullet:update(dt)
-    if bullet.lifetime > bullet.bulletLife then
-      bullet:Remove()
-      table.remove(self.bullets, i)
-    end
-  end
-
-  for i, aoe in pairs(self.AoE) do
-    aoe:update(dt)
-    if aoe.remove then
-      table.remove(self.AoE, i)
-    end
-  end
 end
 
 function Ship:drawLifeMarkers(x,y)
@@ -121,15 +118,12 @@ function Ship:draw()
     end
   end
 
-  for _, bullet in pairs(self.bullets) do
-    if bullet then
-      bullet:draw()
-    end
-  end
 
-    for _, aoe in pairs(self.AoE) do
-    aoe:draw()
-  end
+end
+
+function Ship:getCollisonObject()
+  local move = self.components.move
+  return { x = move.x, y = move.y, r = 20}
 end
 
 function Ship:spawn()

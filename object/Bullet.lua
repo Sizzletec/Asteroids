@@ -6,13 +6,14 @@ require('components/bullet/ExplodingBulletComponent')
 require('components/bullet/HomingBulletComponent')
 require('components/bullet/IonBulletComponent')
 
-Bullet = {}
+Bullet = Object.new()
 Bullet.__index = Bullet
 
 local tilesetBatch = love.graphics.newSpriteBatch(image)
 
 function Bullet.new(entity,x,y,speed,rotation,damage,bulletLife)
   local s = {}
+  setmetatable(s, Object)
   setmetatable(s, Bullet)
   s.bulletLife = bulletLife or 1
   s.lifetime = 0
@@ -39,6 +40,13 @@ function Bullet.new(entity,x,y,speed,rotation,damage,bulletLife)
   return s
 end
 
+
+function Bullet:getCollisonObject()
+  local move = self.components.move
+  return { x = move.x, y = move.y, r = 10 }
+end
+
+
 function Bullet:update(dt)
   for _, component in pairs(self.components) do
     if component.update then
@@ -64,30 +72,42 @@ function Bullet:update(dt)
     m.vy = velocity * -math.cos(m.rotation)
   end
 
-  for _, otherPlayer in pairs(Game.getPlayers()) do
-   if self.entity ~= otherPlayer and otherPlayer.components.life.alive then
-     xPow = math.pow(otherPlayer.components.move.x - m.x, 2)
-     yPow = math.pow(otherPlayer.components.move.y - m.y, 2)
+  -- for _, otherPlayer in pairs(Game.getPlayers()) do
+  --  if self.entity ~= otherPlayer and otherPlayer.components.life.alive then
+  --    xPow = math.pow(otherPlayer.components.move.x - m.x, 2)
+  --    yPow = math.pow(otherPlayer.components.move.y - m.y, 2)
 
-     dist = math.sqrt(xPow + yPow)
+  --    dist = math.sqrt(xPow + yPow)
 
-     if dist < 20 then
-      self:OnPlayerHit(otherPlayer)
-     end
-   end
-  end
+  --    if dist < 20 then
+  --     self:OnPlayerHit(otherPlayer)
+  --    end
+  --  end
+  -- end
 
   m.rotation = math.atan2(m.vx,-m.vy)
 end
 
 
-function Bullet:OnPlayerHit(player)
-  self.entity.components.score.hits = self.entity.components.score.hits + 1
-  player.components.life:takeDamage(self.entity, self.damage)
 
-  for _, component in pairs(self.components) do
-    if component.OnPlayerHit then
-      component:OnPlayerHit(player)
+function Bullet:getObjectMask()
+  return Collision.bullet
+end
+
+function Bullet:getCollisonMask()
+  cm = bit.bor(Collision.ship,Collision.aoe,Collision.tile)
+  return cm
+end
+
+function Bullet:OnPlayerHit(player)
+  if self.entity ~= player and player.components.life.alive then
+    self.entity.components.score.hits = self.entity.components.score.hits + 1
+    player.components.life:takeDamage(self.entity, self.damage)
+
+    for _, component in pairs(self.components) do
+      if component.OnPlayerHit then
+        component:OnPlayerHit(player)
+      end
     end
   end
 end
@@ -101,7 +121,11 @@ function Bullet:OnWallHit(tile,dt)
   -- local move = self.components.move
   -- local sw = AoE.new(self.entity, move.x,move.y,10,30,0.5,self.damage)
   -- table.insert(self.entity.AoE, sw)
-  -- self.bulletLife = 0
+  self.bulletLife = 0
+end
+
+function Bullet:shouldRemove()
+  return self.lifetime > self.bulletLife 
 end
 
 

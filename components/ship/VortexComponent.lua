@@ -33,7 +33,7 @@ function VortexComponent:fire()
   for i=1,8 do
       bullet = Bullet.new(self.entity, move.x,move.y,200,move.rotation + math.pi/4 * i, self.weaponDamage)
       bullet.vortex = true
-      table.insert(self.entity.bullets, bullet)
+      table.insert(Game.getObjects(), bullet)
   end
 end
 

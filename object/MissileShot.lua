@@ -1,6 +1,6 @@
 local image = love.graphics.newImage('images/missileShot.png')
 
-MissileShot = {}
+MissileShot = Object.new()
 MissileShot.__index = MissileShot
 
 local tilesetBatch = love.graphics.newSpriteBatch(image)

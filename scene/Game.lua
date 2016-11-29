@@ -3,6 +3,7 @@ Game.__index = Game
 
 love.filesystem.load("maps/tiledmap.lua")()
 
+require('object/object')
 require('object/Map')
 require('object/Ship')
 require('object/Bullet')
@@ -12,6 +13,8 @@ require('object/MissileShot')
 local myShader = love.graphics.newShader( "shaders/lighting.glsl" )
 local players = {}
 
+
+local objects = {}
 
 gCamX,gCamY = 0,0
 
@@ -27,7 +30,7 @@ local split = false
 
 function Game.load()
 	players = {}
-	-- math.randomseed(os.time())
+	objects = {}
 	local level = "maps/arena" .. tostring(love.math.random(4)) .. ".tmx"
 	map = nil
 	map = Map.new(level)
@@ -42,6 +45,7 @@ function Game.load()
 			playerShip:setDefaults()
 			playerShip:spawn()
 			table.insert(players, playerShip)
+			table.insert(objects, playerShip)
 		end
 	end
 	numberAlive = table.getn(players)
@@ -58,6 +62,10 @@ end
 
 function Game.getPlayers()
 	return players
+end
+
+function Game.getObjects()
+	return objects
 end
 
 function Game.GetSpawnLocation()
@@ -184,6 +192,8 @@ end
 
 function Game.update(dt)
 	map:update(dt)
+	Game.runCollisions(dt)
+
 	if gameWon then
 		winCount = winCount - 3 * dt
 		dt = dt / winCount
@@ -193,10 +203,36 @@ function Game.update(dt)
 		end
 	end
 
-	for i, player in pairs(players) do
-		player:update(dt)
-	end
+	-- for i, player in pairs(players) do
+	-- 	player:update(dt)
+	-- end
 	Game.checkWin()
+end
+
+
+function Game.runCollisions(dt)
+	for i, obj in pairs(objects) do
+		om = obj:getObjectMask()
+		for x = i+1, #objects do
+			inner = objects[x]
+			icm = inner:getCollisonMask()
+			if bit.band(om,icm) > 0 then
+				cm = obj:getCollisonMask()
+				iom = inner:getObjectMask()
+				if bit.band(cm,iom) > 0 then
+					Collision.TestCollison(obj, inner)
+				end
+			end
+		end
+
+		obj:update(dt)
+
+		if obj:shouldRemove() then
+      		obj:Remove()
+      		table.remove(objects, i)
+    	end
+	end
+
 end
 
 function Game.draw()
@@ -304,8 +340,8 @@ function Game.drawBase()
 	-- love.graphics.setColor(255, 255, 255, 255)
 
 	love.graphics.setNewFont(40)
-	for i, player in pairs(players) do
-		player:draw()
+	for i, obj in pairs(objects) do
+		obj:draw()
 	end
 	Bullet.drawBatch()
 	MissileShot.draw()

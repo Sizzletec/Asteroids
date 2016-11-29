@@ -25,7 +25,7 @@ end
 function Layer:draw()
   for _,row in pairs(self.tiles) do
     for _,t in pairs(row) do
-      t:draw()
+      t:addQuad()
     end
   end
 end

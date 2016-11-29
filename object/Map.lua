@@ -84,8 +84,12 @@ function Map:LoadLayers(xml)
 
         id = tonumber(child.xarg.gid)
         ts = self:GetTileset(id)
-
-        layer.tiles[i][j] = Tile.new(id, ts,j*self.tileSize,i*self.tileSize)
+        if id > 0 then
+          tile = Tile.new(id, ts,j*self.tileSize,i*self.tileSize)
+          layer.tiles[i][j] = Tile.new(id, ts,j*self.tileSize,i*self.tileSize)
+          table.insert(Game.getObjects(),tile)
+        end
+       
         j = j + 1
         if j >= width then
           j = 0

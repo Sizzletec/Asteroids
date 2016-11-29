@@ -36,7 +36,7 @@ function IonComponent:fire()
   local y = move.y + (10 * -math.cos(move.rotation))
   bullet = Bullet.new(self.entity, x,y,500,move.rotation, self.weaponDamage,2,2)
   bullet.components.ion = IonBulletComponent.new(bullet)
-  table.insert(self.entity.bullets, bullet)
+  table.insert(Game.getObjects(), bullet)
 end
 
 

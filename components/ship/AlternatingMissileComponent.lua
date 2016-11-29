@@ -42,7 +42,7 @@ function AlternatingMissileComponent:fire()
   end
 
   bullet = MissileShot.new(self.entity,x,y,200,move.rotation, self.weaponDamage,5)
-  table.insert(self.entity.bullets, bullet)
+  table.insert(Game.getObjects(), bullet)
 
   if self.cannon == "right" then
     self.cannon = "left"

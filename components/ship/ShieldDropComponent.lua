@@ -33,7 +33,7 @@ function ShieldDropComponent:fire()
 
 
   local sw = AoE.new(self.entity, move.x,move.y,99,100,10,0)
-  table.insert(self.entity.AoE, sw)
+  table.insert(Game.getObjects(), sw)
 end
 
 function ShieldDropComponent:draw()

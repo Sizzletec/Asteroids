@@ -2,7 +2,7 @@ local part1 = love.graphics.newImage('images/part.png')
 
 require('components/aoe/ShieldComponent')
 
-AoE = {}
+AoE = Object.new()
 AoE.__index = AoE
 
 
@@ -60,10 +60,6 @@ function AoE:update(dt)
 
 
   self.radius = self.radius + self.rate * dt
-
-  if self.radius >= self.endR then
-    self.remove = true
-  end
   -- local move = self.entity.components.move
 
   local players = Game.getPlayers()
@@ -82,8 +78,14 @@ function AoE:update(dt)
   self.partSys:update(dt)
 end
 
+
+function AoE:shouldRemove()
+  return self.radius >= self.endR
+end
+
+
 function AoE:draw()
-  -- love.graphics.circle("line", self.x, self.y, self.radius)
+  love.graphics.circle("line", self.x, self.y, self.radius)
   love.graphics.draw(self.partSys)
 end
 

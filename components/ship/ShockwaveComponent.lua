@@ -33,7 +33,7 @@ function ShockwaveComponent:fire()
 
 
   local sw = AoE.new(self.entity, move.x,move.y,10,200,1,self.weaponDamage)
-  table.insert(self.entity.AoE, sw)
+  table.insert(Game.getObjects(), sw)
 end
 
 function ShockwaveComponent:draw()

@@ -1,4 +1,4 @@
-MapObject = {}
+MapObject = Object.new()
 MapObject.__index = MapObject
 
 function MapObject.new(id)
