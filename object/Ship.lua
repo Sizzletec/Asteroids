@@ -118,6 +118,8 @@ function Ship:draw()
     end
   end
 
+  -- debug = self:getCollisonObject()
+  -- love.graphics.circle("line", debug.x, debug.y, debug.r)
 
 end
 

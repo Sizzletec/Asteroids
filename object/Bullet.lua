@@ -72,19 +72,6 @@ function Bullet:update(dt)
     m.vy = velocity * -math.cos(m.rotation)
   end
 
-  -- for _, otherPlayer in pairs(Game.getPlayers()) do
-  --  if self.entity ~= otherPlayer and otherPlayer.components.life.alive then
-  --    xPow = math.pow(otherPlayer.components.move.x - m.x, 2)
-  --    yPow = math.pow(otherPlayer.components.move.y - m.y, 2)
-
-  --    dist = math.sqrt(xPow + yPow)
-
-  --    if dist < 20 then
-  --     self:OnPlayerHit(otherPlayer)
-  --    end
-  --  end
-  -- end
-
   m.rotation = math.atan2(m.vx,-m.vy)
 end
 
@@ -118,9 +105,6 @@ function Bullet:OnWallHit(tile,dt)
       component:OnWallHit(tile,dt)
     end
   end
-  -- local move = self.components.move
-  -- local sw = AoE.new(self.entity, move.x,move.y,10,30,0.5,self.damage)
-  -- table.insert(self.entity.AoE, sw)
   self.bulletLife = 0
 end
 
@@ -135,7 +119,7 @@ function Bullet:Remove()
       component:Remove(player)
     end
   end
-  self.bulletLife = 0
+  -- self.bulletLife = 0
 end
 
 
@@ -144,6 +128,9 @@ function Bullet:draw()
 
     q = love.graphics.newQuad(0, 24, 12, 12, 48, 48)
     tilesetBatch:add(q,m.x, m.y, m.rotation, 1,1 , 6,6)
+
+    -- debug = self:getCollisonObject()
+    -- love.graphics.circle("line", debug.x, debug.y, debug.r)
 end
 
 

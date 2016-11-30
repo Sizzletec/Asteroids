@@ -191,8 +191,10 @@ function Game.checkWin()
 end
 
 function Game.update(dt)
+	local start = love.timer.getTime()
+
 	map:update(dt)
-	Game.runCollisions(dt)
+	Game.updateObjects(dt)
 
 	if gameWon then
 		winCount = winCount - 3 * dt
@@ -202,15 +204,15 @@ function Game.update(dt)
 			setState(State.score)
 		end
 	end
-
-	-- for i, player in pairs(players) do
-	-- 	player:update(dt)
-	-- end
 	Game.checkWin()
+	local result = love.timer.getTime() - start
+	print(result)
 end
 
 
-function Game.runCollisions(dt)
+function Game.updateObjects(dt)
+	local remove = {}
+
 	for i, obj in pairs(objects) do
 		om = obj:getObjectMask()
 		for x = i+1, #objects do
@@ -224,21 +226,22 @@ function Game.runCollisions(dt)
 				end
 			end
 		end
-
-		obj:update(dt)
-
-		if obj:shouldRemove() then
-      		obj:Remove()
-      		table.remove(objects, i)
-    	end
 	end
 
+	for i, obj in pairs(objects) do
+		
+		if obj:shouldRemove() then
+      		obj:Remove()
+      		table.remove(objects,i)
+    	else
+			obj:update(dt)
+    	end
+	end
 end
 
 function Game.draw()
 	width = love.graphics.getWidth()
 	height = love.graphics.getHeight()
-
 
 	if split then
 		for index,can in ipairs(canvases) do
@@ -325,8 +328,6 @@ function Game.draw()
 	end
 end
 
-
-
 function Game.drawBase()
 	width = love.graphics.getWidth()
 	height = love.graphics.getHeight()
@@ -334,11 +335,9 @@ function Game.drawBase()
 	scaleFactor = width/1920
 
 	love.graphics.scale(scaleFactor, scaleFactor)
-
 	-- love.graphics.setColor(255, 255, 255, alpha)
 	map:drawBackground()
 	-- love.graphics.setColor(255, 255, 255, 255)
-
 	love.graphics.setNewFont(40)
 	for i, obj in pairs(objects) do
 		obj:draw()
@@ -349,10 +348,8 @@ function Game.drawBase()
 
 	map:drawForeground()
 	love.graphics.setBackgroundColor(0x20,0x20,0x20)
-
-		-- fps = love.timer.getFPS()
- --    love.graphics.print(fps, 0, 100)
+	fps = love.timer.getFPS()
+ 	love.graphics.print(fps, 0, 100)
 end
-
 
 return Game

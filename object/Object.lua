@@ -23,6 +23,9 @@ end
 function Object:OnBulletHit(bullet)
 end
 
+function Object:OnAoEHit(bullet)
+end
+
 function Object:Remove()
 end
 

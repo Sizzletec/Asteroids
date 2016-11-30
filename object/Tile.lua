@@ -13,13 +13,14 @@ function Tile.new(id,tileset,x,y)
     id = tonumber(id),
     tileset = tileset,
     x = x,
-    y = y
+    y = y,
+    remove = false
   }
   setmetatable(t, Tile)
   t.components = {}
   if t.id ~= 0 and t.id < 7 then
     t.components["wall"] = WallTileComponent.new(t)
-    -- t.components["blocking"] = BlockingTileComponent.new(t)
+    t.components["blocking"] = BlockingTileComponent.new(t)
     -- t.components["shield"] = ShieldTileComponent.new(t,"right")
 
     if t.id == 3 then
@@ -32,7 +33,9 @@ end
 
 
 function Tile:getCollisonObject()
-  return { x = self.x, y = self.y, r = 10 }
+  ts = self.tileset.tileSize
+  -- love.graphics.rectangle("fill", self.entity.x-2, self.entity.y-2, ts+4, ts+4)
+  return { x = self.x+ts/2, y = self.y+ts/2, r = 10 }
 end
 
 function Tile:getObjectMask()
@@ -70,12 +73,24 @@ function Tile:OnBulletHit(bullet)
   end
 end
 
+
+function Tile:OnAoEHit(bullet)
+  for _, component in pairs(self.components) do
+    if component.OnBulletHit then
+      component:OnBulletHit(bullet)
+    end
+  end
+end
+
+
+
 function Tile:update(dt)
   for _, component in pairs(self.components) do
     if component.update then
       component:update(dt)
     end
   end
+  
 end
 
 function Tile:draw()
@@ -84,6 +99,9 @@ function Tile:draw()
         component:draw()
       end
     end
+
+    -- debug = self:getCollisonObject()
+    -- love.graphics.circle("line", debug.x, debug.y, debug.r)
 end
 
 function Tile:addQuad()
@@ -91,5 +109,15 @@ function Tile:addQuad()
     self.tileset:addTile(self.id, self.x, self.y)
   end
 end
+
+function Tile:shouldRemove()
+  return self.remove
+end
+
+function Tile:Remove()
+  self.id = 0
+  self.components = {}
+end
+
 
 return Tile

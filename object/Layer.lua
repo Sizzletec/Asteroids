@@ -15,18 +15,14 @@ function Layer.new(map,name)
 end
 
 function Layer:update(dt)
-  for _,row in pairs(self.tiles) do
-    for _,t in pairs(row) do
-      t:update(dt)
-    end
+  for _,t in pairs(self.tiles) do
+    t:update(dt)
   end
 end
 
 function Layer:draw()
-  for _,row in pairs(self.tiles) do
-    for _,t in pairs(row) do
-      t:addQuad()
-    end
+  for _,t in pairs(self.tiles) do
+    t:addQuad()
   end
 end
 

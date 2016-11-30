@@ -17,15 +17,24 @@ end
 
 
 function ExplodingTileComponent:OnBulletHit(bullet)
+  self:explodeTile(bullet)
+end
+
+function ExplodingTileComponent:OnAoEHit(aoe)
+  self:explodeTile(aoe)
+end
+
+function ExplodingTileComponent:explodeTile(object)
   local ts = self.entity.tileset
-  if ts then
+  if ts and not self.entity.remove then
       cx = self.entity.x + ts.tileSize/2
       cy = self.entity.y + ts.tileSize/2
-      self.wall = true
-      -- bullet:OnWallHit(self.entity,dt)
-      local sw = AoE.new(bullet.entity,cx,cy,10,40,1,10000)
+
+      local sw = AoE.new(object.entity,cx,cy,10,40,1,10000)
       table.insert(Game.getObjects(), sw)
 
+
+      self.entity.remove = true
       -- if bullet.lifetime > bullet.bulletLife then
         -- bullet:Remove()
         -- table.remove(player.bullets, i)
@@ -34,13 +43,13 @@ function ExplodingTileComponent:OnBulletHit(bullet)
 end
 
 
+
+
+
 function ExplodingTileComponent:draw()
-  if self.wall then
+  if self.entity.remove then
     ts = self.entity.tileset.tileSize
-    love.graphics.rectangle("fill", self.entity.x-2, self.entity.y-2, ts+4, ts+4)
-    self.wall = false
-    self.entity.id = 0
-    self.entity.components = {}
+    love.graphics.rectangle("fill", self.entity.x-2, self.entity.y-2, ts+4, ts+4)    
   end
 end
 
