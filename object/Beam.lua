@@ -35,9 +35,6 @@ function Beam:update(x,y,rotation,dt)
     self.startPointX = xBeam
     self.startPointY = yBeam
 
-
-  -- beamBatch:add(beam1,xBeam, yBeam, self.rotation, 1,1 , 0,0)
-
   local beamSegmants = 1
   while collide and beamSegmants < 100 do
 

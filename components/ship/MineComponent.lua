@@ -32,7 +32,7 @@ function MineComponent:fire()
 
   local bullet = Bullet.new(self.entity, move.x,move.y,0,move.rotation, self.weaponDamage)
   bullet.components.exploding = ExplodingBulletComponent.new(bullet)
-  table.insert(self.entity.bullets, bullet)
+  table.insert(Game.getObjects(), bullet)
 end
 
 

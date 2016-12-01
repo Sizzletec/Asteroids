@@ -3,15 +3,18 @@ Game.__index = Game
 
 love.filesystem.load("maps/tiledmap.lua")()
 
+require('object/object')
 require('object/Map')
 require('object/Ship')
 require('object/Bullet')
 require('object/AoE')
 require('object/MissileShot')
 
+HC = require("HC")
+
 local myShader = love.graphics.newShader( "shaders/lighting.glsl" )
 local players = {}
-
+local objects = {}
 
 gCamX,gCamY = 0,0
 
@@ -23,11 +26,12 @@ local map
 
 local canvases = {}
 local split = false
+debug  = false
 
 
 function Game.load()
 	players = {}
-	-- math.randomseed(os.time())
+	objects = {}
 	local level = "maps/arena" .. tostring(love.math.random(4)) .. ".tmx"
 	map = nil
 	map = Map.new(level)
@@ -42,6 +46,7 @@ function Game.load()
 			playerShip:setDefaults()
 			playerShip:spawn()
 			table.insert(players, playerShip)
+			table.insert(objects, playerShip)
 		end
 	end
 	numberAlive = table.getn(players)
@@ -49,15 +54,19 @@ function Game.load()
 	winCount = 8
 
 	canvases = {
-		love.graphics.newCanvas(love.graphics.getWidth()/2,love.graphics.getHeight()/2),
-		love.graphics.newCanvas(love.graphics.getWidth()/2,love.graphics.getHeight()/2),
-		love.graphics.newCanvas(love.graphics.getWidth()/2,love.graphics.getHeight()/2),
-		love.graphics.newCanvas(love.graphics.getWidth()/2,love.graphics.getHeight()/2)
-	}
+	love.graphics.newCanvas(love.graphics.getWidth()/2,love.graphics.getHeight()/2),
+	love.graphics.newCanvas(love.graphics.getWidth()/2,love.graphics.getHeight()/2),
+	love.graphics.newCanvas(love.graphics.getWidth()/2,love.graphics.getHeight()/2),
+	love.graphics.newCanvas(love.graphics.getWidth()/2,love.graphics.getHeight()/2)
+}
 end
 
 function Game.getPlayers()
 	return players
+end
+
+function Game.getObjects()
+	return objects
 end
 
 function Game.GetSpawnLocation()
@@ -184,6 +193,8 @@ end
 
 function Game.update(dt)
 	map:update(dt)
+	Game.updateObjects(dt)
+
 	if gameWon then
 		winCount = winCount - 3 * dt
 		dt = dt / winCount
@@ -192,17 +203,24 @@ function Game.update(dt)
 			setState(State.score)
 		end
 	end
-
-	for i, player in pairs(players) do
-		player:update(dt)
-	end
 	Game.checkWin()
+end
+
+function Game.updateObjects(dt)
+	for i, obj in pairs(objects) do
+
+		if obj:shouldRemove() then
+			obj:Remove()
+			table.remove(objects,i)
+		else
+			obj:update(dt)
+		end
+	end
 end
 
 function Game.draw()
 	width = love.graphics.getWidth()
 	height = love.graphics.getHeight()
-
 
 	if split then
 		for index,can in ipairs(canvases) do
@@ -217,17 +235,17 @@ function Game.draw()
 			yMax = false
 			yMin = false
 
-			if transX < -map.width* 16 + can:getWidth() then
-				transX = -map.width* 16 + can:getWidth()
-				xMax = true
-			elseif transX > 0 then
-				transX = 0
-				xMin = true
-			end
+		if transX < -map.width* 16 + can:getWidth() then
+    elseif transX > 0 then
+      transX = 0
+      xMin = true
+    end
+			transX = -map.width* 16 + can:getWidth()
+			xMax = true
 
-			if transY < -map.height* 16 + can:getHeight() then
-				transY = -map.height* 16 + can:getHeight()
-				yMax = true
+  		if transY < -map.height* 16 + can:getHeight() then
+  			transY = -map.height* 16 + can:getHeight()
+  			yMax = true
 			elseif transY > 0 then
 				transY = 0
 				yMin = true
@@ -289,8 +307,6 @@ function Game.draw()
 	end
 end
 
-
-
 function Game.drawBase()
 	width = love.graphics.getWidth()
 	height = love.graphics.getHeight()
@@ -298,14 +314,12 @@ function Game.drawBase()
 	scaleFactor = width/1920
 
 	love.graphics.scale(scaleFactor, scaleFactor)
-
 	-- love.graphics.setColor(255, 255, 255, alpha)
 	map:drawBackground()
 	-- love.graphics.setColor(255, 255, 255, 255)
-
 	love.graphics.setNewFont(40)
-	for i, player in pairs(players) do
-		player:draw()
+	for i, obj in pairs(objects) do
+		obj:draw()
 	end
 	Bullet.drawBatch()
 	MissileShot.draw()
@@ -314,9 +328,15 @@ function Game.drawBase()
 	map:drawForeground()
 	love.graphics.setBackgroundColor(0x20,0x20,0x20)
 
-		-- fps = love.timer.getFPS()
- --    love.graphics.print(fps, 0, 100)
+	if debug then
+		fps = love.timer.getFPS()
+		love.graphics.print(fps, 0, 100)
+		local count = 0 
+		for _, v in pairs(HC.hash():shapes()) do 
+			count = count +1 
+		end
+		love.graphics.print(count, 40, 200)
+	end
 end
-
 
 return Game

@@ -38,7 +38,7 @@ function SpreadShotComponent:fire()
     leftCannonOffsetX = move.x + (5 * math.sin(move.rotation))
     leftCannonOffsetY = move.y + (5 * -math.cos(move.rotation))
     bullet = Bullet.new(self.entity,leftCannonOffsetX,leftCannonOffsetY,600,rBullet, self.weaponDamage)
-    table.insert(self.entity.bullets, bullet)
+    table.insert(Game.getObjects(), bullet)
   end
 end
 

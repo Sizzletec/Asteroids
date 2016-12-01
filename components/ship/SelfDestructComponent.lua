@@ -32,7 +32,7 @@ function SelfDestructComponent:fire()
   self.entity.components.life.health = 0
 
   local sw = AoE.new(self.entity, move.x,move.y,10,500,4,self.weaponDamage)
-  table.insert(self.entity.AoE, sw)
+  table.insert(Game.getObjects(), sw)
 end
 
 

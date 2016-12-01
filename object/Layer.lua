@@ -10,23 +10,23 @@ function Layer.new(map,name)
   setmetatable(t, Layer)
   t.components = {}
   t.map = map
-
   return t
 end
 
 function Layer:update(dt)
-  for _,row in pairs(self.tiles) do
-    for _,t in pairs(row) do
+  for i,t in pairs(self.tiles) do
+      if t:shouldRemove() then
+        t:Remove()
+        table.remove(self.tiles,i)
+      else
       t:update(dt)
-    end
+      end
   end
 end
 
 function Layer:draw()
-  for _,row in pairs(self.tiles) do
-    for _,t in pairs(row) do
-      t:draw()
-    end
+  for _,t in pairs(self.tiles) do
+    t:addQuad()
   end
 end
 

@@ -2,7 +2,7 @@ RocketShotComponent = {
   cannon = "right",
   gunCooldown = 0,
   weaponDamage = 2,
-  fireRate = 1,
+  fireRate = 10,
   firing = false
 }
 
@@ -39,7 +39,7 @@ function RocketShotComponent:fire()
     leftCannonOffsetY = move.y + (5 * -math.cos(move.rotation))
     bullet = Bullet.new(self.entity,leftCannonOffsetX,leftCannonOffsetY,600,rBullet, self.weaponDamage)
     bullet.components.exploding = ExplodingBulletComponent.new(bullet)
-    table.insert(self.entity.bullets, bullet)
+    table.insert(Game.getObjects(), bullet)
   end
 end
 

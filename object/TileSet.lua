@@ -22,8 +22,6 @@ function TileSet.new(filename,firstGid,tileCount,tileSize)
       table.insert(m.tileQuads,quad)
     end
   end
-
-
   return m
 end
 
@@ -38,7 +36,5 @@ function TileSet:addTile(id,x,y)
     self.batch:add(quad, sx, sy)
   end
 end
-
-
 
 return TileSet

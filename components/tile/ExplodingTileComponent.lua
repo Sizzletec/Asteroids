@@ -10,68 +10,35 @@ function ExplodingTileComponent.new(entity)
   return i
 end
 
-function ExplodingTileComponent:update(dt)
-  players = Game.getPlayers()
-  for _, player in pairs(players) do
-    for i, bullet in pairs(player.bullets) do
-      local ts = self.entity.tileset
-      if ts then
-        cx = self.entity.x + ts.tileSize/2
-        cy = self.entity.y + ts.tileSize/2
+function ExplodingTileComponent:getCollisonMask()
+  cm = bit.bor(Collision.bullet,Collision.aoe)
+  return cm
+end
 
-        local move = bullet.components.move
+function ExplodingTileComponent:OnBulletHit(bullet)
+  self:explodeTile(bullet)
+end
 
-        local powX = math.pow(cx - move.x, 2)
-        local powY = math.pow(cy - move.y, 2)
-        local dist = math.sqrt(powX + powY)
+function ExplodingTileComponent:OnAoEHit(aoe)
+  self:explodeTile(aoe)
+end
 
-        if dist < 16 and self.id ~= 0 then
-          self.wall = true
-          bullet:OnWallHit(self.entity,dt)
-          local sw = AoE.new(bullet.entity,cx,cy,10,40,1,10000)
-          table.insert(bullet.entity.AoE, sw)
+function ExplodingTileComponent:explodeTile(object)
+  local ts = self.entity.tileset
+  if ts and not self.entity.remove then
+    cx = self.entity.x + ts.tileSize/2
+    cy = self.entity.y + ts.tileSize/2
 
-          if bullet.lifetime > bullet.bulletLife then
-            bullet:Remove()
-            table.remove(player.bullets, i)
-          end
-        end
-      end
-    end
-
-    for i, aoe in pairs(player.AoE) do
-      local ts = self.entity.tileset
-      if ts then
-        cx = self.entity.x + ts.tileSize/2
-        cy = self.entity.y + ts.tileSize/2
-
-        local powX = math.pow(cx - aoe.x, 2)
-        local powY = math.pow(cy - aoe.y, 2)
-        local dist = math.sqrt(powX + powY)
-
-        if dist < (16 + aoe.radius) and self.id ~= 0 and not self.wall  then
-          self.wall = true
-          -- aoe:OnWallHit(self.entity,dt)
-          local sw = AoE.new(aoe.entity,cx,cy,10,40,1,10000)
-          table.insert(aoe.entity.AoE, sw)
-        end
-      end
-    end
-
-
+    local sw = AoE.new(object.entity,cx,cy,10,60,1,10000)
+    table.insert(Game.getObjects(), sw)
+    self.entity.remove = true
   end
 end
 
-
-
-
 function ExplodingTileComponent:draw()
-  if self.wall then
+  if self.entity.remove then
     ts = self.entity.tileset.tileSize
-    love.graphics.rectangle("fill", self.entity.x-2, self.entity.y-2, ts+4, ts+4)
-    self.wall = false
-    self.entity.id = 0
-    self.entity.components = {}
+    love.graphics.rectangle("fill", self.entity.x-2, self.entity.y-2, ts+4, ts+4)    
   end
 end
 

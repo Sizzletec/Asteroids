@@ -2,7 +2,7 @@ local part1 = love.graphics.newImage('images/part.png')
 
 require('components/aoe/ShieldComponent')
 
-AoE = {}
+AoE = Object.new()
 AoE.__index = AoE
 
 
@@ -22,7 +22,7 @@ function AoE.new(entity,x,y,startR,endR,time,damage)
   s.partSys = love.graphics.newParticleSystem(part1, 1500)
 
   s.components = {
-    -- shield = ShieldComponent.new(s)
+    shield = ShieldComponent.new(s)
     -- exploding = BallBulletComponent.new(s)
   }
 
@@ -34,8 +34,6 @@ function AoE.new(entity,x,y,startR,endR,time,damage)
   s.partSys:setSpread( math.pi * 2 )
   s.partSys:setColors(255, 255, 255, 255, 255, 100, 100, 255, 255, 200, 100, 255, 255, 255, 0, 0) -- Fade to transparency.
  
-
-
   -- s.partSys:setParticleLifetime(time) -- Particles live at least 2s and at most 5s.
   -- s.partSys:setPosition(s.x,s.y)
   -- -- s.partSys:setSpeed(s.rate*.9,s.rate)
@@ -47,42 +45,71 @@ function AoE.new(entity,x,y,startR,endR,time,damage)
  
   s.partSys:emit(s.endR*5)
 
+  s.shape = HC.circle(x,y,s.radius)
   return s
 end
 
 function AoE:update(dt)
-
   for _, component in pairs(self.components) do
     if component.update then
       component:update(dt)
     end
   end
-
-
   self.radius = self.radius + self.rate * dt
+  self.partSys:update(dt)
+  self.shape = HC.circle(self.x,self.y,self.radius)
 
-  if self.radius >= self.endR then
-    self.remove = true
+  for shape, delta in pairs(HC.collisions(self.shape)) do
+    if shape.type == "ship" then
+      self:OnPlayerHit(shape.entity)
+    elseif shape.type == "bullet" then
+      print()
+      self:OnBulletHit(shape.entity)
+    elseif shape.type == "tile" then
+      self:OnWallHit(shape.entity,dt)
+      shape.entity:OnAoEHit(self)
+    end
   end
-  -- local move = self.entity.components.move
+end
 
-  local players = Game.getPlayers()
-  for p, otherPlayer in pairs(players) do
-    if otherPlayer ~= self.entity then
-      local otherMove = otherPlayer.components.move
+function Object:OnPlayerHit(player)
+  if player ~= self.entity then
+      local otherMove = player.components.move
       local xPow = math.pow(otherMove.x - self.x, 2)
       local yPow = math.pow(otherMove.y - self.y, 2)
       local dist = math.sqrt(xPow + yPow)
 
       if dist <= self.radius then
-          otherPlayer.components.life:takeDamage(self.entity, self.damage)
+          player.components.life:takeDamage(self.entity, self.damage)
       end
     end
+end
+
+function AoE:OnBulletHit(bullet)
+  for _, component in pairs(self.components) do
+    if component.OnBulletHit then
+      component:OnBulletHit(bullet)
+    end
   end
-  self.partSys:update(dt)
+end
+
+function AoE:getObjectMask()
+  return Collision.aoe
+end
+
+function AoE:getCollisonMask()
+  cm = bit.bor(Collision.ship,Collision.bullet,Collision.tile)
+  return cm
+end
+
+function AoE:shouldRemove()
+  return self.radius >= self.endR
 end
 
 function AoE:draw()
+  if debug then
+    self.shape:draw('fill')
+  end
   -- love.graphics.circle("line", self.x, self.y, self.radius)
   love.graphics.draw(self.partSys)
 end

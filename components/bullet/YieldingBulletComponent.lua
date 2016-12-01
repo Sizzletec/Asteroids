@@ -10,10 +10,11 @@ function YieldingBulletComponent.new(entity)
 end
 
 function YieldingBulletComponent:OnWallHit(tile,dt)
-  self.entity:Remove()
+  self.entity.bulletLife = 0
 end
 
 function YieldingBulletComponent:OnPlayerHit(player)
-  self.entity:Remove()
+  self.entity.bulletLife = 0
 end
+
 return YieldingBulletComponent

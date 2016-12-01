@@ -38,7 +38,7 @@ function ChargeAttackComponent:update(dt)
     local y = move.y + (10 * -math.cos(move.rotation))
     bullet = Bullet.new(self.entity, x,y,400 + self.chargeAmount * 30,move.rotation, self.chargeAmount * self.weaponDamage,.5+self.chargeAmount * 0.15)
     bullet.components.yield = BouncingBulletComponent.new(bullet)
-    table.insert(self.entity.bullets, bullet)
+    table.insert(Game.getObjects(), bullet)
     self.charging=false
   end
 end

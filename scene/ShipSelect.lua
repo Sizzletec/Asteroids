@@ -4,6 +4,7 @@ ShipSelect.__index = ShipSelect
 
 gKeyPressed = {}
 
+require('object/object')
 require('object/Ship')
 require('object/Bullet')
 require('object/Beam')

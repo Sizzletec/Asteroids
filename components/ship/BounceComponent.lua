@@ -36,7 +36,7 @@ function BounceComponent:fire()
   local y = move.y + (10 * -math.cos(move.rotation))
   bullet = Bullet.new(self.entity, x,y,700,move.rotation, self.weaponDamage,2,2)
   bullet.components.yield = BouncingBulletComponent.new(bullet)
-  table.insert(self.entity.bullets, bullet)
+  table.insert(Game.getObjects(), bullet)
 end
 
 

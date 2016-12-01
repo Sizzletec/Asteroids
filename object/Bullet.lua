@@ -6,27 +6,25 @@ require('components/bullet/ExplodingBulletComponent')
 require('components/bullet/HomingBulletComponent')
 require('components/bullet/IonBulletComponent')
 
-Bullet = {}
+Bullet = Object.new()
 Bullet.__index = Bullet
 
 local tilesetBatch = love.graphics.newSpriteBatch(image)
 
 function Bullet.new(entity,x,y,speed,rotation,damage,bulletLife)
   local s = {}
+  setmetatable(s, Object)
   setmetatable(s, Bullet)
   s.bulletLife = bulletLife or 1
   s.lifetime = 0
   s.damage = damage
   s.entity = entity
 
-
-
   s.components = {
     move = MoveComponent.new(s),
     yield = YieldingBulletComponent.new(s),
     -- exploding = BallBulletComponent.new(s)
   }
-
 
   local m = s.components.move
   m.x = x
@@ -35,6 +33,10 @@ function Bullet.new(entity,x,y,speed,rotation,damage,bulletLife)
   m.vx = speed * math.sin(m.rotation)
   m.vy = speed * -math.cos(m.rotation)
   m.topSpeed = speed
+
+  s.shape = HC.circle(m.x,m.y,5)
+  s.shape.type = "bullet"
+  s.shape.entity = s
 
   return s
 end
@@ -50,8 +52,6 @@ function Bullet:update(dt)
 
   local m = self.components.move
 
-  self:DistanceCovered()
-
   if self.vortex then
     m.rotation = m.rotation + 2 * math.pi * dt
 
@@ -64,30 +64,27 @@ function Bullet:update(dt)
     m.vy = velocity * -math.cos(m.rotation)
   end
 
-  for _, otherPlayer in pairs(Game.getPlayers()) do
-   if self.entity ~= otherPlayer and otherPlayer.components.life.alive then
-     xPow = math.pow(otherPlayer.components.move.x - m.x, 2)
-     yPow = math.pow(otherPlayer.components.move.y - m.y, 2)
-
-     dist = math.sqrt(xPow + yPow)
-
-     if dist < 20 then
-      self:OnPlayerHit(otherPlayer)
-     end
-   end
-  end
-
   m.rotation = math.atan2(m.vx,-m.vy)
+
+  for shape, delta in pairs(HC.collisions(self.shape)) do
+    if shape.type == "ship" then
+      self:OnPlayerHit(shape.entity)
+    elseif shape.type == "tile" then
+      shape.entity:OnBulletHit(self)
+    end
+  end
 end
 
 
 function Bullet:OnPlayerHit(player)
-  self.entity.components.score.hits = self.entity.components.score.hits + 1
-  player.components.life:takeDamage(self.entity, self.damage)
+  if self.entity ~= player and player.components.life.alive then
+    self.entity.components.score.hits = self.entity.components.score.hits + 1
+    player.components.life:takeDamage(self.entity, self.damage)
 
-  for _, component in pairs(self.components) do
-    if component.OnPlayerHit then
-      component:OnPlayerHit(player)
+    for _, component in pairs(self.components) do
+      if component.OnPlayerHit then
+        component:OnPlayerHit(player)
+      end
     end
   end
 end
@@ -98,12 +95,11 @@ function Bullet:OnWallHit(tile,dt)
       component:OnWallHit(tile,dt)
     end
   end
-  -- local move = self.components.move
-  -- local sw = AoE.new(self.entity, move.x,move.y,10,30,0.5,self.damage)
-  -- table.insert(self.entity.AoE, sw)
-  -- self.bulletLife = 0
 end
 
+function Bullet:shouldRemove()
+  return self.lifetime > self.bulletLife 
+end
 
 function Bullet:Remove()
   for _, component in pairs(self.components) do
@@ -111,38 +107,19 @@ function Bullet:Remove()
       component:Remove(player)
     end
   end
-  self.bulletLife = 0
+  HC.remove(self.shape)
 end
-
 
 function Bullet:draw()
     local m = self.components.move
 
     q = love.graphics.newQuad(0, 24, 12, 12, 48, 48)
     tilesetBatch:add(q,m.x, m.y, m.rotation, 1,1 , 6,6)
+
+    if debug then
+      self.shape:draw('fill')
+    end
 end
-
-
-function Bullet:DistanceCovered()
-    -- local move = self.components.move
-    -- if move.distance >= 600 then
-    --   move.distance = 0
-
-
-    --   -- local bullet = Bullet.new(self.entity, move.x,move.y,600,move.rotation+math.pi/2, self.damage)
-    --   -- table.insert(self.entity.bullets, bullet)
-
-
-    --   -- local bullet = Bullet.new(self.entity, move.x,move.y,600,move.rotation-math.pi/2, self.damage)
-    --   -- table.insert(self.entity.bullets, bullet)
-
-
-
-    --   -- local sw = AoE.new(self.entity, move.x,move.y,10,30,0.5,self.damage)
-    --   -- table.insert(self.entity.AoE, sw)
-    -- end
-end
-
 
 function Bullet.drawBatch()
   love.graphics.draw(tilesetBatch)

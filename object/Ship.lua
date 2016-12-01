@@ -1,8 +1,6 @@
 ShipsImage = love.graphics.newImage('images/ship-sprites.png')
 part = love.graphics.newImage('images/part.png')
 
--- shoot:play()
-
 require('ship_types/ShipTypes')
 require('helpers/Mover')
 require('components/ship/InputComponent')
@@ -14,7 +12,7 @@ require('components/ship/WallCollisionComponent')
 require('components/ship/StatusComponent')
 require('components/ship/ArmorComponent')
 
-Ship = {}
+Ship = Object.new()
 Ship.__index = Ship
 
 function Ship.new(player,x,y,rotation,vx,vy, type)
@@ -32,13 +30,15 @@ function Ship.new(player,x,y,rotation,vx,vy, type)
 
   s:setDefaults()
 
+  s.shape = HC.circle(x,y,16)
+  s.shape.type = "ship"
+  s.shape.entity = s
+
   return s
 end
 
 function Ship:setDefaults()
-  self.bullets = {}
   self.beams = {}
-  self.AoE = {}
 
   local r = self.components.render
   local color = nil
@@ -59,15 +59,12 @@ function Ship:setDefaults()
     input = InputComponent.new(self)
   }
 
-
-
   if color then
     self.components.render.color = color
   end
 end
 
 function Ship:update(dt)
-
   local move = self.components.move
   self.engineParticle:setParticleLifetime(0.1, 0.3) -- Particles live at least 2s and at most 5s.
   self.engineParticle:setEmissionRate(100)
@@ -90,18 +87,10 @@ function Ship:update(dt)
     end
   end
 
-  for i, bullet in pairs(self.bullets) do
-    bullet:update(dt)
-    if bullet.lifetime > bullet.bulletLife then
-      bullet:Remove()
-      table.remove(self.bullets, i)
-    end
-  end
 
-  for i, aoe in pairs(self.AoE) do
-    aoe:update(dt)
-    if aoe.remove then
-      table.remove(self.AoE, i)
+  for shape, delta in pairs(HC.collisions(self.shape)) do
+    if shape.type == "tile" then
+      shape.entity:OnPlayerHit(self)
     end
   end
 end
@@ -115,20 +104,13 @@ function Ship:drawLifeMarkers(x,y)
 end
 
 function Ship:draw()
+  if debug then
+    self.shape:draw('fill')
+  end
   for _, component in pairs(self.components) do
     if component.draw then
       component:draw()
     end
-  end
-
-  for _, bullet in pairs(self.bullets) do
-    if bullet then
-      bullet:draw()
-    end
-  end
-
-    for _, aoe in pairs(self.AoE) do
-    aoe:draw()
   end
 end
 
