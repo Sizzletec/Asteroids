@@ -10,10 +10,10 @@ require('object/Bullet')
 require('object/AoE')
 require('object/MissileShot')
 
+HC = require("HC")
+
 local myShader = love.graphics.newShader( "shaders/lighting.glsl" )
 local players = {}
-
-
 local objects = {}
 
 gCamX,gCamY = 0,0
@@ -26,6 +26,7 @@ local map
 
 local canvases = {}
 local split = false
+debug  = false
 
 
 function Game.load()
@@ -53,11 +54,11 @@ function Game.load()
 	winCount = 8
 
 	canvases = {
-		love.graphics.newCanvas(love.graphics.getWidth()/2,love.graphics.getHeight()/2),
-		love.graphics.newCanvas(love.graphics.getWidth()/2,love.graphics.getHeight()/2),
-		love.graphics.newCanvas(love.graphics.getWidth()/2,love.graphics.getHeight()/2),
-		love.graphics.newCanvas(love.graphics.getWidth()/2,love.graphics.getHeight()/2)
-	}
+	love.graphics.newCanvas(love.graphics.getWidth()/2,love.graphics.getHeight()/2),
+	love.graphics.newCanvas(love.graphics.getWidth()/2,love.graphics.getHeight()/2),
+	love.graphics.newCanvas(love.graphics.getWidth()/2,love.graphics.getHeight()/2),
+	love.graphics.newCanvas(love.graphics.getWidth()/2,love.graphics.getHeight()/2)
+}
 end
 
 function Game.getPlayers()
@@ -191,8 +192,6 @@ function Game.checkWin()
 end
 
 function Game.update(dt)
-	local start = love.timer.getTime()
-
 	map:update(dt)
 	Game.updateObjects(dt)
 
@@ -205,37 +204,17 @@ function Game.update(dt)
 		end
 	end
 	Game.checkWin()
-	local result = love.timer.getTime() - start
-	print(result)
 end
 
-
 function Game.updateObjects(dt)
-	local remove = {}
-
 	for i, obj in pairs(objects) do
-		om = obj:getObjectMask()
-		for x = i+1, #objects do
-			inner = objects[x]
-			icm = inner:getCollisonMask()
-			if bit.band(om,icm) > 0 then
-				cm = obj:getCollisonMask()
-				iom = inner:getObjectMask()
-				if bit.band(cm,iom) > 0 then
-					Collision.TestCollison(obj, inner)
-				end
-			end
-		end
-	end
 
-	for i, obj in pairs(objects) do
-		
 		if obj:shouldRemove() then
-      		obj:Remove()
-      		table.remove(objects,i)
-    	else
+			obj:Remove()
+			table.remove(objects,i)
+		else
 			obj:update(dt)
-    	end
+		end
 	end
 end
 
@@ -256,17 +235,17 @@ function Game.draw()
 			yMax = false
 			yMin = false
 
-			if transX < -map.width* 16 + can:getWidth() then
-				transX = -map.width* 16 + can:getWidth()
-				xMax = true
-			elseif transX > 0 then
-				transX = 0
-				xMin = true
-			end
+		if transX < -map.width* 16 + can:getWidth() then
+    elseif transX > 0 then
+      transX = 0
+      xMin = true
+    end
+			transX = -map.width* 16 + can:getWidth()
+			xMax = true
 
-			if transY < -map.height* 16 + can:getHeight() then
-				transY = -map.height* 16 + can:getHeight()
-				yMax = true
+  		if transY < -map.height* 16 + can:getHeight() then
+  			transY = -map.height* 16 + can:getHeight()
+  			yMax = true
 			elseif transY > 0 then
 				transY = 0
 				yMin = true
@@ -348,8 +327,16 @@ function Game.drawBase()
 
 	map:drawForeground()
 	love.graphics.setBackgroundColor(0x20,0x20,0x20)
-	fps = love.timer.getFPS()
- 	love.graphics.print(fps, 0, 100)
+
+	if debug then
+		fps = love.timer.getFPS()
+		love.graphics.print(fps, 0, 100)
+		local count = 0 
+		for _, v in pairs(HC.hash():shapes()) do 
+			count = count +1 
+		end
+		love.graphics.print(count, 40, 200)
+	end
 end
 
 return Game

@@ -16,15 +16,7 @@ function ZapComponent.new(entity)
 end
 
 function ZapComponent:update(dt)
-  -- if self.firing and self.gunCooldown <= 0 then
-  --   self:fire()
-  --   self.gunCooldown = 1/self.fireRate
-  -- elseif self.gunCooldown > 0 then
-  --   self.gunCooldown = self.gunCooldown - dt
-  -- end
-
   local move = self.entity.components.move
-
 
   if self.entity.components.life.health <= 0 then
     return
@@ -77,18 +69,6 @@ function ZapComponent:draw()
     local top_left = love.graphics.newQuad(math.floor(self.attackFrame)*100, 0, 100, 80, lightning:getDimensions())
 
     love.graphics.draw(lightning, top_left,move.x, move.y, move.rotation, 1,1 , 50,70)
-
-    -- if self.hitbox then
-    --     love.graphics.push()
-    --     local hitbox = {}
-    --     for i=1,#self.hitbox do
-    --         local vert = self.hitbox[i]
-    --         table.insert(hitbox,vert.x)
-    --         table.insert(hitbox,vert.y)
-    --     end
-    --     love.graphics.polygon('line', hitbox)
-    --     love.graphics.pop()
-    -- end
   end
 end
 

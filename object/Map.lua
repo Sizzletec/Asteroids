@@ -83,7 +83,7 @@ function Map:LoadLayers(xml)
         if id > 0 then
           tile = Tile.new(id, ts,j*self.tileSize,i*self.tileSize)
           table.insert(layer.tiles,tile)
-          table.insert(Game.getObjects(),tile)
+          -- table.insert(Game.getObjects(),tile)
         end
        
         j = j + 1

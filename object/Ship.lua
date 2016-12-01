@@ -1,11 +1,6 @@
 ShipsImage = love.graphics.newImage('images/ship-sprites.png')
 part = love.graphics.newImage('images/part.png')
 
--- shoot:play()
-
-
-
-
 require('ship_types/ShipTypes')
 require('helpers/Mover')
 require('components/ship/InputComponent')
@@ -35,11 +30,14 @@ function Ship.new(player,x,y,rotation,vx,vy, type)
 
   s:setDefaults()
 
+  s.shape = HC.circle(x,y,16)
+  s.shape.type = "ship"
+  s.shape.entity = s
+
   return s
 end
 
 function Ship:setDefaults()
-  -- self.bullets = {}
   self.beams = {}
 
   local r = self.components.render
@@ -61,25 +59,12 @@ function Ship:setDefaults()
     input = InputComponent.new(self)
   }
 
-
-
   if color then
     self.components.render.color = color
   end
 end
 
-function Ship:getObjectMask()
-  return Collision.ship
-end
-
-function Ship:getCollisonMask()
-  cm = bit.bor(Collision.aoe,Collision.bullet,Collision.beam,Collision.tile)
-  return cm
-end
-
-
 function Ship:update(dt)
-
   local move = self.components.move
   self.engineParticle:setParticleLifetime(0.1, 0.3) -- Particles live at least 2s and at most 5s.
   self.engineParticle:setEmissionRate(100)
@@ -101,6 +86,13 @@ function Ship:update(dt)
       self:spawn()
     end
   end
+
+
+  for shape, delta in pairs(HC.collisions(self.shape)) do
+    if shape.type == "tile" then
+      shape.entity:OnPlayerHit(self)
+    end
+  end
 end
 
 function Ship:drawLifeMarkers(x,y)
@@ -112,20 +104,14 @@ function Ship:drawLifeMarkers(x,y)
 end
 
 function Ship:draw()
+  if debug then
+    self.shape:draw('fill')
+  end
   for _, component in pairs(self.components) do
     if component.draw then
       component:draw()
     end
   end
-
-  -- debug = self:getCollisonObject()
-  -- love.graphics.circle("line", debug.x, debug.y, debug.r)
-
-end
-
-function Ship:getCollisonObject()
-  local move = self.components.move
-  return { x = move.x, y = move.y, r = 20}
 end
 
 function Ship:spawn()

@@ -22,7 +22,7 @@ function AoE.new(entity,x,y,startR,endR,time,damage)
   s.partSys = love.graphics.newParticleSystem(part1, 1500)
 
   s.components = {
-    -- shield = ShieldComponent.new(s)
+    shield = ShieldComponent.new(s)
     -- exploding = BallBulletComponent.new(s)
   }
 
@@ -45,6 +45,7 @@ function AoE.new(entity,x,y,startR,endR,time,damage)
  
   s.partSys:emit(s.endR*5)
 
+  s.shape = HC.circle(x,y,s.radius)
   return s
 end
 
@@ -56,6 +57,19 @@ function AoE:update(dt)
   end
   self.radius = self.radius + self.rate * dt
   self.partSys:update(dt)
+  self.shape = HC.circle(self.x,self.y,self.radius)
+
+  for shape, delta in pairs(HC.collisions(self.shape)) do
+    if shape.type == "ship" then
+      self:OnPlayerHit(shape.entity)
+    elseif shape.type == "bullet" then
+      print()
+      self:OnBulletHit(shape.entity)
+    elseif shape.type == "tile" then
+      self:OnWallHit(shape.entity,dt)
+      shape.entity:OnAoEHit(self)
+    end
+  end
 end
 
 function Object:OnPlayerHit(player)
@@ -71,8 +85,12 @@ function Object:OnPlayerHit(player)
     end
 end
 
-function AoE:getCollisonObject()
-  return { x = self.x, y = self.y, r = self.radius }
+function AoE:OnBulletHit(bullet)
+  for _, component in pairs(self.components) do
+    if component.OnBulletHit then
+      component:OnBulletHit(bullet)
+    end
+  end
 end
 
 function AoE:getObjectMask()
@@ -89,6 +107,9 @@ function AoE:shouldRemove()
 end
 
 function AoE:draw()
+  if debug then
+    self.shape:draw('fill')
+  end
   -- love.graphics.circle("line", self.x, self.y, self.radius)
   love.graphics.draw(self.partSys)
 end

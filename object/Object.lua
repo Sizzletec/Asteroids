@@ -1,5 +1,3 @@
-require('ship_types/CollisionTypes')
-
 Object = {}
 Object.__index = Object
 
@@ -29,23 +27,9 @@ end
 function Object:Remove()
 end
 
-
-function Object:getObjectMask()
-  return 0
-end
-
-function Object:getCollisonMask()
-  return 0
-end
-
 function Object:shouldRemove()
   return false
 end
-
-function Object:getCollisonObject()
-  return { x = 0, y = 0 }
-end
-
 
 function Object:draw()
    print("not implemented draw")

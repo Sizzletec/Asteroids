@@ -10,13 +10,17 @@ function Layer.new(map,name)
   setmetatable(t, Layer)
   t.components = {}
   t.map = map
-
   return t
 end
 
 function Layer:update(dt)
-  for _,t in pairs(self.tiles) do
-    t:update(dt)
+  for i,t in pairs(self.tiles) do
+      if t:shouldRemove() then
+        t:Remove()
+        table.remove(self.tiles,i)
+      else
+      t:update(dt)
+      end
   end
 end
 

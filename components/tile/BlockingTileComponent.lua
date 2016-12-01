@@ -10,13 +10,8 @@ function BlockingTileComponent.new(entity)
   return i
 end
 
-function BlockingTileComponent:getCollisonMask()
-  cm = bit.bor(Collision.bullet,Collision.beam)
-  return cm
-end
-
-function BlockingTileComponent:OnBulletHit(player)
-  self.wall = true
+function BlockingTileComponent:OnBulletHit(bullet)
+  bullet:OnWallHit(self.entity)
 end
 
 function BlockingTileComponent:draw()

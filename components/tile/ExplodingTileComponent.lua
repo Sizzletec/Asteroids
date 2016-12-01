@@ -15,7 +15,6 @@ function ExplodingTileComponent:getCollisonMask()
   return cm
 end
 
-
 function ExplodingTileComponent:OnBulletHit(bullet)
   self:explodeTile(bullet)
 end
@@ -27,24 +26,14 @@ end
 function ExplodingTileComponent:explodeTile(object)
   local ts = self.entity.tileset
   if ts and not self.entity.remove then
-      cx = self.entity.x + ts.tileSize/2
-      cy = self.entity.y + ts.tileSize/2
+    cx = self.entity.x + ts.tileSize/2
+    cy = self.entity.y + ts.tileSize/2
 
-      local sw = AoE.new(object.entity,cx,cy,10,40,1,10000)
-      table.insert(Game.getObjects(), sw)
-
-
-      self.entity.remove = true
-      -- if bullet.lifetime > bullet.bulletLife then
-        -- bullet:Remove()
-        -- table.remove(player.bullets, i)
-      -- end
+    local sw = AoE.new(object.entity,cx,cy,10,60,1,10000)
+    table.insert(Game.getObjects(), sw)
+    self.entity.remove = true
   end
 end
-
-
-
-
 
 function ExplodingTileComponent:draw()
   if self.entity.remove then

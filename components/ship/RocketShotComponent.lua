@@ -2,7 +2,7 @@ RocketShotComponent = {
   cannon = "right",
   gunCooldown = 0,
   weaponDamage = 2,
-  fireRate = 1,
+  fireRate = 10,
   firing = false
 }
 
