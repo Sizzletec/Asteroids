@@ -27,6 +27,7 @@ local map
 local canvases = {}
 local split = false
 debug  = false
+fps = true
 
 
 function Game.load()
@@ -328,9 +329,12 @@ function Game.drawBase()
 	map:drawForeground()
 	love.graphics.setBackgroundColor(0x20,0x20,0x20)
 
-	if debug then
+	if fps then
 		fps = love.timer.getFPS()
 		love.graphics.print(fps, 0, 100)
+	end
+	if debug then
+
 		local count = 0 
 		for _, v in pairs(HC.hash():shapes()) do 
 			count = count +1 

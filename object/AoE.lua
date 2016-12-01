@@ -44,7 +44,6 @@ function AoE.new(entity,x,y,startR,endR,time,damage)
   -- s.partSys:setColors(200, 200, 255, 255, 0, 0, 255, 0) -- Fade to transparency.
  
   s.partSys:emit(s.endR*5)
-
   s.shape = HC.circle(x,y,s.radius)
   return s
 end
@@ -57,7 +56,6 @@ function AoE:update(dt)
   end
   self.radius = self.radius + self.rate * dt
   self.partSys:update(dt)
-  self.shape = HC.circle(self.x,self.y,self.radius)
 
   for shape, delta in pairs(HC.collisions(self.shape)) do
     if shape.type == "ship" then
@@ -69,6 +67,13 @@ function AoE:update(dt)
       self:OnWallHit(shape.entity,dt)
       shape.entity:OnAoEHit(self)
     end
+  end
+
+  
+  if math.abs(self.shape._radius - self.radius) >= 1 then
+    -- print(self.shape._radius, self.radius,math.abs(self.shape._radius - self.radius) )
+    HC.remove(self.shape)
+    self.shape = HC.circle(self.x,self.y,self.radius)
   end
 end
 

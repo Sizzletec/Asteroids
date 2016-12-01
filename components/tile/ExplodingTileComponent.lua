@@ -29,7 +29,7 @@ function ExplodingTileComponent:explodeTile(object)
     cx = self.entity.x + ts.tileSize/2
     cy = self.entity.y + ts.tileSize/2
 
-    local sw = AoE.new(object.entity,cx,cy,10,60,1,10000)
+    local sw = AoE.new(object.entity,cx,cy,10,40,1,10000)
     table.insert(Game.getObjects(), sw)
     self.entity.remove = true
   end

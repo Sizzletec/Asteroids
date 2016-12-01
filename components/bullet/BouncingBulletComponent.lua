@@ -15,15 +15,15 @@ function BouncingBulletComponent:OnWallHit(tile,dt)
     yAngle = tile.y - move.y
     if math.abs(yAngle) < math.abs(xAngle) then
       move.vx = -move.vx
-      move.x = move.x + move.vx * dt
+      -- move.x = move.x + move.vx * dt
     else
       move.vy = -move.vy
-      move.y = move.y + move.vy * dt
+      -- move.y = move.y + move.vy * dt
     end
 end
 
 function BouncingBulletComponent:OnPlayerHit(player)
-  self.entity:Remove()
+  -- self.entity:Remove()
 end
 
 return BouncingBulletComponent
