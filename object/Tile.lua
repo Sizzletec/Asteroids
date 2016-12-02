@@ -38,18 +38,18 @@ if t.id ~= 0 and t.id < 7 then
   return t
 end
 
-function Tile:OnPlayerHit(player)
+function Tile:OnPlayerHit(player,delta)
   for _, component in pairs(self.components) do
     if component.OnPlayerHit then
-      component:OnPlayerHit(player)
+      component:OnPlayerHit(player,delta)
     end
   end
 end
 
-function Tile:OnBulletHit(bullet)
+function Tile:OnBulletHit(bullet,delta)
   for _, component in pairs(self.components) do
     if component.OnBulletHit then
-      component:OnBulletHit(bullet)
+      component:OnBulletHit(bullet,delta)
     end
   end
 end
@@ -71,6 +71,13 @@ function Tile:update(dt)
 end
 
 function Tile:draw()
+end
+
+function Tile:addQuad()
+  if self.tileset then
+    self.tileset:addTile(self.id, self.x, self.y)
+  end
+
   for _, component in pairs(self.components) do
     if component.draw then
       component:draw()
@@ -79,12 +86,6 @@ function Tile:draw()
 
   if debug then
     self.shape:draw('fill')
-  end
-end
-
-function Tile:addQuad()
-  if self.tileset then
-    self.tileset:addTile(self.id, self.x, self.y)
   end
 end
 

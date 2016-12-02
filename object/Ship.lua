@@ -90,7 +90,7 @@ function Ship:update(dt)
 
   for shape, delta in pairs(HC.collisions(self.shape)) do
     if shape.type == "tile" then
-      shape.entity:OnPlayerHit(self)
+      shape.entity:OnPlayerHit(self,delta)
     end
   end
 end

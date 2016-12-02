@@ -10,8 +10,8 @@ function BlockingTileComponent.new(entity)
   return i
 end
 
-function BlockingTileComponent:OnBulletHit(bullet)
-  bullet:OnWallHit(self.entity)
+function BlockingTileComponent:OnBulletHit(bullet,delta)
+  bullet:OnWallHit(self.entity,delta)
 end
 
 function BlockingTileComponent:draw()

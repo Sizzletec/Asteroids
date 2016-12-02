@@ -10,29 +10,21 @@ function WallTileComponent.new(entity)
   return i
 end
 
-function WallTileComponent:OnPlayerHit(player)
+function WallTileComponent:OnPlayerHit(player,delta)
   local wall = player.components.wallCollision
   local ts = self.entity.tileset
   if wall and ts then
     self.wall = true
     local move = player.components.move
-    xAngle = self.entity.x - move.x
-    yAngle = self.entity.y - move.y
+    local angle = math.atan2(delta.x,delta.y)
 
-    if math.abs(yAngle) > math.abs(xAngle) then
-      move.vy = -move.vy/2
-      if yAngle > 0 then
-        move.y = move.y - 1
-      else
-        move.y = move.y + 1
-      end
+    move.x = move.x + delta.x
+    move.y = move.y + delta.y
+
+    if math.abs(delta.x) <  math.abs(delta.y) then
+      move.vy = math.abs(move.vy)/2 * math.cos(angle)
     else
-      move.vx = -move.vx/2
-      if xAngle > 0 then
-        move.x = move.x - 1
-      else
-        move.x = move.x + 1
-      end
+      move.vx = math.abs(move.vx)/2 * math.sin(angle)
     end
   end
 end

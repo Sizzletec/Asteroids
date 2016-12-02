@@ -70,7 +70,7 @@ function Bullet:update(dt)
     if shape.type == "ship" then
       self:OnPlayerHit(shape.entity)
     elseif shape.type == "tile" then
-      shape.entity:OnBulletHit(self)
+      shape.entity:OnBulletHit(self,delta)
     end
   end
 end
@@ -89,10 +89,10 @@ function Bullet:OnPlayerHit(player)
   end
 end
 
-function Bullet:OnWallHit(tile,dt)
+function Bullet:OnWallHit(tile,delta)
   for _, component in pairs(self.components) do
     if component.OnWallHit then
-      component:OnWallHit(tile,dt)
+      component:OnWallHit(tile,delta)
     end
   end
 end
