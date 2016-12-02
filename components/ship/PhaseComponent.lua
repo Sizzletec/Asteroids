@@ -15,7 +15,7 @@ function PhaseComponent.new(entity)
 
   setmetatable(i, PhaseComponent)
   i.entity = entity
-  i.partSys = love.graphics.newParticleSystem(part1, 1000)
+  i.shape = nil
   return i
 end
 
@@ -26,10 +26,6 @@ function PhaseComponent:update(dt)
   elseif self.gunCooldown > 0 then
     self.gunCooldown = self.gunCooldown - dt
   end
-
-
--- Fade to transparency.
-  self.partSys:update(dt)
 end
 
 function PhaseComponent:fire()
@@ -39,118 +35,74 @@ function PhaseComponent:fire()
   local move = self.entity.components.move
   self.entity.components.score.shots = self.entity.components.score.shots + 1
 
-    move.x = move.x + (80 * math.sin(move.rotation))
-    move.y = move.y + (80 * -math.cos(move.rotation))
+  move.x = move.x + (80 * math.sin(move.rotation))
+  move.y = move.y + (80 * -math.cos(move.rotation))
 
-    local distanceTraveled = 80
-
-    local tile = TiledMap_GetMapTile(math.floor(move.x/16),math.floor(move.y/16),1)
-
-    while tile > 0 do
-
-      move.x = move.x + (40 * math.sin(move.rotation))
-      move.y = move.y + (40 * -math.cos(move.rotation))
-      distanceTraveled = distanceTraveled + 40
+  local distanceTraveled = 80
 
       move:StageWrap()
-
-      tile = TiledMap_GetMapTile(math.floor(move.x/16),math.floor(move.y/16),1)
-    end
-
-    local powX = math.pow(move.vx, 2)
-    local powY = math.pow(move.vy, 2)
-    local velocity = math.sqrt(powX + powY)
-
-    move.vx = velocity * math.sin(move.rotation)
-    move.vy = velocity * -math.cos(move.rotation)
+    move:updateShape()
 
 
+  tile = false 
 
-
-
-
-
-    self.hitbox = {
-      { x = -30, y = -30 },
-      { x = 30, y = -30 },
-      { x = 30, y = distanceTraveled+30},
-      { x = -30, y = distanceTraveled+30}
-    }
-
-    for i=1,#self.hitbox do
-        local vert = self.hitbox[i]
-        local s = math.sin(move.rotation)
-        local c = math.cos(move.rotation)
-        local x = vert.x
-        local y = vert.y
-        vert.x = move.x - ( x * c + y* s )
-        vert.y = move.y - (x *s + y * -c)
-    end
-
-    local players = Game.getPlayers()
-    for p, otherPlayer in pairs(players) do
-      if otherPlayer ~= self.entity then
-        local otherMove = otherPlayer.components.move
-        inShape = PointWithinShape(self.hitbox,otherMove.x,otherMove.y)
-
-        if inShape then
-            otherPlayer.components.life:takeDamage(self.entity, self.weaponDamage)
-        end
+  for shape, delta in pairs(HC.collisions(self.entity.shape)) do
+    if shape.type == "tile" then
+      if shape.entity.components.wall then
+        tile = true
+        break
       end
+    end 
+  end 
+
+  while tile do
+    move.x = move.x + (20 * math.sin(move.rotation))
+    move.y = move.y + (20 * -math.cos(move.rotation))
+    distanceTraveled = distanceTraveled + 20
+
+    move:StageWrap()
+    move:updateShape()
+
+    tile = false
+    for shape, delta in pairs(HC.collisions(self.entity.shape)) do
+      if shape.type == "tile" then
+        if shape.entity.components.wall then
+          tile = true
+          break
+        end
+      end 
+    end 
   end
 
+  local powX = math.pow(move.vx, 2)
+  local powY = math.pow(move.vy, 2)
+  local velocity = math.sqrt(powX + powY)
 
-  self.partSys:setParticleLifetime(.2, .3) -- Particles live at least 2s and at most 5s.
-  -- self.partSys:setEmissionRate(500)
-  self.partSys:setSizeVariation(1)
+  move.vx = velocity * math.sin(move.rotation)
+  move.vy = velocity * -math.cos(move.rotation)
 
-  -- self.partSys:setPosition(self.startPointX,self.startPointY)
-  -- self.partSys:setSpeed(speed)
-  self.partSys:setDirection(move.rotation -math.pi/2)
-
-  -- self.partSys:setEmissionRate(500)
-  -- self.partSys:setRelativeRotation(true)
+  self.shape = HC.polygon(-30,-30, 30,-30, 30, distanceTraveled+30, -30, distanceTraveled+30)
+  self.shape:setRotation(0)
+  local cx,cy = self.shape:center()
+  self.shape:moveTo(move.x,move.y+cy)
+  self.shape:setRotation(move.rotation,move.x,move.y)
 
 
-    -- if self.offset ~=  -dist/2 then
-    --    self.partSys:reset()
-       -- self.offset = -dist/2
-    -- end
+  for shape, delta in pairs(HC.collisions(self.shape)) do
+    if shape.type == "ship" then
+      if shape.entity ~= self.entity then
+        shape.entity.components.life:takeDamage(self.entity, self.weaponDamage)
+      end
+    end
+  end
 
-  -- self.partSys:setOffset(self.offset, 0)
-
-  self.partSys:setAreaSpread("uniform", 30/2,(distanceTraveled+30)/2)
-
-  self.partSys:setLinearAcceleration(1000, 0, -1000, 2000) -- Random movement in all directions.
-  self.partSys:setColors(255, 0, 255,255, 255,0,255, 0) -- Fade to transparency.
-
-  self.partSys:emit(1000)
+  
 end
 
 function PhaseComponent:draw()
-  local move = self.entity.components.move
-  if self.hitbox then
-    love.graphics.push()
-    local hitbox = {}
-    for i=1,#self.hitbox do
-        local vert = self.hitbox[i]
-        table.insert(hitbox,vert.x)
-        table.insert(hitbox,vert.y)
-    end
-    love.graphics.polygon('line', hitbox)
-    love.graphics.pop()
-
-
-    local xMid = (self.hitbox[1].x + self.hitbox[2].x)/2
-    local yMid = (self.hitbox[3].y + self.hitbox[4].y)/2
-    local offset = (self.hitbox[1].y - self.hitbox[3].y + 30)/2
-    local offsetX = xMid + offset * math.sin(move.rotation)
-    local offsetY = yMid + offset * math.cos(move.rotation)
-
-    love.graphics.draw(self.partSys,offsetX,offsetY,move.rotation)
+  if self.shape then
+    self.shape:draw('line')
   end
-
-
 end
 
 return PhaseComponent

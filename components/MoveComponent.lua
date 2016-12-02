@@ -43,9 +43,12 @@ function MoveComponent:update(dt)
   self:ApplyVelocity(dt)
   self:ApplyRotation(dt)
   self:StageWrap()
-  self.entity.shape:moveTo(self.x,self.y)
+  self:updateShape()
 end
 
+function MoveComponent:updateShape(dt)
+  self.entity.shape:moveTo(self.x,self.y)
+end
 
 
 function MoveComponent:ApplyAcceleration(dt)
