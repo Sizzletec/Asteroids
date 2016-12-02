@@ -91,6 +91,9 @@ function Ship:update(dt)
   for shape, delta in pairs(HC.collisions(self.shape)) do
     if shape.type == "tile" then
       shape.entity:OnPlayerHit(self,delta)
+    -- elseif shape.type == "ship" then
+    --   shape.entity.components.input = self.components.input
+    --   -- self.components.input = nil
     end
   end
 end

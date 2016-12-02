@@ -5,6 +5,7 @@ require('components/bullet/YieldingBulletComponent')
 require('components/bullet/ExplodingBulletComponent')
 require('components/bullet/HomingBulletComponent')
 require('components/bullet/IonBulletComponent')
+require('components/bullet/SapperBulletComponent')
 
 Bullet = Object.new()
 Bullet.__index = Bullet

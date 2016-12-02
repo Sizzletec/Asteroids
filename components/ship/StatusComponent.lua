@@ -15,7 +15,8 @@ function StatusComponent:ApplyDot(entity,damage,time)
   self.statusList["DoT"] = {
     entity = entity,
     damage = damage,
-    time = time
+    time = time,
+    tick = 0
   }
 end
 
@@ -47,21 +48,25 @@ end
 function StatusComponent:update(dt)
   self.time = self.time + dt
     self.time = 0
-    for key,status in pairs(self.statusList) do
-      if status.time > 0 then
-        status.time = status.time -dt
-        if key == "DoT" then
-            self.entity.components.life:takeDamage(status.entity,status.damage)
-        elseif key == "disable" then
-          self.entity.components.input.disabled = true
+  for key,status in pairs(self.statusList) do
+    if status.time > 0 then
+      status.time = status.time -dt
+      if key == "DoT" then
+        status.tick = status.tick + dt
+        if status.tick >= 1 then
+          status.tick = status.tick -1
+          self.entity.components.life:takeDamage(status.entity,status.damage)
         end
-      else
-        if key == "disable" then
-          self.entity.components.input.disabled = false
-          status.time = 0
-        end
+      elseif key == "disable" then
+        self.entity.components.input.disabled = true
+      end
+    else
+      if key == "disable" then
+        self.entity.components.input.disabled = false
+        status.time = 0
       end
     end
+  end
 end
 
 return StatusComponent
