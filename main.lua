@@ -38,6 +38,12 @@ end
 --   end
 -- end
 
+function love.resize(w, h)
+  	if currentState.resize then
+		currentState.resize(w, h)
+	end
+end
+
 function love.keyreleased(key)
 	if currentState.keyreleased then
 		currentState.keyreleased(key)

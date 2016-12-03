@@ -11,10 +11,13 @@ require('object/AoE')
 require('object/MissileShot')
 
 HC = require("HC")
+local gamera =  require("gamera/gamera")
 
 local myShader = love.graphics.newShader( "shaders/lighting.glsl" )
 local players = {}
 local objects = {}
+
+
 
 gCamX,gCamY = 0,0
 
@@ -28,6 +31,8 @@ local canvases = {}
 local split = false
 debug  = false
 fps = true
+
+local cam
 
 
 function Game.load()
@@ -54,12 +59,14 @@ function Game.load()
 	gameWon = false
 	winCount = 8
 
-	canvases = {
-	love.graphics.newCanvas(love.graphics.getWidth()/2,love.graphics.getHeight()/2),
-	love.graphics.newCanvas(love.graphics.getWidth()/2,love.graphics.getHeight()/2),
-	love.graphics.newCanvas(love.graphics.getWidth()/2,love.graphics.getHeight()/2),
-	love.graphics.newCanvas(love.graphics.getWidth()/2,love.graphics.getHeight()/2)
-}
+	cam = gamera.new(0,0,map.tileSize * map.width,map.tileSize * map.height)
+	cam:setWindow(0,0,map.tileSize * map.width,map.tileSize * map.height)
+	-- cam:setScale(2.0)
+end
+
+function Game.resize(w, h)
+	print("resize",w,h)
+  	
 end
 
 function Game.getPlayers()
@@ -195,6 +202,10 @@ end
 function Game.update(dt)
 	map:update(dt)
 	Game.updateObjects(dt)
+	-- move = players[1].components.move
+	-- cam:setAngle(move.rotation)
+	-- cam:setPosition(move.x, move.y)
+	-- cam:setAngle(move.rotation)
 
 	if gameWon then
 		winCount = winCount - 3 * dt
@@ -220,82 +231,87 @@ function Game.updateObjects(dt)
 end
 
 function Game.draw()
+	cam:draw(function(l,t,w,h)
+  		Game.drawBase()
+	end)
 	width = love.graphics.getWidth()
 	height = love.graphics.getHeight()
 
-	if split then
-		for index,can in ipairs(canvases) do
-			move = players[index].components.move
+	-- if split then
+	-- 	for index,can in ipairs(canvases) do
+	-- 		move = players[index].components.move
 
-			transX = -move.x + width/4
-			transY = -move.y + height/4
+	-- 		transX = -move.x + width/4
+	-- 		transY = -move.y + height/4
 
-			xMax = false
-			xMin = false
+	-- 		xMax = false
+	-- 		xMin = false
 
-			yMax = false
-			yMin = false
+	-- 		yMax = false
+	-- 		yMin = false
 
-		if transX < -map.width* 16 + can:getWidth() then
-    elseif transX > 0 then
-      transX = 0
-      xMin = true
-    end
-			transX = -map.width* 16 + can:getWidth()
-			xMax = true
+	-- 	if transX < -map.width* 16 + can:getWidth() then
+ --    elseif transX > 0 then
+ --      transX = 0
+ --      xMin = true
+ --    end
+	-- 		transX = -map.width* 16 + can:getWidth()
+	-- 		xMax = true
 
-  		if transY < -map.height* 16 + can:getHeight() then
-  			transY = -map.height* 16 + can:getHeight()
-  			yMax = true
-			elseif transY > 0 then
-				transY = 0
-				yMin = true
-			end
+ --  		if transY < -map.height* 16 + can:getHeight() then
+ --  			transY = -map.height* 16 + can:getHeight()
+ --  			yMax = true
+	-- 		elseif transY > 0 then
+	-- 			transY = 0
+	-- 			yMin = true
+	-- 		end
 
-			love.graphics.translate(transX , transY)
-			love.graphics.setCanvas(can)
-			love.graphics.clear()
+	-- 		love.graphics.translate(transX , transY)
+	-- 		love.graphics.setCanvas(can)
+	-- 		love.graphics.clear()
 
-			Game.drawBase()
+	-- 		Game.drawBase()
 
-			transX = move.x - width/4
-			transY = move.y - height/4
+	-- 		transX = move.x - width/4
+	-- 		transY = move.y - height/4
 
-			if xMin then
-				transX = 0
-			elseif xMax then
-				transX = map.width* 16 - can:getWidth()
-			end
+	-- 		if xMin then
+	-- 			transX = 0
+	-- 		elseif xMax then
+	-- 			transX = map.width* 16 - can:getWidth()
+	-- 		end
 
-			if yMin then
-				transY = 0
-			elseif yMax then
-				transY = map.height* 16 - can:getHeight()
-			end
+	-- 		if yMin then
+	-- 			transY = 0
+	-- 		elseif yMax then
+	-- 			transY = map.height* 16 - can:getHeight()
+	-- 		end
 
-			love.graphics.translate(transX, transY)
-			love.graphics.setCanvas()
-			x = 0
-			y = 0
-			if index%2 == 0 then
-				x = width/2
-			end
-			if index > 2 then
-				y = height/2
-			end
-			love.graphics.draw(can,x,y)
+	-- 		love.graphics.translate(transX, transY)
+	-- 		love.graphics.setCanvas()
+	-- 		x = 0
+	-- 		y = 0
+	-- 		if index%2 == 0 then
+	-- 			x = width/2
+	-- 		end
+	-- 		if index > 2 then
+	-- 			y = height/2
+	-- 		end
+	-- 		love.graphics.draw(can,x,y)
 
-			player = players[index]
-			player:drawLifeMarkers(x+4,y+20)
+	-- 		player = players[index]
+	-- 		player:drawLifeMarkers(x+4,y+20)
 
-			if player.components.life.lives > 0 then
-				love.graphics.print(player.components.life.health .. " hp", x+26, y+42)
-			end
-		end
-		love.graphics.line(0,height/2, width,height/2)
-		love.graphics.line(width/2,0, width/2,height)
-	else
-		Game.drawBase()
+	-- 		if player.components.life.lives > 0 then
+	-- 			love.graphics.print(player.components.life.health .. " hp", x+26, y+42)
+	-- 		end
+	-- 	end
+		-- love.graphics.line(0,height/2, width,height/2)
+		-- love.graphics.line(width/2,0, width/2,height)
+	-- else
+	-- 	Game.drawBase()
+
+		love.graphics.line(0,962, width,962)
 		for i, player in pairs(players) do
 			local xOffset = 1920/4 * (i-1) + 100
 			love.graphics.setShader()
@@ -305,7 +321,7 @@ function Game.draw()
 				love.graphics.print(player.components.life.health .. " hp", xOffset+30, 1016)
 			end
 		end
-	end
+	-- end
 end
 
 function Game.drawBase()
