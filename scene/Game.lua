@@ -18,7 +18,7 @@ local players = {}
 local objects = {}
 
 
-
+local scale = 1
 gCamX,gCamY = 0,0
 
 local numberAlive = 0
@@ -61,7 +61,7 @@ function Game.load()
 
 	cam = gamera.new(0,0,map.tileSize * map.width,map.tileSize * map.height)
 	cam:setWindow(0,0,map.tileSize * map.width,map.tileSize * map.height)
-	-- cam:setScale(2.0)
+	
 end
 
 function Game.resize(w, h)
@@ -200,11 +200,20 @@ function Game.checkWin()
 end
 
 function Game.update(dt)
+	-- if scale < 4 then
+	-- 	scale = scale + 0.1 * dt
+	-- end 
+	-- cam:setScale(2)
 	map:update(dt)
 	Game.updateObjects(dt)
-	-- move = players[1].components.move
+	move = players[1].components.move
 	-- cam:setAngle(move.rotation)
-	-- cam:setPosition(move.x, move.y)
+
+	cam:setPosition(move.x, move.y)
+	if Game.shake then
+		 Game.shake = false
+		cam:shake(5)
+	end
 	-- cam:setAngle(move.rotation)
 
 	if gameWon then
@@ -322,6 +331,11 @@ function Game.draw()
 			end
 		end
 	-- end
+
+	local joysticks = love.joystick.getJoysticks()
+    for i, joystick in ipairs(joysticks) do
+        love.graphics.print(joystick:getName(), 10, i * 20)
+    end
 end
 
 function Game.drawBase()

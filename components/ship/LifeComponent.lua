@@ -25,6 +25,8 @@ end
 function LifeComponent:takeDamage(fromPlayer, damage)
   hit:stop()
   hit:play()
+  Game.shake = true
+
   local score = self.entity.components.score
   local armor = self.entity.components.armor
 

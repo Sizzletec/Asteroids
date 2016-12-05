@@ -133,6 +133,15 @@ function gamera:setAngle(angle)
   adjustPosition(self)
 end
 
+
+function gamera:shake(value)
+  randomx = love.math.random(value*2) - value
+  randomy = love.math.random(value*2) - value
+
+  self.x = self.x + randomx
+  self.y = self.y + randomy
+end
+
 function gamera:getWorld()
   return self.wl, self.wt, self.ww, self.wh
 end

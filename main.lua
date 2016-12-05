@@ -6,6 +6,9 @@ require('scene/Title')
 require('scene/Settings')
 require('scene/ShipSelect')
 require('scene/Score')
+require('object/Player')
+
+Players = {}
 
 State = {
 	title = Title,
@@ -22,6 +25,10 @@ function love.load()
 	love.window.setMode(1920/2, 1080/2, {fullscreen=false, resizable=true, highdpi=true})
 	setState(ShipSelect)
 
+
+	p1 = Player.new()
+	p1.components.keyboard = KeyboardInputComponent.new(i)
+	table.insert(Players,p1)
 	-- love.mouse.setVisible(false)
 end
 
@@ -45,12 +52,15 @@ function love.resize(w, h)
 end
 
 function love.keyreleased(key)
+	-- Players[1].components.keyboard:keyreleased(key)
 	if currentState.keyreleased then
 		currentState.keyreleased(key)
 	end
 end
 
 function love.keypressed(key, unicode)
+	-- Players[1].components.keyboard:keypressed(key, unicode)
+
 	if currentState.keypressed then
 		currentState.keypressed(key,unicode)
 	end
@@ -74,7 +84,18 @@ function love.gamepadaxis(joystick, axis, value)
 	end
 end
 
+
+function love.joystickadded(joystick)
+
+	-- p1 = Player.new()
+	-- table.insert(Players,p1)
+
+end
+
 function love.update( dt )
+	keyP = Players[1].components.keyboard.keysPressed
+
+	-- print(#keyP)
 	if currentState.update then
 		currentState.update(dt)
 	end
@@ -82,22 +103,9 @@ function love.update( dt )
 end
 
 function love.draw()
-	-- currentState.draw = function()
-	-- 	 love.graphics.print("NOPE!!", 1200, 850)
-	-- end
-
-	-- canvas = love.graphics.newCanvas( 600, 600 )
-	-- love.graphics.setCanvas(canvas)
-	-- love.graphics.clear()
-
 	if currentState.draw then
 		currentState.draw()
 	end
-	-- love.graphics.setCanvas()
-	-- if (Game.getPlayers()[1]) then
-	-- 	m = Game.getPlayers()[1].components.move
-	-- 	love.graphics.draw(canvas, m.x -50, m.y -50)
-	-- end	
 end
 
 function setState(newState)
