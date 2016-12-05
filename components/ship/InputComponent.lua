@@ -18,19 +18,22 @@ function InputComponent.new(entity)
   i.entity = entity
   i.components = {}
 
-  if entity.player == 1 then
+  if entity.player.input == "keyboard" then
     i.components["keyboard"] = KeyboardInputComponent.new(i)
   end
-  i.components["joystick"] = JoystickInputComponent.new(i)
+  -- i.components["joystick"] = JoystickInputComponent.new(i)
 
   return i
 end
 
 function InputComponent:update(dt)
 
-  if self.activeComponent then
-    self.activeComponent:update(dt)
+  if self.entity.player.input == "keyboard" then
+    self.components["keyboard"]:update(dt)
   end
+  -- if self.activeComponent then
+  --   self.activeComponent:update(dt)
+  -- end
 
   if self.disabled then
     self.throttle = 0

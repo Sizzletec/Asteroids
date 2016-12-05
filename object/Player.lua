@@ -2,7 +2,9 @@ Player = {}
 Player.__index = Player
 
 function Player.new()
-  local p = {}
+  local p = {
+    input = ""
+  }
   p.components = {}
   return p
 end

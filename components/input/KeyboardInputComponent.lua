@@ -2,21 +2,10 @@ KeyboardInputComponent = {}
 KeyboardInputComponent.__index = KeyboardInputComponent
 
 function KeyboardInputComponent.new(entity)
-  local i = {
-    keysPressed = {}
-  }
+  local i = {}
   setmetatable(i, KeyboardInputComponent)
   i.entity = entity
   return i
-end
-
-function KeyboardInputComponent:keyreleased(key)
-  self.keysPressed[key] = nil
-end
-
-function KeyboardInputComponent:keypressed(key, unicode)
-  self.entity.activeComponent = self
-  self.keysPressed[key] = true
 end
 
 function KeyboardInputComponent:update(dt)
@@ -30,14 +19,14 @@ function KeyboardInputComponent:update(dt)
   self.entity.fireAngle = math.atan2(x,-y)
 
 
-  self.entity.primary = love.mouse.isDown(1) or self.keysPressed.space
-  self.entity.secondary = love.mouse.isDown(2) or self.keysPressed.lshift
+  self.entity.primary = love.mouse.isDown(1) or love.keyboard.isDown("space")
+  self.entity.secondary = love.mouse.isDown(2) or love.keyboard.isDown("lshift")
 
-  self.entity.throttle =  (self.keysPressed.up or self.keysPressed.w) and 1 or 0
+  self.entity.throttle =  love.keyboard.isDown("up","w") and 1 or 0
 
-  if (self.keysPressed.left or self.keysPressed.a) then
+  if love.keyboard.isDown("left","a") then
     self.entity.angularInput = -1
-  elseif (self.keysPressed.right or self.keysPressed.d) then
+  elseif love.keyboard.isDown("right","d") then
     self.entity.angularInput = 1
   else
     self.entity.angularInput = 0

@@ -98,6 +98,7 @@ function Ship:update(dt)
   end
 end
 
+
 function Ship:drawLifeMarkers(x,y)
   for _, component in pairs(self.components) do
     if component.drawLifeMarkers ~= nil then
