@@ -56,6 +56,10 @@ end
 
 function love.keypressed(key, unicode)
 	Players[1].input = "keyboard"
+
+	if currentState.keypressed then
+		currentState.keypressed(key, unicode)
+	end
 end
 
 function love.gamepadpressed(joystick, button)
@@ -63,6 +67,10 @@ function love.gamepadpressed(joystick, button)
 		if player.joystick == joystick then
 			player.input = "joystick"
 		end  
+	end
+
+	if currentState.gamepadpressed then
+		currentState.gamepadpressed(joystick, button)
 	end
 end
 
@@ -79,6 +87,10 @@ function love.gamepadaxis(joystick, axis, value)
 		if player.joystick == joystick then
 			player.input = "joystick"
 		end  
+	end
+
+	if currentState.gamepadaxis then
+		currentState.gamepadaxis(joystick, axis, value)
 	end
 end
 

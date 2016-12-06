@@ -14,16 +14,19 @@ function InputComponent.new(entity)
   setmetatable(i, InputComponent)
   i.entity = entity
   i.components = {}
-  
+
   return i
 end
 
 function InputComponent:update()
-  if self.entity.player.input == "keyboard" then
-    self:getKeyboard()
-  elseif self.entity.player.input == "joystick" then 
-    self:getJoystick()
-  end
+
+  if self.entity.player.controlling == self.entity then
+    if self.entity.player.input == "keyboard" then
+      self:getKeyboard()
+    elseif self.entity.player.input == "joystick" then 
+      self:getJoystick()
+    end
+  end 
 
   if self.disabled then
     self.throttle = 0

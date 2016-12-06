@@ -48,7 +48,9 @@ function Game.load()
 
 	for i, player in pairs(Players) do
 		playerShip = player.ship
-		if playerShip then
+		
+		if playerShip and player.select.step == SelectStep.ready then
+			player.controlling = playerShip
 			playerShip:setDefaults()
 			playerShip:spawn()
 			table.insert(players, playerShip)
@@ -141,7 +143,6 @@ function Game.checkWin()
 			if player.components.life.lives > 0 then
 				player.place = numberAlive
 			end
-			selections[player.player].ship = player
 		end
 		gameWon = true
 	end

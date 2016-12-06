@@ -2,6 +2,7 @@ Title = {}
 Title.__index = Title
 
 love.filesystem.load("maps/tiledmap.lua")()
+require('object/Map')
 
 local highlightedOption = 1
 local menuOptions = {
@@ -11,11 +12,10 @@ local menuOptions = {
 gKeyPressed = {}
 gCamX,gCamY = 0,0
 
-local menuSpeed = 0.2
+local menuSpeed = 0.3
 local menuCooldown = 0
 
 function Title.load()
-	TiledMap_Load("maps/title.tmx",16)
 end
 
 function Title.SelectMenuItem()
@@ -43,37 +43,34 @@ function Title.menuDown()
 end
 
 function Title.update(dt)
-	if love.keyboard.isDown("escape") then love.event.quit() end
-	for _,player in pairs(Players) do
-		if menuCooldown > 0 then
-			menuCooldown = menuCooldown - dt
-		else
-			Title.getPlayerInput(player)
-		end
+	if menuCooldown > 0 then
+		menuCooldown = menuCooldown - dt
 	end
 end
 
-function Title.getPlayerInput(player)
-	if player.input == "joystick" then
-		if love.joystick.isDown(player.joystick, "a") then
-			Title.SelectMenuItem()
-		else
-			value = love.joystick.getAxis(player.joystick, "lefty")
-			if value > 0.7 then
-				Title.menuDown()
-			elseif value < -0.7 then
-				Title.menuUp()
-			end
-		end
-	elseif player.input == "keyboard" then
-		if love.keyboard.isDown("return") then
-			Title.SelectMenuItem()
-		elseif love.keyboard.isDown("up") then
-			Title.menuUp()
-		elseif love.keyboard.isDown("down") then
+function Title.keypressed(key, unicode)
+	if (key == "escape") then love.event.quit() end
+	if (key == "up") then Title.menuUp() end
+	if (key == "down") then Title.menuDown() end
+	if (key == "return") then
+		Title.SelectMenuItem()
+	end
+end
+
+function Title.gamepadpressed(joystick, button)
+    if button == "a" then
+    	Title.SelectMenuItem()
+    end
+end
+
+function Title.gamepadaxis(joystick, axis, value)
+	if menuCooldown <= 0 and axis ==  "lefty" then
+		if value > 0.7 then
 			Title.menuDown()
+		elseif value < -0.7 then
+			Title.menuUp()
 		end
-	end 
+	end
 end
 
 function Title.draw()

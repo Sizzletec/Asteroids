@@ -58,12 +58,13 @@ function RenderComponent:draw()
     love.graphics.draw(ShipsImage, top_left,x, y, r, 1,1 , 16,16)
   end
 
-  if self.entity.shipType == ShipType.gunship and life.alive then
+  -- if self.entity.shipType == ShipType.gunship and life.alive then
 
-    local angle = self.entity.components.input.fireAngle
-    local cannonQuad = love.graphics.newQuad(0, 160, 20, 20, ShipsImage:getDimensions())
-    love.graphics.draw(ShipsImage,cannonQuad,move.x - (3 * math.sin(move.rotation)), move.y + (3 * math.cos(move.rotation)), angle, 1,1 , 10, 10)
-  end
+    
+  --   local angle = self.entity.components.input.fireAngle
+  --   local cannonQuad = love.graphics.newQuad(0, 160, 20, 20, ShipsImage:getDimensions())
+  --   love.graphics.draw(ShipsImage,cannonQuad,move.x - (3 * math.sin(move.rotation)), move.y + (3 * math.cos(move.rotation)), angle, 1,1 , 10, 10)
+  -- end
 
   love.graphics.setColor(255, 255, 255)
 
