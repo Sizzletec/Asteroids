@@ -14,12 +14,7 @@ function InputComponent.new(entity)
   setmetatable(i, InputComponent)
   i.entity = entity
   i.components = {}
-
-  if entity.player.input == "keyboard" then
-    -- i.components["keyboard"] = KeyboardInputComponent.new(i)
-  end
-  -- i.components["joystick"] = JoystickInputComponent.new(i)
-
+  
   return i
 end
 
