@@ -11,9 +11,6 @@ local placeStrings = {
 function Score.keypressed(key, unicode)
 	if (key == "escape") then setState(State.title) end
 	if (key == "return") then
-		for i, player in pairs(selections) do
-			ship = player.ship
-		end
 		setState(State.shipSelect) 
 	end
 end
@@ -44,15 +41,15 @@ function Score.draw()
 	love.graphics.scale(scaleFactor, scaleFactor)
 	love.graphics.setBackgroundColor(0x20,0x20,0x20)
 
-	for i, player in pairs(selections) do
+	for i, player in pairs(Players) do
 		love.graphics.setColor(255, 255, 255)
 		love.graphics.setNewFont(60)
 		ship = player.ship
 
-		if ship then
+		if ship and player.select.step == SelectStep.ready then
 			local xOffset = 1920/4 * (i-1) + 100
 
-			love.graphics.print("Player " .. ship.player, xOffset, 100)
+			love.graphics.print("Player " .. i, xOffset, 100)
 			love.graphics.print(placeStrings[ship.place], xOffset, 200)
 
 			love.graphics.setColor(200, 200, 200)

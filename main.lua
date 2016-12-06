@@ -23,12 +23,11 @@ currentState = State.title
 
 function love.load()
 	love.window.setMode(1920/2, 1080/2, {fullscreen=false, resizable=true, highdpi=true})
-	setState(ShipSelect)
+	-- setState(ShipSelect)
 
-
-	p1 = Player.new()
-	p1.components.keyboard = KeyboardInputComponent.new(i)
-	table.insert(Players,p1)
+	for x=1,4 do
+		table.insert(Players,Player.new())
+	end
 	-- love.mouse.setVisible(false)
 end
 
@@ -52,38 +51,48 @@ function love.resize(w, h)
 end
 
 function love.keyreleased(key)
-	-- Players[1].components.keyboard:keyreleased(key)
-	if currentState.keyreleased then
-		currentState.keyreleased(key)
-	end
+	Players[1].input = "keyboard"
 end
 
 function love.keypressed(key, unicode)
-	-- Players[1].components.keyboard:keypressed(key, unicode)
+	Players[1].input = "keyboard"
 
 	if currentState.keypressed then
-		currentState.keypressed(key,unicode)
+		currentState.keypressed(key, unicode)
 	end
 end
 
 function love.gamepadpressed(joystick, button)
+	for _,player in pairs(Players) do
+		if player.joystick == joystick then
+			player.input = "joystick"
+		end  
+	end
+
 	if currentState.gamepadpressed then
 		currentState.gamepadpressed(joystick, button)
 	end
 end
 
 function love.gamepadreleased(joystick, button)
-	if currentState.gamepadreleased then
-		currentState.gamepadreleased(joystick, button)
+	for _,player in pairs(Players) do
+		if player.joystick == joystick then
+			player.input = "joystick"
+		end  
 	end
 end
 
 function love.gamepadaxis(joystick, axis, value)
+	for _,player in pairs(Players) do
+		if player.joystick == joystick then
+			player.input = "joystick"
+		end  
+	end
+
 	if currentState.gamepadaxis then
 		currentState.gamepadaxis(joystick, axis, value)
 	end
 end
-
 
 function love.joystickadded(joystick)
 
@@ -93,9 +102,6 @@ function love.joystickadded(joystick)
 end
 
 function love.update( dt )
-	keyP = Players[1].components.keyboard.keysPressed
-
-	-- print(#keyP)
 	if currentState.update then
 		currentState.update(dt)
 	end

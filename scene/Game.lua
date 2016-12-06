@@ -46,9 +46,11 @@ function Game.load()
 	spawn = TiledMap_GetSpawnLocations()
 
 
-	for i, player in pairs(selections) do
+	for i, player in pairs(Players) do
 		playerShip = player.ship
-		if playerShip then
+		
+		if playerShip and player.select.step == SelectStep.ready then
+			player.controlling = playerShip
 			playerShip:setDefaults()
 			playerShip:spawn()
 			table.insert(players, playerShip)
@@ -119,58 +121,6 @@ function Game.GetSpawnLocation()
 	return newSpawn
 end
 
-function Game.keyreleased(key)
-	for _, player in pairs(players) do
-		local keyboard = player.components.input.components.keyboard
-		if keyboard ~= nil then
-			keyboard:keyreleased(key)
-		end
-	end
-end
-
-function Game.keypressed(key, unicode)
-	if (key == "escape") then setState(State.shipSelect) end
-	for _, player in pairs(players) do
-		local keyboard = player.components.input.components.keyboard
-		if keyboard ~= nil then
-			keyboard:keypressed(key, unicode)
-		end
-	end
-end
-
-function Game.gamepadpressed(joystick, button)
-	local id, instanceid = joystick:getID()
-	local player = Game.getPlayer(id)
-	if player then
-		local joystick = player.components.input.components.joystick
-		if joystick ~= nil then
-			joystick:gamepadpressed(joystick, button)
-		end
-	end
-end
-
-function Game.gamepadreleased(joystick, button)
-	local id, instanceid = joystick:getID()
-	local player = Game.getPlayer(id)
-	if player then
-		local joystick = player.components.input.components.joystick
-		if joystick ~= nil then
-			joystick:gamepadreleased(joystick, button)
-		end
-	end
-end
-
-function Game.gamepadaxis(joystick, axis, value)
-	local id, instanceid = joystick:getID()
-	local player = Game.getPlayer(id)
-	if player then
-		local joystick = player.components.input.components.joystick
-		if joystick ~= nil then
-			joystick:gamepadaxis(joystick, axis, value)
-		end
-	end
-end
-
 function Game.getPlayer(id)
 	for i, player in pairs(players) do
 		if player.player == id then
@@ -193,7 +143,6 @@ function Game.checkWin()
 			if player.components.life.lives > 0 then
 				player.place = numberAlive
 			end
-			selections[player.player].ship = player
 		end
 		gameWon = true
 	end
@@ -246,91 +195,16 @@ function Game.draw()
 	width = love.graphics.getWidth()
 	height = love.graphics.getHeight()
 
-	-- if split then
-	-- 	for index,can in ipairs(canvases) do
-	-- 		move = players[index].components.move
+	love.graphics.line(0,962, width,962)
+	for i, player in pairs(players) do
+		local xOffset = 1920/4 * (i-1) + 100
+		love.graphics.setShader()
+		player:drawLifeMarkers(xOffset+10,994)
 
-	-- 		transX = -move.x + width/4
-	-- 		transY = -move.y + height/4
-
-	-- 		xMax = false
-	-- 		xMin = false
-
-	-- 		yMax = false
-	-- 		yMin = false
-
-	-- 	if transX < -map.width* 16 + can:getWidth() then
- --    elseif transX > 0 then
- --      transX = 0
- --      xMin = true
- --    end
-	-- 		transX = -map.width* 16 + can:getWidth()
-	-- 		xMax = true
-
- --  		if transY < -map.height* 16 + can:getHeight() then
- --  			transY = -map.height* 16 + can:getHeight()
- --  			yMax = true
-	-- 		elseif transY > 0 then
-	-- 			transY = 0
-	-- 			yMin = true
-	-- 		end
-
-	-- 		love.graphics.translate(transX , transY)
-	-- 		love.graphics.setCanvas(can)
-	-- 		love.graphics.clear()
-
-	-- 		Game.drawBase()
-
-	-- 		transX = move.x - width/4
-	-- 		transY = move.y - height/4
-
-	-- 		if xMin then
-	-- 			transX = 0
-	-- 		elseif xMax then
-	-- 			transX = map.width* 16 - can:getWidth()
-	-- 		end
-
-	-- 		if yMin then
-	-- 			transY = 0
-	-- 		elseif yMax then
-	-- 			transY = map.height* 16 - can:getHeight()
-	-- 		end
-
-	-- 		love.graphics.translate(transX, transY)
-	-- 		love.graphics.setCanvas()
-	-- 		x = 0
-	-- 		y = 0
-	-- 		if index%2 == 0 then
-	-- 			x = width/2
-	-- 		end
-	-- 		if index > 2 then
-	-- 			y = height/2
-	-- 		end
-	-- 		love.graphics.draw(can,x,y)
-
-	-- 		player = players[index]
-	-- 		player:drawLifeMarkers(x+4,y+20)
-
-	-- 		if player.components.life.lives > 0 then
-	-- 			love.graphics.print(player.components.life.health .. " hp", x+26, y+42)
-	-- 		end
-	-- 	end
-		-- love.graphics.line(0,height/2, width,height/2)
-		-- love.graphics.line(width/2,0, width/2,height)
-	-- else
-	-- 	Game.drawBase()
-
-		love.graphics.line(0,962, width,962)
-		for i, player in pairs(players) do
-			local xOffset = 1920/4 * (i-1) + 100
-			love.graphics.setShader()
-			player:drawLifeMarkers(xOffset+10,994)
-
-			if player.components.life.lives > 0 then
-				love.graphics.print(player.components.life.health .. " hp", xOffset+30, 1016)
-			end
+		if player.components.life.lives > 0 then
+			love.graphics.print(player.components.life.health .. " hp", xOffset+30, 1016)
 		end
-	-- end
+	end
 
 	local joysticks = love.joystick.getJoysticks()
     for i, joystick in ipairs(joysticks) do
@@ -345,17 +219,13 @@ function Game.drawBase()
 	scaleFactor = width/1920
 
 	love.graphics.scale(scaleFactor, scaleFactor)
-	-- love.graphics.setColor(255, 255, 255, alpha)
 	map:drawBackground()
-	-- love.graphics.setColor(255, 255, 255, 255)
 	love.graphics.setNewFont(40)
 	for i, obj in pairs(objects) do
 		obj:draw()
 	end
 	Bullet.drawBatch()
 	MissileShot.draw()
-	-- Beam.draw()
-
 	map:drawForeground()
 	love.graphics.setBackgroundColor(0x20,0x20,0x20)
 

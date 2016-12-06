@@ -4,7 +4,8 @@ RotatingFireComponent = {
   gunCooldown = 0,
   weaponDamage = 40,
   fireRate = 2,
-  firing = false
+  firing = false,
+  fireAngle = 0
 }
 
 RotatingFireComponent.__index = RotatingFireComponent
@@ -33,12 +34,23 @@ function RotatingFireComponent:fire()
   local move = self.entity.components.move
   self.entity.components.score.shots = self.entity.components.score.shots + 1
 
-  local angle = self.entity.components.input.fireAngle
+  input = self.entity.components.input
+  if input then
+    self.fireAngle = input.fireAngle
+  end
 
   local x = move.x - (3 * math.sin(move.rotation))
   local y = move.y + (3 * math.cos(move.rotation))
-  bullet = Bullet.new(self.entity,x,y,900,angle, self.weaponDamage)
+  bullet = Bullet.new(self.entity,x,y,900,self.fireAngle, self.weaponDamage)
   table.insert(Game.getObjects(), bullet)
 end
+
+function RotatingFireComponent:draw()
+  local move = self.entity.components.move
+  local angle = self.fireAngle
+  local cannonQuad = love.graphics.newQuad(0, 160, 20, 20, ShipsImage:getDimensions())
+  love.graphics.draw(ShipsImage,cannonQuad,move.x - (3 * math.sin(move.rotation)), move.y + (3 * math.cos(move.rotation)), angle, 1,1 , 10, 10)
+end
+
 
 return RotatingFireComponent

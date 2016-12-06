@@ -2,6 +2,7 @@ Title = {}
 Title.__index = Title
 
 love.filesystem.load("maps/tiledmap.lua")()
+require('object/Map')
 
 local highlightedOption = 1
 local menuOptions = {
@@ -15,21 +16,6 @@ local menuSpeed = 0.3
 local menuCooldown = 0
 
 function Title.load()
-	TiledMap_Load("maps/title.tmx",16)
-end
-
-function Title.keyreleased(key)
-	gKeyPressed[key] = nil
-end
-
-function Title.keypressed(key, unicode)
-	gKeyPressed[key] = true
-	if (key == "escape") then love.event.quit() end
-	if (key == "up") then Title.menuUp() end
-	if (key == "down") then Title.menuDown() end
-	if (key == "return") then
-		Title.SelectMenuItem()
-	end
 end
 
 function Title.SelectMenuItem()
@@ -37,27 +23,6 @@ function Title.SelectMenuItem()
 		setState(State.shipSelect)
 	elseif highlightedOption == 2 then
 		setState(State.settings)
-	end
-end
-
-function Title.gamepadpressed(joystick, button)
-    if button == "a" then
-    	Title.SelectMenuItem()
-    end
-end
-
-function Title.gamepadreleased(joystick, button)
-    if button == "a" then
-    end
-end
-
-function Title.gamepadaxis(joystick, axis, value)
-	if menuCooldown <= 0 and axis ==  "lefty" then
-		if value > 0.7 then
-			Title.menuDown()
-		elseif value < -0.7 then
-			Title.menuUp()
-		end
 	end
 end
 
@@ -80,6 +45,31 @@ end
 function Title.update(dt)
 	if menuCooldown > 0 then
 		menuCooldown = menuCooldown - dt
+	end
+end
+
+function Title.keypressed(key, unicode)
+	if (key == "escape") then love.event.quit() end
+	if (key == "up") then Title.menuUp() end
+	if (key == "down") then Title.menuDown() end
+	if (key == "return") then
+		Title.SelectMenuItem()
+	end
+end
+
+function Title.gamepadpressed(joystick, button)
+    if button == "a" then
+    	Title.SelectMenuItem()
+    end
+end
+
+function Title.gamepadaxis(joystick, axis, value)
+	if menuCooldown <= 0 and axis ==  "lefty" then
+		if value > 0.7 then
+			Title.menuDown()
+		elseif value < -0.7 then
+			Title.menuUp()
+		end
 	end
 end
 
