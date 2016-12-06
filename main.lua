@@ -25,12 +25,7 @@ function love.load()
 	love.window.setMode(1920/2, 1080/2, {fullscreen=false, resizable=true, highdpi=true})
 	-- setState(ShipSelect)
 
-
-	p1 = Player.new()
-	p1.components.keyboard = KeyboardInputComponent.new(i)
-	table.insert(Players,p1)
-
-	for x=1,3 do
+	for x=1,4 do
 		table.insert(Players,Player.new())
 	end
 	-- love.mouse.setVisible(false)
