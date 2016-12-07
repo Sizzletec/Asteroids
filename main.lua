@@ -22,8 +22,9 @@ State = {
 currentState = State.title
 
 function love.load()
-	love.window.setMode(1920/2, 1080/2, {fullscreen=false, resizable=true, highdpi=true})
+	love.window.setMode(1920, 1080, {fullscreen=false, resizable=true, highdpi=true})
 	-- setState(ShipSelect)
+	-- love.graphics.setDefaultFilter( 'nearest', 'nearest' )
 
 	for x=1,4 do
 		table.insert(Players,Player.new())
@@ -63,6 +64,8 @@ function love.keypressed(key, unicode)
 end
 
 function love.gamepadpressed(joystick, button)
+	Players[joystick:getID()].input = "joystick"
+
 	for _,player in pairs(Players) do
 		if player.joystick == joystick then
 			player.input = "joystick"
@@ -95,10 +98,15 @@ function love.gamepadaxis(joystick, axis, value)
 end
 
 function love.joystickadded(joystick)
+	-- print(joystick:getName(), joystick:getGUID( ),joystick:getID( ), "added")
+	Players[joystick:getID()].input = "joystick"
+	Players[joystick:getID()].joystick = joystick
+end
 
-	-- p1 = Player.new()
-	-- table.insert(Players,p1)
-
+function love.joystickremoved( joystick )
+	-- print(joystick:getName(), joystick:getGUID( ),joystick:getID( ),"remove")
+	Players[joystick:getID()].input = ""
+	Players[joystick:getID()].joystick = nil
 end
 
 function love.update( dt )

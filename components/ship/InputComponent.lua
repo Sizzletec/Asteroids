@@ -18,13 +18,13 @@ function InputComponent.new(entity)
   return i
 end
 
-function InputComponent:update()
+function InputComponent:update(dt)
 
   if self.entity.player.controlling == self.entity then
     if self.entity.player.input == "keyboard" then
       self:getKeyboard()
     elseif self.entity.player.input == "joystick" then 
-      self:getJoystick()
+      self:getJoystick(dt)
     end
   end 
 
@@ -77,20 +77,20 @@ function InputComponent:getKeyboard()
   end
 end
 
-function InputComponent:getJoystick()
+function InputComponent:getJoystick(dt)
 
-  joy = entity.player.joystick
+  joy = self.entity.player.joystick
 
   if joy then
 
-    rightx = love.joystick.getAxis(joy, "rightx")
-    righty = love.joystick.getAxis(joy, "righty")
+    rightx = joy:getGamepadAxis("rightx")
+    righty = joy:getGamepadAxis("righty")
 
-    lefty = love.joystick.getAxis(joy, "lefty")
-    leftx = love.joystick.getAxis(joy, "leftx")
+    lefty = joy:getGamepadAxis("lefty")
+    leftx = joy:getGamepadAxis("leftx")
 
-    triggerleft = love.joystick.getAxis(joy, "triggerleft")
-    triggerright = love.joystick.getAxis(joy, "triggerright")
+    triggerleft = joy:getGamepadAxis("triggerleft")
+    triggerright = joy:getGamepadAxis("triggerright")
 
 
     if math.abs(rightx) > 0.5 or math.abs(righty) > 0.5 then

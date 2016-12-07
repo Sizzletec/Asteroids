@@ -79,6 +79,11 @@ function Game.getObjects()
 	return objects
 end
 
+function Game.keypressed(key, unicode)
+	if (key == "escape") then setState(ShipSelect)  end
+end
+
+
 function Game.GetSpawnLocation()
 	local newSpawn = {x = 100, y = 100, r = 0}
 
@@ -152,7 +157,7 @@ function Game.update(dt)
 	-- if scale < 4 then
 	-- 	scale = scale + 0.1 * dt
 	-- end 
-	-- cam:setScale(2)
+	cam:setScale(2)
 	map:update(dt)
 	Game.updateObjects(dt)
 	move = players[1].components.move

@@ -165,7 +165,7 @@ ShipSelectOrder = {
   ShipType.standard,
   ShipType.gunship,
   ShipType.assalt,
-  ShipType.ray,
+  -- ShipType.ray,
   ShipType.zap,
   ShipType.charge,
   ShipType.rocket,

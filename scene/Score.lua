@@ -17,7 +17,7 @@ end
 
 function Score.gamepadpressed(joystick, button)
 	 if button == "start" then
-    	for i, player in pairs(selections) do
+    	for i, player in pairs(Players) do
 			ship = player.ship
 		end
 		setState(State.shipSelect) 
