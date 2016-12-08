@@ -10,6 +10,10 @@ require('object/Bullet')
 require('object/AoE')
 require('object/MissileShot')
 
+
+img = love.graphics.newImage('images/background.png')
+
+
 HC = require("HC")
 local gamera =  require("gamera/gamera")
 
@@ -223,7 +227,11 @@ function Game.drawBase()
 
 	scaleFactor = width/1920
 
+	move = players[1].components.move
 	love.graphics.scale(scaleFactor, scaleFactor)
+	img:setWrap("repeat", "repeat")
+	quad = love.graphics.newQuad(0,0, cam.w,cam.h, 200, 300)
+	love.graphics.draw(img,quad, cam.x - cam.w/2, cam.y -cam.h/2)
 	map:drawBackground()
 	love.graphics.setNewFont(40)
 	for i, obj in pairs(objects) do
