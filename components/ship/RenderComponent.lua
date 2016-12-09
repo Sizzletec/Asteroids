@@ -56,43 +56,44 @@ function RenderComponent:draw()
   if life and not life.alive then
     local top_left = love.graphics.newQuad(math.floor(self.entity.explodingFrame)*32, 4*32, 32, 32, ShipsImage:getDimensions())
     love.graphics.draw(ShipsImage, top_left,x, y, r, 1,1 , 16,16)
-  end
+  else
 
-  -- if self.entity.shipType == ShipType.gunship and life.alive then
+    -- if self.entity.shipType == ShipType.gunship and life.alive then
 
-    
-  --   local angle = self.entity.components.input.fireAngle
-  --   local cannonQuad = love.graphics.newQuad(0, 160, 20, 20, ShipsImage:getDimensions())
-  --   love.graphics.draw(ShipsImage,cannonQuad,move.x - (3 * math.sin(move.rotation)), move.y + (3 * math.cos(move.rotation)), angle, 1,1 , 10, 10)
-  -- end
+      
+    --   local angle = self.entity.components.input.fireAngle
+    --   local cannonQuad = love.graphics.newQuad(0, 160, 20, 20, ShipsImage:getDimensions())
+    --   love.graphics.draw(ShipsImage,cannonQuad,move.x - (3 * math.sin(move.rotation)), move.y + (3 * math.cos(move.rotation)), angle, 1,1 , 10, 10)
+    -- end
 
-  love.graphics.setColor(255, 255, 255)
+    love.graphics.setColor(255, 255, 255)
 
-  if self.entity.shield then
-    love.graphics.circle("line", x, y, 20)
-  end
+    if self.entity.shield then
+      love.graphics.circle("line", x, y, 20)
+    end
 
-  local maxTicks = math.ceil(self.entity.shipType.health/10)
-  local currentTicks = math.ceil(life.health/10)
-  local angleDiff = math.pi/maxTicks
+    local maxTicks = math.ceil(self.entity.shipType.health/10)
+    local currentTicks = math.ceil(life.health/10)
+    local angleDiff = math.pi/maxTicks
 
-  -- print(angleDiff)
+    -- print(angleDiff)
 
-  love.graphics.setLineWidth(2)
-  love.graphics.setColor(200, 0, 0,160)
-  for i=1,maxTicks,1 do
-    -- love.graphics.setLineWidth(20)
-    if currentTicks < i then
-        love.graphics.setColor(100, 100, 100,50)
+    love.graphics.setLineWidth(2)
+    love.graphics.setColor(200, 0, 0,160)
+    for i=1,maxTicks,1 do
+      -- love.graphics.setLineWidth(20)
+      if currentTicks < i then
+          love.graphics.setColor(100, 100, 100,50)
+      end
+
+
+      -- 2/17 for 150 2/14 for 130 2/19 for 170 2/18  2/36 for 300
+
+      love.graphics.arc("line", "open", x, y, 30,angleDiff*(i-1)+math.pi/14 -math.pi ,angleDiff*i- math.pi/36 -math.pi)
     end
 
 
-    -- 2/17 for 150 2/14 for 130 2/19 for 170 2/18  2/36 for 300
-
-    love.graphics.arc("line", "open", x, y, 30,angleDiff*(i-1)+math.pi/14 -math.pi ,angleDiff*i- math.pi/36 -math.pi)
   end
-
-
   love.graphics.setLineWidth(1)
   love.graphics.setColor(255, 255, 255)
 

@@ -113,8 +113,15 @@ end
 
 function Bullet:draw()
     local m = self.components.move
+    c = self.entity.player.select.color
 
-    q = love.graphics.newQuad(0, 24, 12, 12, 48, 48)
+    c = c + 2 
+
+    if c > 3 then
+      c = c - 4
+    end
+
+    q = love.graphics.newQuad(12*c, 0, 12, 12, 48, 12)
     tilesetBatch:add(q,m.x, m.y, m.rotation, 1,1 , 6,6)
 
     if debug then
