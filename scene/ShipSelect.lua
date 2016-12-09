@@ -17,7 +17,7 @@ SelectStep = {
 	ready = 2
 }
 
-local menuSpeed = 0.2
+local menuSpeed = 0.4
 
 function ShipSelect.load()
 	for i,player in pairs(Players) do

@@ -7,7 +7,7 @@ LifeComponent.__index = LifeComponent
 
 function LifeComponent.new(entity)
   local i = {
-    lives = 2,
+    lives = 3,
     health = 100,
     alive = true
   }
@@ -25,7 +25,18 @@ end
 function LifeComponent:takeDamage(fromPlayer, damage)
   hit:stop()
   hit:play()
-  Game.shake = true
+
+  if self.entity.player == Players[1] then 
+    Game.shake1 = true
+  end
+
+  if self.entity.player == Players[2] then 
+    Game.shake2 = true
+  end
+
+
+
+
 
   local score = self.entity.components.score
   local armor = self.entity.components.armor

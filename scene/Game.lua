@@ -36,7 +36,8 @@ local split = false
 debug  = false
 fps = false
 
-local cam
+local cam1
+local cam2
 
 
 function Game.load()
@@ -65,8 +66,11 @@ function Game.load()
 	gameWon = false
 	winCount = 8
 
-	cam = gamera.new(0,0,map.tileSize * map.width,map.tileSize * map.height)
-	cam:setWindow(0,0,map.tileSize * map.width,map.tileSize * map.height)
+	cam1 = gamera.new(0,0,map.tileSize * map.width,map.tileSize * map.height)
+	cam1:setWindow(0,0,map.tileSize * map.width/2,map.tileSize * map.height)
+
+	cam2 = gamera.new(0,0,map.tileSize * map.width,map.tileSize * map.height)
+	cam2:setWindow(map.tileSize * map.width/2,0,map.tileSize * map.width/2,map.tileSize * map.height)
 	
 end
 
@@ -161,7 +165,9 @@ function Game.update(dt)
 	-- if scale < 4 then
 	-- 	scale = scale + 0.1 * dt
 	-- end 
-	cam:setScale(scale)
+	cam1:setScale(scale)
+	cam2:setScale(scale)
+
 	map:update(dt)
 	Game.updateObjects(dt)
 	move = players[1].components.move
@@ -194,10 +200,17 @@ function Game.update(dt)
 	-- end
 
 	-- cam:setPosition(nextPos.x, nextPos.y)
-	cam:setPosition(move.x, move.y)
-	if Game.shake then
-		 Game.shake = false
-		cam:shake(5)
+	move2 = players[2].components.move
+	cam1:setPosition(move.x, move.y)
+	cam2:setPosition(move2.x, move2.y)
+	if Game.shake1 then
+		Game.shake1 = false
+		cam1:shake(5)
+	end
+
+	if Game.shake2 then
+		Game.shake2 = false
+		cam2:shake(5)
 	end
 	-- cam:setAngle(move.rotation)
 
@@ -225,9 +238,14 @@ function Game.updateObjects(dt)
 end
 
 function Game.draw()
-	cam:draw(function(l,t,w,h)
-  		Game.drawBase()
+	cam1:draw(function(l,t,w,h)
+  		Game.drawBase(cam1,1)
 	end)
+
+	cam2:draw(function(l,t,w,h)
+  		Game.drawBase(cam2,1)
+	end)
+
 	width = love.graphics.getWidth()
 	height = love.graphics.getHeight()
 
@@ -246,15 +264,17 @@ function Game.draw()
     for i, joystick in ipairs(joysticks) do
         love.graphics.print(joystick:getName(), 10, i * 20)
     end
+
+    love.graphics.line(width/2,0, width/2,962)
 end
 
-function Game.drawBase()
+function Game.drawBase(cam,player)
 	width = love.graphics.getWidth()
 	height = love.graphics.getHeight()
 
 	scaleFactor = width/1920
 
-	move = players[1].components.move
+	move = players[player].components.move
 	love.graphics.scale(scaleFactor, scaleFactor)
 	img:setWrap("repeat", "repeat")
 	quad = love.graphics.newQuad(0,0, cam.w,cam.h, 200, 300)

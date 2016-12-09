@@ -22,7 +22,7 @@ ShipType = {
   standard = {
     name = "Standard",
     primaryAttack = AlternatingFireComponent,
-    secondaryAttack = ShieldDropComponent,
+    secondaryAttack = ShockwaveComponent,
     tertiaryAttack = PhaseComponent,
     topSpeed = 240,
     acceleration = 360,
@@ -104,7 +104,7 @@ ShipType = {
     topSpeed = 200,
     acceleration = 200,
     rotationSpeed = 4,
-    health = 300,
+    health = 180,
     frameOffset = 14
   },
   spreader = {
