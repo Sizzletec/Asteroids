@@ -34,7 +34,7 @@ local map
 local canvases = {}
 local split = false
 debug  = false
-fps = true
+fps = false
 
 local cam
 
@@ -167,33 +167,34 @@ function Game.update(dt)
 	move = players[1].components.move
 	-- cam:setAngle(move.rotation)
 
-	camGoalX = move.x + 100 * math.sin(move.rotation)
-	camGoalY = move.y - 100 * math.cos(move.rotation)
+	-- camGoalX = move.x + 100 * math.sin(move.rotation)
+	-- camGoalY = move.y - 100 * math.cos(move.rotation)
 
-	rate = 4
-	nextPos = {x = move.x,y = move.y}
-	if cam.x < camGoalX then
-		nextPos.x = cam.x + rate
-	elseif cam.x > camGoalX then
-		nextPos.x = cam.x - rate
-	end
+	-- rate = 4
+	-- nextPos = {x = move.x,y = move.y}
+	-- if cam.x < camGoalX then
+	-- 	nextPos.x = cam.x + rate
+	-- elseif cam.x > camGoalX then
+	-- 	nextPos.x = cam.x - rate
+	-- end
 
-	if cam.y < camGoalY then
-		nextPos.y = cam.y + rate
-	elseif cam.y > camGoalY then
-		nextPos.y = cam.y - rate
-	end
+	-- if cam.y < camGoalY then
+	-- 	nextPos.y = cam.y + rate
+	-- elseif cam.y > camGoalY then
+	-- 	nextPos.y = cam.y - rate
+	-- end
 
 
-	if math.abs(cam.x - camGoalX)< rate  or math.abs(cam.x - camGoalX)>500 then
-		nextPos.x = camGoalX
-	end
+	-- if math.abs(cam.x - camGoalX)< rate  or math.abs(cam.x - camGoalX)>500 then
+	-- 	nextPos.x = camGoalX
+	-- end
 
-	if math.abs(cam.y - camGoalY)< rate or math.abs(cam.y - camGoalY)>500 then
-		nextPos.y = camGoalY
-	end
+	-- if math.abs(cam.y - camGoalY)< rate or math.abs(cam.y - camGoalY)>500 then
+	-- 	nextPos.y = camGoalY
+	-- end
 
-	cam:setPosition(nextPos.x, nextPos.y)
+	-- cam:setPosition(nextPos.x, nextPos.y)
+	cam:setPosition(move.x, move.y)
 	if Game.shake then
 		 Game.shake = false
 		cam:shake(5)

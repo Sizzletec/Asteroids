@@ -162,7 +162,7 @@ function ShipSelect.gamepadpressed(joystick, button)
     	end
     elseif player.select.step == SelectStep.ready then
     	if button == "b" then
-	    	ShipSelect.unReady(id)
+    		player.select.step = SelectStep.active
     	end
 	end
 

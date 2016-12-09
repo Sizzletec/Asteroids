@@ -72,17 +72,27 @@ function RenderComponent:draw()
     love.graphics.circle("line", x, y, 20)
   end
 
-  local numBullets = math.ceil(life.health/15)
-  local angleDiff = math.pi/4/numBullets
+  local maxTicks = math.ceil(self.entity.shipType.health/10)
+  local currentTicks = math.ceil(life.health/10)
+  local angleDiff = math.pi/maxTicks
+
+  print(angleDiff)
+
+  love.graphics.setLineWidth(2)
+  love.graphics.setColor(200, 0, 0,160)
+  for i=1,maxTicks,1 do
+    -- love.graphics.setLineWidth(20)
+    if currentTicks < i then
+        love.graphics.setColor(100, 100, 100,50)
+    end
 
 
+    -- 2/17 for 150 2/14 for 130 2/19 for 170 2/18  2/36 for 300
 
-  love.graphics.setLineWidth(7)
-  love.graphics.setColor(200, 0, 0)
-  for i=1,numBullets,1 do
-    love.graphics.setLineWidth(7)
-      love.graphics.arc("line", "open", x, y, 30,-math.pi/12*(i+1)+math.pi/20,-math.pi/12*i-math.pi/20)
+    love.graphics.arc("line", "open", x, y, 30,angleDiff*(i-1)+math.pi/14 -math.pi ,angleDiff*i- math.pi/36 -math.pi)
   end
+
+
   love.graphics.setLineWidth(1)
   love.graphics.setColor(255, 255, 255)
 
