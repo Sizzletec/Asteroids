@@ -76,7 +76,7 @@ function RenderComponent:draw()
   local currentTicks = math.ceil(life.health/10)
   local angleDiff = math.pi/maxTicks
 
-  print(angleDiff)
+  -- print(angleDiff)
 
   love.graphics.setLineWidth(2)
   love.graphics.setColor(200, 0, 0,160)

@@ -6,6 +6,7 @@ function InputComponent.new(entity)
     fireAngle = 0,
     primary = false,
     secondary = false,
+    tertiary = false,
     throttle = 0,
     angularInput = 0,
     activeComponent = nil,
@@ -33,13 +34,14 @@ function InputComponent:update(dt)
     self.angularInput = 0
     self.primary = false
     self.secondary = false
+    self.tertiary = false
   end
 
 
   local comp = self.entity.components
   local pa = comp.primaryAttack
   local sa = comp.secondaryAttack
-
+  local ta = comp.tertiaryAttack
 
   if pa then
     pa.firing = self.primary
@@ -48,6 +50,10 @@ function InputComponent:update(dt)
 
   if sa then
     sa.firing = self.secondary
+  end
+
+  if ta then
+    ta.firing = self.tertiary
   end
 end
 
@@ -65,6 +71,7 @@ function InputComponent:getKeyboard()
 
   self.primary = love.mouse.isDown(1) or love.keyboard.isDown("space")
   self.secondary = love.mouse.isDown(2) or love.keyboard.isDown("lshift")
+  self.tertiary = love.keyboard.isDown("z")
 
   self.throttle =  love.keyboard.isDown("up","w") and 1 or 0
 
@@ -133,6 +140,7 @@ function InputComponent:getJoystick(dt)
 
     self.primary = triggerright > 0.5
     self.secondary = triggerleft > 0.5
+    self.tertiary = joy:isGamepadDown("rightshoulder")
   end
 end
 

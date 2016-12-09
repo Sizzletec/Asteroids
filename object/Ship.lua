@@ -56,6 +56,7 @@ function Ship:setDefaults()
     wallCollision = WallCollisionComponent.new(self),
     primaryAttack = self.shipType.primaryAttack.new(self),
     secondaryAttack = self.shipType.secondaryAttack.new(self),
+    tertiaryAttack = self.shipType.tertiaryAttack.new(self),
     input = InputComponent.new(self)
   }
 
