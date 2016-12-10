@@ -5,8 +5,8 @@ IonComponent.__index = IonComponent
 function IonComponent.new(entity)
   local i = {
     gunCooldown = 0,
-    weaponDamage = 10,
-    fireRate = 1,
+    weaponDamage = 5,
+    fireRate = 4,
     firing = false
   }
 

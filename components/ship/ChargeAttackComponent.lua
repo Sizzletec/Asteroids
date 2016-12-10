@@ -6,7 +6,7 @@ function ChargeAttackComponent.new(entity)
   local i = {
     gunCooldown = 0,
     weaponDamage = 10,
-    fireRate = 4,
+    fireRate = 6,
     firing = false,
     chargeAmount = 0,
     charging = 0

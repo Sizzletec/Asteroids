@@ -22,7 +22,7 @@ function AoE.new(entity,x,y,startR,endR,time,damage)
   s.partSys = love.graphics.newParticleSystem(part1, 1500)
 
   s.components = {
-    shield = ShieldComponent.new(s)
+    -- shield = ShieldComponent.new(s)
     -- exploding = BallBulletComponent.new(s)
   }
 

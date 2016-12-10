@@ -5,8 +5,8 @@ BounceComponent.__index = BounceComponent
 function BounceComponent.new(entity)
   local i = {
     gunCooldown = 0,
-    weaponDamage = 20,
-    fireRate = 5,
+    weaponDamage = 30,
+    fireRate = 2,
     firing = false
   }
 
