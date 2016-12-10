@@ -34,7 +34,7 @@ local map
 local canvases = {}
 local split = false
 debug  = false
-fps = false
+fps = true
 
 local cam1
 local cam2
@@ -260,12 +260,25 @@ function Game.draw()
 		end
 	end
 
-	local joysticks = love.joystick.getJoysticks()
-    for i, joystick in ipairs(joysticks) do
-        love.graphics.print(joystick:getName(), 10, i * 20)
-    end
+	-- local joysticks = love.joystick.getJoysticks()
+    -- for i, joystick in ipairs(joysticks) do
+    --     love.graphics.print(joystick:getName(), 10, i * 20)
+    -- end
 
     love.graphics.line(width/2,0, width/2,962)
+
+    if fps then
+		fps = love.timer.getFPS()
+		love.graphics.print(fps, 0, 100)
+	end
+	if debug then
+
+		local count = 0 
+		for _, v in pairs(HC.hash():shapes()) do 
+			count = count +1 
+		end
+		love.graphics.print(count, 40, 200)
+	end
 end
 
 function Game.drawBase(cam,player)
@@ -289,18 +302,7 @@ function Game.drawBase(cam,player)
 	map:drawForeground()
 	love.graphics.setBackgroundColor(0x20,0x20,0x20)
 
-	if fps then
-		fps = love.timer.getFPS()
-		love.graphics.print(fps, 0, 100)
-	end
-	if debug then
 
-		local count = 0 
-		for _, v in pairs(HC.hash():shapes()) do 
-			count = count +1 
-		end
-		love.graphics.print(count, 40, 200)
-	end
 end
 
 return Game
