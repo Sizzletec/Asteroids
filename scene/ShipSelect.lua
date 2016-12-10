@@ -17,7 +17,7 @@ SelectStep = {
 	ready = 2
 }
 
-local menuSpeed = 0.4
+local menuSpeed = .3
 
 function ShipSelect.load()
 	for i,player in pairs(Players) do
@@ -146,7 +146,15 @@ function ShipSelect.gamepadpressed(joystick, button)
     	if button == "b" then
 	    	setState(State.title)
     	end
+
 	elseif player.select.step  == SelectStep.active then
+	
+		if button == "dpleft" then 
+	    	ShipSelect.shipLeft(id)
+		elseif button == "dpright" then
+			ShipSelect.shipRight(id)
+		end
+
 		if button == "x" or button == "y" then
 	    	player.select.color = player.select.color  + 1
 			if player.select.color  > 3 then
@@ -176,14 +184,12 @@ function ShipSelect.gamepadaxis(joystick, axis, value)
 	local id, instanceid = joystick:getID()
 	local player = Players[id]
 
-	if axis ==  "leftx"
-		and player.select.menuCooldown <= 0
-		and player.select.step == SelectStep.active then
+	if axis ==  "leftx" and player.select.menuCooldown <= 0 and player.select.step == SelectStep.active then
 
-		if value > 0.7 then
+		if value > 0.9 then
 			ShipSelect.shipRight(id)
 			player.select.menuCooldown = menuSpeed
-		elseif value < -0.7 then
+		elseif value < -0.9 then
 			ShipSelect.shipLeft(id)
 			player.selectmenuCooldown = menuSpeed
 		end 

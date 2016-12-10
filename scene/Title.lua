@@ -58,9 +58,15 @@ function Title.keypressed(key, unicode)
 end
 
 function Title.gamepadpressed(joystick, button)
-    if button == "a" then
+    if button == "a" then 
     	Title.SelectMenuItem()
-    end
+    elseif button == "dpup" then 
+    	Title.menuUp()
+	elseif button == "dpdown" then
+		Title.menuDown() 
+	elseif button == "back" then
+		love.event.quit()
+	end
 end
 
 function Title.gamepadaxis(joystick, axis, value)
