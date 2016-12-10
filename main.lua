@@ -22,7 +22,7 @@ State = {
 currentState = State.title
 
 function love.load()
-	love.window.setMode(1920, 1080, {fullscreen=true, resizable=true, highdpi=true})
+	love.window.setMode(1920, 1080, {fullscreen=false, resizable=true, highdpi=true})
 	-- setState(ShipSelect)
 	-- love.graphics.setDefaultFilter( 'nearest', 'nearest' )
 

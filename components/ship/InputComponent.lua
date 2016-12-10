@@ -130,8 +130,14 @@ function InputComponent:getJoystick(dt)
         self.angularInput = self.angularInput * math.abs(moveAngle)/(move.rotationSpeed* dt)
       end
 
-      if math.abs(moveAngle) < math.pi/8 and (math.abs(leftx) > 0.9 or math.abs(lefty) > 0.9) then
-        self.throttle = 1
+
+
+      if math.abs(moveAngle) < math.pi/8 then
+
+        gas = math.sqrt(leftx*leftx + lefty*lefty)
+        if gas > 0.99 then
+          self.throttle = 1
+        end
       end
     else
       self.angularInput = 0 
