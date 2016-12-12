@@ -7,7 +7,6 @@ gKeyPressed = {}
 require('object/object')
 require('object/Ship')
 require('object/Bullet')
-require('object/Beam')
 require('object/MissileShot')
 local t = 0
 
