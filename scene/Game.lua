@@ -30,7 +30,7 @@ local gameWon = false
 local winCount = 10
 
 local map
-
+local active = 0
 local canvases = {}
 local split = false
 debug  = false
@@ -51,27 +51,53 @@ function Game.load()
 	spawn = TiledMap_GetSpawnLocations()
 
 
+	active = 0
+
+	activePlayers = {}
 	for i, player in pairs(Players) do
 		playerShip = player.ship
 		
 		if playerShip and player.select.step == SelectStep.ready then
+			active = active + 1
 			player.controlling = playerShip
 			playerShip:setDefaults()
 			playerShip:spawn()
 			table.insert(players, playerShip)
 			table.insert(objects, playerShip)
+			table.insert(activePlayers, player)
+
+
 		end
 	end
 	numberAlive = table.getn(players)
 	gameWon = false
 	winCount = 8
 
-	cam1 = gamera.new(0,0,map.tileSize * map.width,map.tileSize * map.height)
-	cam1:setWindow(0,0,map.tileSize * map.width/2,map.tileSize * map.height)
+	width = love.graphics.getWidth()
+	height = love.graphics.getHeight()
 
-	cam2 = gamera.new(0,0,map.tileSize * map.width,map.tileSize * map.height)
-	cam2:setWindow(map.tileSize * map.width/2,0,map.tileSize * map.width/2,map.tileSize * map.height)
-	
+	for i, player in pairs(activePlayers) do
+		player.cam = gamera.new(0,0,map.tileSize * map.width,map.tileSize * map.height)
+
+		xOff = 0
+		yOff = 0
+		if i%2 == 0 then
+			xOff = width/2 
+		end 
+
+		if i>2 and active > 2 then
+			yOff = height/2 
+		end
+
+		if active > 2 then
+			scale = 1.5
+			player.cam:setWindow(xOff,yOff,width/2,height/2)
+		else 
+			scale = 2
+			player.cam:setWindow(xOff,yOff,width/2,height)
+		end
+		
+	end
 end
 
 function Game.resize(w, h)
@@ -162,57 +188,21 @@ function Game.checkWin()
 end
 
 function Game.update(dt)
-	-- if scale < 4 then
-	-- 	scale = scale + 0.1 * dt
-	-- end 
-	cam1:setScale(scale)
-	cam2:setScale(scale)
+	for i, player in pairs(Players) do
+		if player.cam then
+			player.cam:setScale(scale)
+
+			move = player.ship.components.move
+			player.cam:setPosition(move.x, move.y)
+			if player.shake then
+				player.shake = false
+				player.cam:shake(5)
+			end
+		end
+	end
 
 	map:update(dt)
 	Game.updateObjects(dt)
-	move = players[1].components.move
-	-- cam:setAngle(move.rotation)
-
-	-- camGoalX = move.x + 100 * math.sin(move.rotation)
-	-- camGoalY = move.y - 100 * math.cos(move.rotation)
-
-	-- rate = 4
-	-- nextPos = {x = move.x,y = move.y}
-	-- if cam.x < camGoalX then
-	-- 	nextPos.x = cam.x + rate
-	-- elseif cam.x > camGoalX then
-	-- 	nextPos.x = cam.x - rate
-	-- end
-
-	-- if cam.y < camGoalY then
-	-- 	nextPos.y = cam.y + rate
-	-- elseif cam.y > camGoalY then
-	-- 	nextPos.y = cam.y - rate
-	-- end
-
-
-	-- if math.abs(cam.x - camGoalX)< rate  or math.abs(cam.x - camGoalX)>500 then
-	-- 	nextPos.x = camGoalX
-	-- end
-
-	-- if math.abs(cam.y - camGoalY)< rate or math.abs(cam.y - camGoalY)>500 then
-	-- 	nextPos.y = camGoalY
-	-- end
-
-	-- cam:setPosition(nextPos.x, nextPos.y)
-	move2 = players[2].components.move
-	cam1:setPosition(move.x, move.y)
-	cam2:setPosition(move2.x, move2.y)
-	if Game.shake1 then
-		Game.shake1 = false
-		cam1:shake(5)
-	end
-
-	if Game.shake2 then
-		Game.shake2 = false
-		cam2:shake(5)
-	end
-	-- cam:setAngle(move.rotation)
 
 	if gameWon then
 		winCount = winCount - 3 * dt
@@ -238,34 +228,41 @@ function Game.updateObjects(dt)
 end
 
 function Game.draw()
-	cam1:draw(function(l,t,w,h)
-  		Game.drawBase(cam1,1)
-	end)
 
-	cam2:draw(function(l,t,w,h)
-  		Game.drawBase(cam2,1)
-	end)
+	for i, player in pairs(Players) do
+			if playerShip and player.select.step == SelectStep.ready then
+			player.cam:draw(function(l,t,w,h)
+	  			Game.drawBase(player)
+			end)
+		end
+	end
 
 	width = love.graphics.getWidth()
 	height = love.graphics.getHeight()
 
-	love.graphics.line(0,962, width,962)
-	for i, player in pairs(players) do
-		local xOffset = 1920/4 * (i-1) + 100
-		love.graphics.setShader()
-		player:drawLifeMarkers(xOffset+10,994)
+	-- love.graphics.line(0,962, width,962)
+	-- for i, player in pairs(players) do
+	-- 	local xOffset = 1920/4 * (i-1) + 100
+	-- 	love.graphics.setShader()
+	-- 	player:drawLifeMarkers(xOffset+10,994)
 
-		if player.components.life.lives > 0 then
-			love.graphics.print(player.components.life.health .. " hp", xOffset+30, 1016)
-		end
-	end
+	-- 	if player.components.life.lives > 0 then
+	-- 		love.graphics.print(player.components.life.health .. " hp", xOffset+30, 1016)
+	-- 	end
+	-- end
 
 	-- local joysticks = love.joystick.getJoysticks()
     -- for i, joystick in ipairs(joysticks) do
     --     love.graphics.print(joystick:getName(), 10, i * 20)
     -- end
 
-    love.graphics.line(width/2,0, width/2,962)
+
+    love.graphics.line(width/2,0, width/2,height)
+
+    if active > 2 then
+    	love.graphics.line(0,height/2, width,height/2)
+    end
+
 
     if fps then
 		fps = love.timer.getFPS()
@@ -281,17 +278,17 @@ function Game.draw()
 	end
 end
 
-function Game.drawBase(cam,player)
+function Game.drawBase(player)
 	width = love.graphics.getWidth()
 	height = love.graphics.getHeight()
 
 	scaleFactor = width/1920
 
-	move = players[player].components.move
+	move = player.components.move
 	love.graphics.scale(scaleFactor, scaleFactor)
 	img:setWrap("repeat", "repeat")
-	quad = love.graphics.newQuad(0,0, cam.w,cam.h, 200, 300)
-	love.graphics.draw(img,quad, cam.x - cam.w/2, cam.y -cam.h/2)
+	quad = love.graphics.newQuad(0,0, player.cam.w,player.cam.h, 200, 300)
+	love.graphics.draw(img,quad, player.cam.x - player.cam.w/2, player.cam.y -player.cam.h/2, 0,2,2)
 	map:drawBackground()
 	love.graphics.setNewFont(40)
 	for i, obj in pairs(objects) do

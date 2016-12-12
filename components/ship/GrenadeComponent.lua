@@ -34,7 +34,7 @@ function GrenadeComponent:fire()
 
   local x = move.x + (10 * math.sin(move.rotation)) 
   local y = move.y + (10 * -math.cos(move.rotation))
-  bullet = Bullet.new(self.entity, x,y,400,move.rotation, self.weaponDamage,2,2)
+  bullet = Bullet.new(self.entity, x,y,300,move.rotation, self.weaponDamage,2,2)
   bullet.components.yield = BouncingBulletComponent.new(bullet)
   bullet.components.exploding =  ExplodingBulletComponent.new(bullet)
   table.insert(Game.getObjects(), bullet)

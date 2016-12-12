@@ -33,7 +33,9 @@ function ShipSelect.load()
 			}
 		end
 	end
-	Players[2].select.step = SelectStep.ready
+	-- Players[2].select.step = SelectStep.ready
+	Players[3].select.step = SelectStep.ready
+	Players[4].select.step = SelectStep.ready
 end
 
 
@@ -214,6 +216,10 @@ function ShipSelect.draw()
 	scaleFactor = width/1920
 
 	love.graphics.scale(scaleFactor, scaleFactor)
+
+	img:setWrap("repeat", "repeat")
+	quad = love.graphics.newQuad(0,0, width,height, 200, 300)
+	love.graphics.draw(img,quad,0, 0, 0,4,4 )
 
 
 	for i, player in pairs(Players) do
