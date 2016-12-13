@@ -192,7 +192,7 @@ function ShipSelect.gamepadaxis(joystick, axis, value)
 			player.select.menuCooldown = menuSpeed
 		elseif value < -0.9 then
 			ShipSelect.shipLeft(id)
-			player.selectmenuCooldown = menuSpeed
+			player.select.menuCooldown = menuSpeed
 		end 
 	end
 end
