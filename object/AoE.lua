@@ -78,7 +78,7 @@ function AoE:update(dt)
 end
 
 function Object:OnPlayerHit(player)
-  if player ~= self.entity or self.hurtsOwner then
+  if player ~= self.entity or self.hurtsOwner and not player.phase  then
       local otherMove = player.components.move
       local xPow = math.pow(otherMove.x - self.x, 2)
       local yPow = math.pow(otherMove.y - self.y, 2)

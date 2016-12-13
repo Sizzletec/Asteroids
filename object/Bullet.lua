@@ -78,7 +78,7 @@ end
 
 
 function Bullet:OnPlayerHit(player)
-  if self.entity ~= player and player.components.life.alive then
+  if self.entity ~= player and player.components.life.alive and not player.phase then
     self.entity.components.score.hits = self.entity.components.score.hits + 1
     player.components.life:takeDamage(self.entity, self.damage)
 

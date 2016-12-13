@@ -38,10 +38,11 @@ function MoveComponent:update(dt)
     self.throttle = input.throttle
   end
 
-
-  self:ApplyAcceleration(dt)
-  self:ApplyVelocity(dt)
-  self:ApplyRotation(dt)
+  if not self.entity.phase then
+    self:ApplyAcceleration(dt)
+    self:ApplyVelocity(dt)
+    self:ApplyRotation(dt)
+  end
   self:StageWrap()
   self:updateShape()
 end

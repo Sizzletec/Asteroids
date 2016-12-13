@@ -43,17 +43,23 @@ function InputComponent:update(dt)
   local sa = comp.secondaryAttack
   local ta = comp.tertiaryAttack
 
-  if pa then
-    pa.firing = self.primary
-  end
+  if not self.entity.phase then
 
+    if pa then
+      pa.firing = self.primary
+    end
 
-  if sa then
-    sa.firing = self.secondary
-  end
+    if sa then
+      sa.firing = self.secondary
+    end
 
-  if ta then
-    ta.firing = self.tertiary
+    if ta then
+      ta.firing = self.tertiary
+    end
+  else
+    pa.firing = false
+    sa.firing = false
+    ta.firing = false
   end
 end
 

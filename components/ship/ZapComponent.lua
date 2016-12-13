@@ -39,7 +39,7 @@ function ZapComponent:update(dt)
     
     for shape, delta in pairs(HC.collisions(self.shape)) do
       if shape.type == "ship" then
-        if shape.entity ~= self.entity then
+        if shape.entity ~= self.entity and not shape.entity.phase then
           if self.contacts[shape.entity] == nil then
             contacts[shape.entity] = 0
           else

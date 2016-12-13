@@ -57,10 +57,12 @@ function RayComponent:update(dt)
           -- self.length = t
 
           if shape.type == "ship" then
-            shape.entity.components.life:takeDamage(self.entity, self.weaponDamage) 
-            self.length = t
-            table.insert( self.hitShapes, data)
-            break
+            if not shape.entity.phase then
+              shape.entity.components.life:takeDamage(self.entity, self.weaponDamage) 
+              self.length = t
+              table.insert( self.hitShapes, data)
+              break
+            end
           elseif shape.type == "tile" then
             beam = {entity = self.entity}
             if shape.entity:OnBeamHit(beam) then

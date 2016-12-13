@@ -9,7 +9,8 @@ function LifeComponent.new(entity)
   local i = {
     lives = 3,
     health = 100,
-    alive = true
+    alive = true,
+    phase = false
   }
   setmetatable(i, LifeComponent)
   i.entity = entity

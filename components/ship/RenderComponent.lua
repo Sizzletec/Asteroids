@@ -39,8 +39,13 @@ function RenderComponent:draw()
     y = move.y
     r = move.rotation
   end
- 
-   if self.entity.explodingFrame < 3 then
+  
+  if self.entity.phase then
+    love.graphics.setColor(255, 255, 255,100)
+  end
+
+
+  if self.entity.explodingFrame < 3 then
     local xFrame = 0
     if self.entity.engine then
       xFrame = 1
