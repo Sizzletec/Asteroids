@@ -54,6 +54,18 @@ function Tile:OnBulletHit(bullet,delta)
   end
 end
 
+function Tile:OnBeamHit(bullet,delta)
+  hit = false
+  for _, component in pairs(self.components) do
+    if component.OnBeamHit then
+      if component:OnBeamHit(bullet) then
+        hit = true
+      end
+    end
+  end
+  return hit
+end
+
 function Tile:OnAoEHit(bullet)
   for _, component in pairs(self.components) do
     if component.OnAoEHit then

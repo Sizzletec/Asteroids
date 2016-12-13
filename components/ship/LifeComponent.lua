@@ -26,17 +26,7 @@ function LifeComponent:takeDamage(fromPlayer, damage)
   hit:stop()
   hit:play()
 
-  if self.entity.player == Players[1] then 
-    Game.shake1 = true
-  end
-
-  if self.entity.player == Players[2] then 
-    Game.shake2 = true
-  end
-
-
-
-
+  self.entity.player.shake = true
 
   local score = self.entity.components.score
   local armor = self.entity.components.armor

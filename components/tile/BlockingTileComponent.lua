@@ -14,6 +14,10 @@ function BlockingTileComponent:OnBulletHit(bullet,delta)
   bullet:OnWallHit(self.entity,delta)
 end
 
+function BlockingTileComponent:OnBeamHit(beam)
+  return true
+end
+
 function BlockingTileComponent:draw()
   if self.wall then
     ts = self.entity.tileset.tileSize

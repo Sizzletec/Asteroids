@@ -23,6 +23,12 @@ function ExplodingTileComponent:OnAoEHit(aoe)
   self:explodeTile(aoe)
 end
 
+function ExplodingTileComponent:OnBeamHit(beam)
+  self:explodeTile(beam)
+  return true
+end
+
+
 function ExplodingTileComponent:explodeTile(object)
   local ts = self.entity.tileset
   if ts and not self.entity.remove then
