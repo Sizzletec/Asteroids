@@ -1,3 +1,5 @@
+local chargeImg = love.graphics.newImage('images/charge.png')
+
 ChargeAttackComponent = {}
 
 ChargeAttackComponent.__index = ChargeAttackComponent
@@ -6,10 +8,11 @@ function ChargeAttackComponent.new(entity)
   local i = {
     gunCooldown = 0,
     weaponDamage = 10,
-    fireRate = 6,
+    fireRate = 4,
     firing = false,
     chargeAmount = 0,
-    charging = 0
+    charging = 0,
+    timeOnFrame = 0
   }
   setmetatable(i, ChargeAttackComponent)
   i.entity = entity
@@ -17,8 +20,10 @@ function ChargeAttackComponent.new(entity)
 end
 
 function ChargeAttackComponent:update(dt)
+  self.timeOnFrame = self.timeOnFrame + dt
+
   if self.firing and self.gunCooldown <= 0 then
-    self:fire()
+    self:fire(dt)
     self.gunCooldown = 1/self.fireRate
   elseif self.gunCooldown > 0 then
     self.gunCooldown = self.gunCooldown - dt
@@ -49,8 +54,9 @@ function ChargeAttackComponent:fire()
   end
 
   if self.charging then
-    if self.chargeAmount < 10 then
+    if self.chargeAmount < 12 then
       self.chargeAmount = self.chargeAmount + 1
+      self.timeOnFrame = 0
     end
   else
     self.charging = true
@@ -61,7 +67,20 @@ end
 function ChargeAttackComponent:draw()
   local move = self.entity.components.move
   if self.charging then
-    love.graphics.circle("line", move.x + (15 * math.sin(move.rotation)), move.y - (15 * math.cos(move.rotation)), self.chargeAmount, 30)
+    -- love.graphics.circle("line", move.x + (15 * math.sin(move.rotation)), move.y - (15 * math.cos(move.rotation)), self.chargeAmount, 30)
+    frame = self.chargeAmount -1
+
+    if frame > 0 and self.timeOnFrame >= 0.05 then
+      if self.timeOnFrame >= 0.1 then
+      self.timeOnFrame = self.timeOnFrame - .1
+      end
+
+      frame = frame -1 
+    end
+
+    quad = love.graphics.newQuad(24*frame, 0, 24, 24, 288, 24)
+    love.graphics.draw(chargeImg, quad, move.x-12 + (15 * math.sin(move.rotation)), move.y-12 - (15 * math.cos(move.rotation)))
+
   end
 end
 
