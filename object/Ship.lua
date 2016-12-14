@@ -46,6 +46,8 @@ function Ship:setDefaults()
   if r then
     color = r.color
   end
+  self.phase = nil
+
 
   self.components = {
     render = RenderComponent.new(self),
@@ -122,6 +124,7 @@ end
 function Ship:spawn()
   local spawnLocation = Game.GetSpawnLocation()
 
+  self.components.status = StatusComponent.new(self)
   for _, component in pairs(self.components) do
     if component.spawn then
       component:spawn()

@@ -105,6 +105,14 @@ function Game.resize(w, h)
   	
 end
 
+function Game.getMapSize()
+	if map then
+		return {width = map.tileSize * map.width, height = map.tileSize * map.height}
+	else
+		return {width = 0, height = 0 }
+	end
+end
+
 function Game.getPlayers()
 	return players
 end

@@ -104,8 +104,10 @@ end
 
 function MoveComponent:StageWrap()
   local wrap = false
-  if self.y > 960 then
-    self.y = 960
+
+  ms = Game.getMapSize()
+  if self.y > ms.height then
+    self.y = ms.height
     self.vy = -self.vy/2
     wrap = true
   end
@@ -116,8 +118,8 @@ function MoveComponent:StageWrap()
     wrap = true
   end
 
-  if self.x > 1920 then
-    self.x = 1920
+  if self.x > ms.width then
+    self.x = ms.width
     self.vx = -self.vx/2
     wrap = true
   end
