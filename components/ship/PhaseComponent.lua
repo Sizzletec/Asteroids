@@ -42,8 +42,11 @@ function PhaseComponent:phase(dt)
   self.totalDist = self.totalDist +15
   -- totalDist = 80
 
-    move:StageWrap()
-    move:updateShape()
+  if move:StageWrap() then
+    move.rotation = move.rotation + math.pi
+  end
+
+  move:updateShape()
 
 
   tile = false 

@@ -217,12 +217,10 @@ end
 
 function Game.updateObjects(dt)
 	for i, obj in pairs(objects) do
-
+		obj:update(dt)
 		if obj:shouldRemove() then
 			obj:Remove()
 			table.remove(objects,i)
-		else
-			obj:update(dt)
 		end
 	end
 end

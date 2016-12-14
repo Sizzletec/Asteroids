@@ -103,21 +103,36 @@ function MoveComponent:ApplyRotation(dt)
 end
 
 function MoveComponent:StageWrap()
+  local wrap = false
   if self.y > 960 then
-    self.y = self.y - 960
+    self.y = 960
+    self.vy = -self.vy/2
+    wrap = true
   end
 
   if self.y < 0 then
-    self.y = self.y + 960
+    self.y = 0
+    self.vy = -self.vy/2
+    wrap = true
   end
 
   if self.x > 1920 then
-    self.x = self.x - 1920
+    self.x = 1920
+    self.vx = -self.vx/2
+    wrap = true
   end
 
   if self.x < 0 then
-    self.x = self.x + 1920
+    self.x = 0
+    self.vx = -self.vx/2
+    wrap = true
   end
+
+  if wrap and self.entity.bulletLife then 
+    self.entity.bulletLife = 0
+  end
+
+  return wrap
 end
 
 
