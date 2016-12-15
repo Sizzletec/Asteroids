@@ -43,7 +43,7 @@ local cam2
 function Game.load()
 	players = {}
 	objects = {}
-	local level = "maps/arena" .. tostring(love.math.random(5)) .. ".tmx"
+	local level = "maps/arena" .. tostring(love.math.random(4)) .. ".tmx"
 	map = nil
 	map = Map.new(level)
 	TiledMap_Load(level,16)
