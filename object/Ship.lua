@@ -59,6 +59,7 @@ function Ship:setDefaults()
     primaryAttack = self.shipType.primaryAttack.new(self),
     secondaryAttack = self.shipType.secondaryAttack.new(self),
     tertiaryAttack = self.shipType.tertiaryAttack.new(self),
+    quaternaryAttack = self.shipType.quaternaryAttack.new(self),
     input = InputComponent.new(self)
   }
 
