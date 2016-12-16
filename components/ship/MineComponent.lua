@@ -5,9 +5,10 @@ function MineComponent.new(entity)
   local i = {
     cannon = "right",
     gunCooldown = 0,
-    weaponDamage = 10,
+    weaponDamage = 20,
     fireRate = 1,
-    firing = false
+    firing = false,
+    explosionDamage = 50
   }
   setmetatable(i, MineComponent)
   i.entity = entity
@@ -31,7 +32,7 @@ function MineComponent:fire()
   self.entity.components.score.shots = self.entity.components.score.shots + 1
 
   local bullet = Bullet.new(self.entity, move.x,move.y,0,move.rotation, self.weaponDamage)
-  bullet.components.exploding = ExplodingBulletComponent.new(bullet)
+  bullet.components.exploding = ExplodingBulletComponent.new(bullet,self.explosionDamage)
   table.insert(Game.getObjects(), bullet)
 end
 

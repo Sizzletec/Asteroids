@@ -15,7 +15,8 @@ function AoE.new(entity,x,y,startR,endR,time,damage)
     rate = (endR - startR)/ time,
     endR = endR,
     remove = false,
-    damage = damage
+    damage = damage,
+    contacts = {}
   }
   setmetatable(s, AoE)
 
@@ -57,17 +58,27 @@ function AoE:update(dt)
   self.radius = self.radius + self.rate * dt
   self.partSys:update(dt)
 
+  contacts = {}
+
   for shape, delta in pairs(HC.collisions(self.shape)) do
-    if shape.type == "ship" then
-      self:OnPlayerHit(shape.entity)
-    elseif shape.type == "bullet" then
-      print()
-      self:OnBulletHit(shape.entity)
-    elseif shape.type == "tile" then
-      self:OnWallHit(shape.entity,dt)
-      shape.entity:OnAoEHit(self)
+    if shape.entity and not shape.entity.phase then
+      if self.contacts[shape.entity] == nil then
+
+        contacts[shape.entity] = shape.entity
+        if shape.type == "ship" then
+          self:OnPlayerHit(shape.entity)
+        elseif shape.type == "bullet" then
+          self:OnBulletHit(shape.entity)
+        elseif shape.type == "tile" then
+          self:OnWallHit(shape.entity,dt)
+          shape.entity:OnAoEHit(self)
+        end   
+      else
+        contacts[shape.entity] = self.contacts[shape.entity]
+      end
     end
   end
+  self.contacts = contacts
 
   
   if math.abs(self.shape._radius - self.radius) >= 1 then
@@ -78,15 +89,15 @@ function AoE:update(dt)
 end
 
 function Object:OnPlayerHit(player)
-  if player ~= self.entity or self.hurtsOwner and not player.phase  then
-      local otherMove = player.components.move
-      local xPow = math.pow(otherMove.x - self.x, 2)
-      local yPow = math.pow(otherMove.y - self.y, 2)
-      local dist = math.sqrt(xPow + yPow)
+  if player ~= self.entity or self.hurtsOwner then
+      -- local otherMove = player.components.move
+      -- local xPow = math.pow(otherMove.x - self.x, 2)
+      -- local yPow = math.pow(otherMove.y - self.y, 2)
+      -- local dist = math.sqrt(xPow + yPow)
 
-      if dist <= self.radius then
+      -- if dist <= self.radius then
           player.components.life:takeDamage(self.entity, self.damage)
-      end
+      -- end
     end
 end
 

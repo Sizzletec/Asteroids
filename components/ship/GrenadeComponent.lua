@@ -5,9 +5,10 @@ GrenadeComponent.__index = GrenadeComponent
 function GrenadeComponent.new(entity)
   local i = {
     gunCooldown = 0,
-    weaponDamage = 50,
+    weaponDamage = 10,
     fireRate = 1,
-    firing = false
+    firing = false,
+    explosionDamage = 40
   }
 
   setmetatable(i, GrenadeComponent)
@@ -36,7 +37,7 @@ function GrenadeComponent:fire()
   local y = move.y + (10 * -math.cos(move.rotation))
   bullet = Bullet.new(self.entity, x,y,300,move.rotation, self.weaponDamage,2,2)
   bullet.components.yield = BouncingBulletComponent.new(bullet)
-  bullet.components.exploding =  ExplodingBulletComponent.new(bullet)
+  bullet.components.exploding =  ExplodingBulletComponent.new(bullet,self.explosionDamage)
   table.insert(Game.getObjects(), bullet)
 end
 
