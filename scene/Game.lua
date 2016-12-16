@@ -34,7 +34,7 @@ local active = 0
 local canvases = {}
 local split = false
 debug  = false
-fps = true
+fps = false
 
 local cam1
 local cam2
@@ -245,6 +245,13 @@ function Game.draw()
 			local y = player.cam.t
 			local w = player.cam.w
 			local h = player.cam.h
+
+			player.ship:drawLifeMarkers(x-10,y+20)
+
+			if player.ship.components.life.lives > 0 then
+				love.graphics.setNewFont(22)
+				love.graphics.print(player.ship.components.life.health .. " HP", x+14, y+34)
+			end
 
 
 			love.graphics.setColor(255, 255, 255,20)
