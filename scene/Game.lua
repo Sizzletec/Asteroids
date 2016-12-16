@@ -248,7 +248,7 @@ function Game.draw()
 
 
 			love.graphics.setColor(255, 255, 255,20)
-			local radius = 200
+			local radius = 100
     		love.graphics.circle("fill", x+w-radius, y+radius, radius, 30)
     		
     		for _, otherPlayer in pairs(Players) do
@@ -257,15 +257,12 @@ function Game.draw()
     				local otherMove = otherPlayer.ship.components.move
 
 
-    				powX = math.pow(otherMove.y - m.x,2)
+    				powX = math.pow(otherMove.x - m.x,2)
     				powY = math.pow(otherMove.y - m.y,2)
 
-    				dist = math.sqrt(powX + powY)
+    				dist = math.sqrt(powX + powY)/5
 
-    				print(dist)
-
-    				angle = math.atan2(otherMove.y - m.x,otherMove.y - m.y)
-
+    				angle = math.atan2(otherMove.x - m.x,otherMove.y - m.y)
 
     				love.graphics.setColor(255, 0, 0)
 
