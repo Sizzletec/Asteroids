@@ -49,6 +49,13 @@ function Bullet:update(dt)
     end
   end
 
+  if self.gernade then
+    self.gernade = self.gernade + dt*10
+    if self.gernade >= 3 then
+      self.gernade = self.gernade - 2
+    end
+  end
+
   self.lifetime = self.lifetime + dt
 
   local m = self.components.move
@@ -121,8 +128,17 @@ function Bullet:draw()
       c = c - 4
     end
 
-    q = love.graphics.newQuad(12*c, 0, 12, 12, 48, 12)
-    tilesetBatch:add(q,m.x, m.y, m.rotation, 1,1 , 6,6)
+    if self.rocket then
+      q = love.graphics.newQuad(0, 12, 12, 12, 48, 24)
+      tilesetBatch:add(q,m.x, m.y, m.rotation, 1,1 , 6,6)
+    elseif self.gernade then
+      v = math.floor(self.gernade)
+      q = love.graphics.newQuad(12*v, 12, 12, 12, 48, 24)
+      tilesetBatch:add(q,m.x, m.y, m.rotation, 1,1 , 6,6)
+    else
+      q = love.graphics.newQuad(12*c, 0, 12, 12, 48, 24)
+      tilesetBatch:add(q,m.x, m.y, m.rotation, 1,1 , 6,6)
+    end
 
     if debug then
       self.shape:draw('fill')
