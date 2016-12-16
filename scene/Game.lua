@@ -249,7 +249,7 @@ function Game.draw()
 
 			if player.ship.components.life.lives > 0 then
 				love.graphics.setNewFont(22)
-				love.graphics.print(player.ship.components.life.health .. " HP", x+14, y+34)
+				love.graphics.print(math.ceil(player.ship.components.life.health) .. " HP", x+14, y+34)
 			end
 
 
