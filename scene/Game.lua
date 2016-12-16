@@ -236,10 +236,49 @@ end
 function Game.draw()
 
 	for i, player in pairs(Players) do
-			if playerShip and player.select.step == SelectStep.ready then
+		if player.ship and player.select.step == SelectStep.ready then
 			player.cam:draw(function(l,t,w,h)
 	  			Game.drawBase(player)
 			end)
+
+			local x = player.cam.l
+			local y = player.cam.t
+			local w = player.cam.w
+			local h = player.cam.h
+
+
+			love.graphics.setColor(255, 255, 255,20)
+			local radius = 100
+    		love.graphics.circle("fill", x+w-radius, y+radius, radius, 30)
+    		
+    		for _, otherPlayer in pairs(Players) do
+    			if  otherPlayer ~= player and otherPlayer.ship and otherPlayer.select.step == SelectStep.ready then
+    				local m = player.ship.components.move
+    				local otherMove = otherPlayer.ship.components.move
+
+
+    				powX = math.pow(otherMove.x - m.x,2)
+    				powY = math.pow(otherMove.y - m.y,2)
+
+    				dist = math.sqrt(powX + powY)/5
+
+    				angle = math.atan2(otherMove.x - m.x,otherMove.y - m.y)
+
+    				love.graphics.setColor(255, 0, 0)
+
+    				if dist > radius then
+    					dist = 100
+    				end
+
+    				local xOff = dist * math.sin(angle)
+    				local yOff = dist * math.cos(angle)
+
+    				love.graphics.circle("fill", x+w-radius+xOff, y+radius+yOff, 10, 10)
+
+    			end
+    		end
+
+    		love.graphics.setColor(255, 255, 255)
 		end
 	end
 
@@ -261,6 +300,11 @@ function Game.draw()
     -- for i, joystick in ipairs(joysticks) do
     --     love.graphics.print(joystick:getName(), 10, i * 20)
     -- end
+
+
+    
+
+    love.graphics.setColor(255, 255, 255)
 
 
     love.graphics.line(width/2,0, width/2,height)

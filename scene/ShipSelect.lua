@@ -34,8 +34,8 @@ function ShipSelect.load()
 		end
 	end
 	Players[2].select.step = SelectStep.ready
-	Players[3].select.step = SelectStep.ready
-	Players[4].select.step = SelectStep.ready
+	-- Players[3].select.step = SelectStep.ready
+	-- Players[4].select.step = SelectStep.ready
 end
 
 
