@@ -22,6 +22,8 @@ function GrenadeComponent:update(dt)
   elseif self.gunCooldown > 0 then
     self.gunCooldown = self.gunCooldown - dt
   end
+
+  
 end
 
 function GrenadeComponent:fire()
@@ -37,6 +39,7 @@ function GrenadeComponent:fire()
   bullet = Bullet.new(self.entity, x,y,300,move.rotation, self.weaponDamage,2,2)
   bullet.components.yield = BouncingBulletComponent.new(bullet)
   bullet.components.exploding =  ExplodingBulletComponent.new(bullet)
+  bullet.gernade = 1
   table.insert(Game.getObjects(), bullet)
 end
 

@@ -39,6 +39,7 @@ function RocketShotComponent:fire()
     leftCannonOffsetY = move.y + (5 * -math.cos(move.rotation))
     bullet = Bullet.new(self.entity,leftCannonOffsetX,leftCannonOffsetY,600,rBullet, self.weaponDamage)
     bullet.components.exploding = ExplodingBulletComponent.new(bullet)
+    bullet.rocket = true
     table.insert(Game.getObjects(), bullet)
   end
 end
