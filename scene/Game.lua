@@ -234,7 +234,6 @@ function Game.updateObjects(dt)
 end
 
 function Game.draw()
-
 	for i, player in pairs(Players) do
 		if player.ship and player.select.step == SelectStep.ready then
 			player.cam:draw(function(l,t,w,h)
@@ -250,7 +249,7 @@ function Game.draw()
 
 			if player.ship.components.life.lives > 0 then
 				love.graphics.setNewFont(22)
-				love.graphics.print(player.ship.components.life.health .. " HP", x+14, y+34)
+				love.graphics.print(math.ceil(player.ship.components.life.health) .. " HP", x+14, y+34)
 			end
 
 
@@ -292,34 +291,12 @@ function Game.draw()
 	width = love.graphics.getWidth()
 	height = love.graphics.getHeight()
 
-	-- love.graphics.line(0,962, width,962)
-	-- for i, player in pairs(players) do
-	-- 	local xOffset = 1920/4 * (i-1) + 100
-	-- 	love.graphics.setShader()
-	-- 	player:drawLifeMarkers(xOffset+10,994)
-
-	-- 	if player.components.life.lives > 0 then
-	-- 		love.graphics.print(player.components.life.health .. " hp", xOffset+30, 1016)
-	-- 	end
-	-- end
-
-	-- local joysticks = love.joystick.getJoysticks()
-    -- for i, joystick in ipairs(joysticks) do
-    --     love.graphics.print(joystick:getName(), 10, i * 20)
-    -- end
-
-
-    
-
     love.graphics.setColor(255, 255, 255)
-
-
     love.graphics.line(width/2,0, width/2,height)
 
     if active > 2 then
     	love.graphics.line(0,height/2, width,height/2)
     end
-
 
     if fps then
 		fps = love.timer.getFPS()
@@ -352,11 +329,8 @@ function Game.drawBase(player)
 		obj:draw()
 	end
 	Bullet.drawBatch()
-	MissileShot.draw()
 	map:drawForeground()
 	love.graphics.setBackgroundColor(0x20,0x20,0x20)
-
-
 end
 
 return Game

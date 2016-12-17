@@ -36,10 +36,12 @@ function PhaseComponent:phase(dt)
   local move = self.entity.components.move
   self.entity.components.score.shots = self.entity.components.score.shots + 1
 
-  move.x = move.x + (15 * math.sin(move.rotation))
-  move.y = move.y + (15 * -math.cos(move.rotation))
+  local step = 800 * dt
 
-  self.totalDist = self.totalDist +15
+  move.x = move.x + (step * math.sin(move.rotation))
+  move.y = move.y + (step * -math.cos(move.rotation))
+
+  self.totalDist = self.totalDist +step
   -- totalDist = 80
 
   if move:StageWrap() then

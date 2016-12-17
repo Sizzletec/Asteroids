@@ -1,11 +1,11 @@
 
 
 RayComponent = {
-  weaponDamage = 3,
+  weaponDamage = 50,
   firing = false,
   heat = 0,
   cooldown = false,
-  range = 400
+  range = 1000
 }
 
 RayComponent.__index = RayComponent
@@ -34,7 +34,7 @@ function RayComponent:update(dt)
 
   local move = self.entity.components.move
   if self.firing and not self.cooldown then
-    self.heat = self.heat + 0.6
+    self.heat = self.heat + 80 * dt
 
     if self.heat >= 100 then
       self.cooldown = true
@@ -58,7 +58,7 @@ function RayComponent:update(dt)
 
           if shape.type == "ship" then
             if not shape.entity.phase then
-              shape.entity.components.life:takeDamage(self.entity, self.weaponDamage) 
+              shape.entity.components.life:takeDamage(self.entity, self.weaponDamage * dt) 
               self.length = t
               table.insert( self.hitShapes, data)
               break

@@ -1,7 +1,7 @@
 ShockwaveComponent = {
   cannon = "right",
   gunCooldown = 0,
-  weaponDamage = 1,
+  weaponDamage = 20,
   fireRate = 1,
   firing = false,
 }
