@@ -24,6 +24,14 @@ function LifeComponent:spawn()
 end
 
 function LifeComponent:takeDamage(fromPlayer, damage)
+  local shield  = self.entity.shield
+  if shield then
+    if shield.active then
+      shield:takeDamage(fromPlayer, damage)
+      return 
+    end
+  end
+
   hit:stop()
   hit:play()
 

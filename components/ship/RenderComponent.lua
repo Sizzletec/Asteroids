@@ -73,9 +73,6 @@ function RenderComponent:draw()
 
     love.graphics.setColor(255, 255, 255)
 
-    if self.entity.shield then
-      love.graphics.circle("line", x, y, 20)
-    end
 
     local maxTicks = math.ceil(self.entity.shipType.health/10)
     local currentTicks = math.ceil(life.health/10)

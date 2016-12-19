@@ -17,6 +17,9 @@ require('components/ship/RocketShotComponent')
 require('components/ship/GrenadeComponent')
 require('components/ship/IonComponent')
 require('components/ship/ShieldDropComponent')
+require('components/ship/ShieldingComponent')
+
+
 
 ShipType = {
   standard = {
@@ -24,7 +27,7 @@ ShipType = {
     primaryAttack = AlternatingFireComponent,
     secondaryAttack = SpreadShotComponent,
     tertiaryAttack = RocketShotComponent,
-    quaternaryAttack =  PhaseComponent,
+    quaternaryAttack =  ShieldingComponent,
     topSpeed = 180,
     acceleration = 360,
     rotationSpeed = 8,
@@ -47,8 +50,8 @@ ShipType = {
     name = "Assault",
     primaryAttack = ShotgunComponent,
     secondaryAttack = PhaseComponent,
-    tertiaryAttack = PhaseComponent,
-    quaternaryAttack =  PhaseComponent,
+    tertiaryAttack = ShieldingComponent,
+    quaternaryAttack =  ShieldingComponent,
     topSpeed = 250,
     acceleration = 400,
     rotationSpeed = 5,
