@@ -1,5 +1,3 @@
-local part1 = love.graphics.newImage('images/part.png')
-
 BoostComponent = {}
 BoostComponent.__index = BoostComponent
 
@@ -7,25 +5,60 @@ function BoostComponent.new(entity)
   local i = {
     gunCooldown = 0,
     fireRate = 1,
-    firing = false
+    firing = false,
+    active = false,
+    duration = .4,
+    activeTime = 0 
   }
+
   setmetatable(i, BoostComponent)
   i.entity = entity
   return i
 end
 
 function BoostComponent:update(dt)
+  if self.firing and self.gunCooldown <= 0 then
+    self:fire()
+    self.gunCooldown = 1/self.fireRate
+  elseif self.gunCooldown > 0 then
+    self.gunCooldown = self.gunCooldown - dt
+  end
+
+  if self.active then
+    local move = self.entity.components.move
+    self.activeTime = self.activeTime + dt
+
+    move.speedModifier = 8 - 7 * (self.activeTime/self.duration)
+    move.throttle = 1
+    if self.activeTime >= self.duration then
+      self.active = false
+      
+      move.speedModifier = 1
+    end
+  end
+end
+
+function BoostComponent:fire()
   if self.entity.components.life.health <= 0 then
     return
   end
-
   local move = self.entity.components.move
+  move.speedModifier = 8
+  move.throttle = true
+  self.activeTime = 0
+  self.active = true  
+end
 
-  if self.firing then
-    move.speedModifier = 2
-  else
-    move.speedModifier = 1
+function BoostComponent:draw()
+  if self.active then
+    local move = self.entity.components.move
+    -- love.graphics.circle("line", move.x, move.y, 16)
+
+    -- love.graphics.draw(shieldImg,move.x-16,move.y-16)
   end
+  -- if self.shape then
+  --   -- self.shape:draw('line')
+  -- end
 end
 
 return BoostComponent
