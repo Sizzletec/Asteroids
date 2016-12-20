@@ -38,6 +38,10 @@ function MoveComponent:update(dt)
     self.throttle = input.throttle
   end
 
+  if self.boosting then
+    self.throttle =1
+  end
+
   if not self.entity.phase then
     self:ApplyAcceleration(dt)
     self:ApplyVelocity(dt)

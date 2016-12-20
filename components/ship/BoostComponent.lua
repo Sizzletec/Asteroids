@@ -26,14 +26,15 @@ function BoostComponent:update(dt)
 
   if self.active then
     local move = self.entity.components.move
+
     self.activeTime = self.activeTime + dt
 
     move.speedModifier = 8 - 7 * (self.activeTime/self.duration)
-    move.throttle = 1
     if self.activeTime >= self.duration then
       self.active = false
       
       move.speedModifier = 1
+      move.boosting = false
     end
   end
 end
@@ -44,7 +45,6 @@ function BoostComponent:fire()
   end
   local move = self.entity.components.move
   move.speedModifier = 8
-  move.throttle = true
   self.activeTime = 0
   self.active = true  
 end
@@ -52,6 +52,7 @@ end
 function BoostComponent:draw()
   if self.active then
     local move = self.entity.components.move
+    move.boosting = true
     -- love.graphics.circle("line", move.x, move.y, 16)
 
     -- love.graphics.draw(shieldImg,move.x-16,move.y-16)

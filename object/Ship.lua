@@ -55,12 +55,12 @@ function Ship:setDefaults()
     status = StatusComponent.new(self),
     life = LifeComponent.new(self),
     move = MoveComponent.new(self),
+    input = InputComponent.new(self),
     wallCollision = WallCollisionComponent.new(self),
     primaryAttack = self.shipType.primaryAttack.new(self),
     secondaryAttack = self.shipType.secondaryAttack.new(self),
     tertiaryAttack = self.shipType.tertiaryAttack.new(self),
-    quaternaryAttack = self.shipType.quaternaryAttack.new(self),
-    input = InputComponent.new(self)
+    quaternaryAttack = self.shipType.quaternaryAttack.new(self)
   }
 
   if color then
