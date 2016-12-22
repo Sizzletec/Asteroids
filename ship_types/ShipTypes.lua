@@ -54,7 +54,7 @@ ShipType = {
     quaternaryAttack =  ShieldingComponent,
     topSpeed = 250,
     acceleration = 400,
-    rotationSpeed = 5,
+    rotationSpeed = 6,
     health = 170,
     frameOffset = 4
   },
@@ -203,6 +203,6 @@ ShipSelectOrder = {
   -- ShipType.spreader,
   -- ShipType.phaser,
   -- ShipType.shockwave,
-  ShipType.bounce,
+  -- ShipType.bounce,
   -- ShipType.vortex
 }

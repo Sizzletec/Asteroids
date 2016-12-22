@@ -7,15 +7,20 @@ ChargeAttackComponent.__index = ChargeAttackComponent
 function ChargeAttackComponent.new(entity)
   local i = {
     gunCooldown = 0,
-    weaponDamage = 10,
+    weaponDamage = 15,
     fireRate = 4,
     firing = false,
     chargeAmount = 0,
     charging = 0,
-    timeOnFrame = 0
+    timeOnFrame = 0,
+    burstOffset = 0.1
   }
   setmetatable(i, ChargeAttackComponent)
   i.entity = entity
+
+  i.burst = 0
+  i.burstCooldown = 0
+
   return i
 end
 
@@ -23,7 +28,7 @@ function ChargeAttackComponent:update(dt)
   self.timeOnFrame = self.timeOnFrame + dt
 
   if self.firing and self.gunCooldown <= 0 then
-    self:fire(dt)
+    self:charge(dt)
     self.gunCooldown = 1/self.fireRate
   elseif self.gunCooldown > 0 then
     self.gunCooldown = self.gunCooldown - dt
@@ -35,20 +40,30 @@ function ChargeAttackComponent:update(dt)
     charging = 0
   end
 
+  self.burstCooldown = self.burstCooldown  - dt
+
+  if self.burst > 0  and self.burstCooldown <= 0 then
+    self.burst = self.burst -1
+    self:fire()
+  end
+
   local move = self.entity.components.move
   if not self.firing and self.charging then
-    self.entity.components.score.shots = self.entity.components.score.shots + 1
-    local numBullets = math.floor(self.chargeAmount)
-    local x = move.x + (10 * math.sin(move.rotation)) 
-    local y = move.y + (10 * -math.cos(move.rotation))
-    bullet = Bullet.new(self.entity, x,y,400 + self.chargeAmount * 30,move.rotation, self.chargeAmount * self.weaponDamage,.5+self.chargeAmount * 0.15)
-    bullet.components.yield = BouncingBulletComponent.new(bullet)
-    table.insert(Game.getObjects(), bullet)
+    self.burst = math.floor(self.chargeAmount)/2.9 - 1
+    self:fire()
+    -- self.entity.components.score.shots = self.entity.components.score.shots + 1
+    -- local numBullets = math.floor(self.chargeAmount)
+    -- local x = move.x + (10 * math.sin(move.rotation)) 
+    -- local y = move.y + (10 * -math.cos(move.rotation))
+    -- bullet = Bullet.new(self.entity, x,y,400 + self.chargeAmount * 30,move.rotation, self.chargeAmount * self.weaponDamage,.5+self.chargeAmount * 0.15)
+    -- bullet.components.yield = BouncingBulletComponent.new(bullet)
+    -- table.insert(Game.getObjects(), bullet)
     self.charging=false
   end
 end
 
-function ChargeAttackComponent:fire()
+
+function ChargeAttackComponent:charge(dt)
   if self.entity.components.life.health <= 0 then
     return
   end
@@ -62,6 +77,24 @@ function ChargeAttackComponent:fire()
     self.charging = true
     self.chargeAmount = 1
   end
+end
+
+
+function ChargeAttackComponent:fire(dt)
+  if self.entity.components.life.health <= 0 then
+    return
+  end
+
+  self.burstCooldown = self.burstOffset
+
+  local move = self.entity.components.move
+  self.entity.components.score.shots = self.entity.components.score.shots + 1
+
+  local x = move.x + (10 * math.sin(move.rotation)) 
+  local y = move.y + (10 * -math.cos(move.rotation))
+  bullet = Bullet.new(self.entity, x,y,500,move.rotation, self.weaponDamage,2,2)
+  bullet.components.yield = BouncingBulletComponent.new(bullet)
+  table.insert(Game.getObjects(), bullet)
 end
 
 function ChargeAttackComponent:draw()
