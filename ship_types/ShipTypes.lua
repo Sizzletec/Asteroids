@@ -26,13 +26,13 @@ ShipType = {
     name = "Standard",
     primaryAttack = AlternatingFireComponent,
     secondaryAttack = RocketShotComponent,
-    tertiaryAttack = RocketShotComponent,
+    tertiaryAttack = MineComponent,
     quaternaryAttack =  BoostComponent,
     topSpeed = 180,
     acceleration = 360,
     rotationSpeed = 8,
     health = 150,
-    frameOffset = 18
+    frameOffset = 0
   },
   gunship = {
     name = "Gunship",
@@ -85,109 +85,15 @@ ShipType = {
   charge = {
     name = "Charger",
     primaryAttack = ChargeAttackComponent,
-    secondaryAttack = IonComponent,
-    tertiaryAttack = PhaseComponent,
+    secondaryAttack = GrenadeComponent,
+    tertiaryAttack = MineComponent,
     quaternaryAttack =  PhaseComponent,
     topSpeed = 240,
     acceleration = 240,
     rotationSpeed = 4,
     health = 160,
     frameOffset = 10
-  },
-  missile = {
-    name = "Missile",
-    primaryAttack = AlternatingMissileComponent,
-    secondaryAttack = PhaseComponent,
-    tertiaryAttack = PhaseComponent,
-    quaternaryAttack =  PhaseComponent,
-    topSpeed = 180,
-    acceleration = 180,
-    rotationSpeed = 4,
-    health = 150,
-    frameOffset = 12
-  },
-  miner = {
-    name = "Miner",
-    primaryAttack = MineComponent,
-    secondaryAttack = PhaseComponent,
-    tertiaryAttack = PhaseComponent,
-    quaternaryAttack =  PhaseComponent,
-    topSpeed = 200,
-    acceleration = 200,
-    rotationSpeed = 4,
-    health = 180,
-    frameOffset = 14
-  },
-  spreader = {
-    name = "Spreader",
-    primaryAttack = SpreadShotComponent,
-    secondaryAttack = PhaseComponent,
-    tertiaryAttack = PhaseComponent,
-    quaternaryAttack =  PhaseComponent,
-    topSpeed = 240,
-    acceleration = 360,
-    rotationSpeed = 10,
-    health = 150,
-    frameOffset = 0
-  },
-  rocket = {
-    name = "Rocket",
-    primaryAttack = RocketShotComponent,
-    secondaryAttack = IonComponent,
-    tertiaryAttack = PhaseComponent,
-    quaternaryAttack =  PhaseComponent,
-    topSpeed = 240,
-    acceleration = 360,
-    rotationSpeed = 10,
-    health = 150,
-    frameOffset = 16
-  },
-  -- phaser = {
-  --   name = "Phaser",
-  --   primaryAttack = PhaseComponent,
-  --   secondaryAttack = PhaseComponent,
-  --   topSpeed = 240,
-  --   acceleration = 360,
-  --   rotationSpeed = 10,
-  --   health = 150,
-  --   frameOffset = 0
-  -- },
-  shockwave = {
-    name = "Shockwave",
-    primaryAttack = ShockwaveComponent,
-    secondaryAttack = PhaseComponent,
-    tertiaryAttack = PhaseComponent,
-    quaternaryAttack =  PhaseComponent,
-    topSpeed = 240,
-    acceleration = 360,
-    rotationSpeed = 10,
-    health = 150,
-    frameOffset = 0
-  },
-  bounce = {
-    name = "Bounce",
-    primaryAttack = BounceComponent,
-    secondaryAttack = GrenadeComponent,
-    tertiaryAttack = PhaseComponent,
-    quaternaryAttack =  PhaseComponent,
-    topSpeed = 200,
-    acceleration = 260,
-    rotationSpeed = 5,
-    health = 150,
-    frameOffset = 0
-  },
-  vortex = {
-    name = "Vortex",
-    primaryAttack = VortexComponent,
-    secondaryAttack = PhaseComponent,
-    tertiaryAttack = PhaseComponent,
-    quaternaryAttack =  PhaseComponent,
-    topSpeed = 200,
-    acceleration = 260,
-    rotationSpeed = 5,
-    health = 150,
-    frameOffset = 18
-  },
+  }
 }
 
 ShipSelectOrder = {
@@ -197,12 +103,4 @@ ShipSelectOrder = {
   ShipType.ray,
   ShipType.zap,
   ShipType.charge,
-  -- ShipType.rocket,
-  -- ShipType.missile,
-  -- ShipType.miner,
-  -- ShipType.spreader,
-  -- ShipType.phaser,
-  -- ShipType.shockwave,
-  -- ShipType.bounce,
-  -- ShipType.vortex
 }
