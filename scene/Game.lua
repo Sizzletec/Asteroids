@@ -49,8 +49,6 @@ function Game.load()
 	TiledMap_Load(level,16)
 
 	spawn = TiledMap_GetSpawnLocations()
-
-
 	active = 0
 
 	activePlayers = {}
