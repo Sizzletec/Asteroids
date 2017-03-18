@@ -2,7 +2,7 @@ local shoot = love.audio.newSource("sounds/shoot.wav", "static")
 
 RotatingFireComponent = {
   gunCooldown = 0,
-  weaponDamage = 40,
+  weaponDamage = 30,
   fireRate = 2,
   firing = false,
   fireAngle = 0
@@ -23,6 +23,11 @@ function RotatingFireComponent:update(dt)
     self.gunCooldown = 1/self.fireRate
   elseif self.gunCooldown > 0 then
     self.gunCooldown = self.gunCooldown - dt
+  end
+
+    input = self.entity.components.input
+  if input then
+    self.fireAngle = input.fireAngle
   end
 end
 

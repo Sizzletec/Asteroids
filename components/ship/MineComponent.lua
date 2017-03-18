@@ -8,7 +8,7 @@ function MineComponent.new(entity)
     weaponDamage = 20,
     fireRate = 1,
     firing = false,
-    explosionDamage = 50
+    explosionDamage = 40
   }
   setmetatable(i, MineComponent)
   i.entity = entity

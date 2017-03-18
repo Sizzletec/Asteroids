@@ -20,11 +20,12 @@ function RayComponent.new(entity)
 end
 
 function RayComponent:update(dt)
-  if self.entity.components.life.health <= 0 then
+  local life = self.entity.components.life
+  if self.entity.components.life.health <= 0 and not life.alive  then
     return
   end
 
-  local life = self.entity.components.life
+  
 
   if not life.alive then
     self.beam = nil

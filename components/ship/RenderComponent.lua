@@ -103,10 +103,10 @@ function RenderComponent:draw()
 
 
 
-  dis = self.entity.components.status:GetDisabled()
-  if dis then
-    love.graphics.print(dis, x, y)
-  end
+  -- dis = self.entity.components.status:GetDisabled()
+  -- if dis then
+  --   love.graphics.print(dis, x, y)
+  -- end
 
   for b, beam in pairs(self.entity.beams) do
     beam:draw()

@@ -1,6 +1,6 @@
 VortexComponent = {
   gunCooldown = 0,
-  weaponDamage = 20,
+  weaponDamage = 5,
   fireRate = 1,
   firing = false
 }

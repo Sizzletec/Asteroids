@@ -6,7 +6,7 @@ function IonComponent.new(entity)
   local i = {
     gunCooldown = 0,
     weaponDamage = 5,
-    fireRate = 4,
+    fireRate = 2,
     firing = false
   }
 

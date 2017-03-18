@@ -125,7 +125,8 @@ end
 function Ship:spawn()
   local spawnLocation = Game.GetSpawnLocation()
 
-  self.components.status = StatusComponent.new(self)
+  
+
   for _, component in pairs(self.components) do
     if component.spawn then
       component:spawn()
@@ -142,6 +143,10 @@ function Ship:spawn()
   end
 
   self.explodingFrame = 0
+  self.components.status = StatusComponent.new(self)
+  self.components.status.statusList["disable"] = {
+    time = 0
+  }
 end
 
 return Ship
