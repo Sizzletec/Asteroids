@@ -32,7 +32,7 @@ ShipType = {
     acceleration = 360,
     rotationSpeed = 8,
     health = 150,
-    frameOffset = 18
+    frameOffset = 18  
   },
   gunship = {
     name = "Gunship",

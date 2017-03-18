@@ -103,10 +103,15 @@ function RenderComponent:draw()
 
 
 
-  -- dis = self.entity.components.status:GetDisabled()
-  -- if dis then
-  --   love.graphics.print(dis, x, y)
-  -- end
+  dis = self.entity.components.status:GetDisabled()
+  if dis and dis > 0 then
+    -- love.graphics.print(dis, x, y)
+
+    -- local move = self.entity.components.move
+    -- love.graphics.circle("line", move.x, move.y, 16)
+
+    love.graphics.draw(disableImg,x,y)
+  end
 
   for b, beam in pairs(self.entity.beams) do
     beam:draw()

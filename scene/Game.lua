@@ -12,6 +12,7 @@ require('object/MissileShot')
 
 
 img = love.graphics.newImage('images/background.png')
+disableImg = love.graphics.newImage('images/disabled.png')
 
 
 HC = require("HC")

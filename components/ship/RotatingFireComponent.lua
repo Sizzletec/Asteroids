@@ -54,7 +54,9 @@ function RotatingFireComponent:draw()
   local move = self.entity.components.move
   local angle = self.fireAngle
   local cannonQuad = love.graphics.newQuad(0, 160, 20, 20, ShipsImage:getDimensions())
-  love.graphics.draw(ShipsImage,cannonQuad,move.x - (3 * math.sin(move.rotation)), move.y + (3 * math.cos(move.rotation)), angle, 1,1 , 10, 10)
+  if self.entity.components.life.health > 0 then
+    love.graphics.draw(ShipsImage,cannonQuad,move.x - (3 * math.sin(move.rotation)), move.y + (3 * math.cos(move.rotation)), angle, 1,1 , 10, 10)
+  end
 end
 
 
