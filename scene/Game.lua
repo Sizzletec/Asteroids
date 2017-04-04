@@ -37,8 +37,7 @@ local split = false
 debug  = false
 fps = false
 
-local cam1
-local cam2
+local cam
 
 
 function Game.load()
@@ -74,6 +73,8 @@ function Game.load()
 
 	width = love.graphics.getWidth()
 	height = love.graphics.getHeight()
+
+	cam = gamera.new(0,0,map.tileSize * map.width,map.tileSize * map.height)
 
 	for i, player in pairs(activePlayers) do
 		player.cam = gamera.new(0,0,map.tileSize * map.width,map.tileSize * map.height)
@@ -233,70 +234,36 @@ function Game.updateObjects(dt)
 end
 
 function Game.draw()
-	for i, player in pairs(Players) do
-		if player.ship and player.select.step == SelectStep.ready then
-			player.cam:draw(function(l,t,w,h)
-	  			Game.drawBase(player)
-			end)
-
-			local x = player.cam.l
-			local y = player.cam.t
-			local w = player.cam.w
-			local h = player.cam.h
-
-			player.ship:drawLifeMarkers(x-10,y+20)
-
-			if player.ship.components.life.lives > 0 then
-				love.graphics.setNewFont(22)
-				love.graphics.print(math.ceil(player.ship.components.life.health) .. " HP", x+14, y+34)
-			end
+	cam:draw(function(l,t,w,h)
+	  	Game.drawBase(nil)
+	end)
 
 
-			love.graphics.setColor(255, 255, 255,20)
-			local radius = 100
-    		love.graphics.circle("fill", x+w-radius, y+radius, radius, 30)
-    		
-    		for _, otherPlayer in pairs(Players) do
-    			if  otherPlayer ~= player and otherPlayer.ship and otherPlayer.select.step == SelectStep.ready then
-    				local m = player.ship.components.move
-    				local otherMove = otherPlayer.ship.components.move
+	-- for i, player in pairs(Players) do
+	-- 	if player.ship and player.select.step == SelectStep.ready then
+	-- 		local x = player.cam.l
+	-- 		local y = player.cam.t
+	-- 		local w = player.cam.w
+	-- 		local h = player.cam.h
+
+	-- 		player.ship:drawLifeMarkers(x-10,y+20)
+
+	-- 		if player.ship.components.life.lives > 0 then
+	-- 			love.graphics.setNewFont(22)
+	-- 			love.graphics.print(math.ceil(player.ship.components.life.health) .. " HP", x+14, y+34)
+	-- 		end
+
+ --    		love.graphics.setColor(255, 255, 255)
+	-- 	end
+	-- end
 
 
-    				powX = math.pow(otherMove.x - m.x,2)
-    				powY = math.pow(otherMove.y - m.y,2)
-
-    				dist = math.sqrt(powX + powY)/5
-
-    				angle = math.atan2(otherMove.x - m.x,otherMove.y - m.y)
-
-    				love.graphics.setColor(255, 0, 0)
-
-    				if dist > radius then
-    					dist = 100
-    				end
-
-    				local xOff = dist * math.sin(angle)
-    				local yOff = dist * math.cos(angle)
-
-    				love.graphics.circle("fill", x+w-radius+xOff, y+radius+yOff, 10, 10)
-
-    			end
-    		end
-
-    		love.graphics.setColor(255, 255, 255)
-		end
-	end
 
 	width = love.graphics.getWidth()
 	height = love.graphics.getHeight()
 
     love.graphics.setColor(255, 255, 255)
-    love.graphics.line(width/2,0, width/2,height)
-
-    if active > 2 then
-    	love.graphics.line(0,height/2, width,height/2)
-    end
-
+    
     if fps then
 		fps = love.timer.getFPS()
 		love.graphics.print(fps, 0, 100)
@@ -317,11 +284,11 @@ function Game.drawBase(player)
 
 	scaleFactor = width/1920
 
-	move = player.components.move
+	-- move = player.components.move
 	love.graphics.scale(scaleFactor, scaleFactor)
 	img:setWrap("repeat", "repeat")
-	quad = love.graphics.newQuad(0,0, player.cam.w,player.cam.h, 200, 300)
-	love.graphics.draw(img,quad, player.cam.x - player.cam.w/2, player.cam.y -player.cam.h/2, 0,2,2)
+	-- quad = love.graphics.newQuad(0,0, player.cam.w,player.cam.h, 200, 300)
+	-- love.graphics.draw(img,quad, player.cam.x - player.cam.w/2, player.cam.y -player.cam.h/2, 0,2,2)
 	map:drawBackground()
 	love.graphics.setNewFont(40)
 	for i, obj in pairs(objects) do
