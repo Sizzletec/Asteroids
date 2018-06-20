@@ -10,8 +10,7 @@ function AlternatingFireComponent.new(entity)
     weaponDamage = 10,
     fireRate = 12,
     firing = false,
-    gunCooldown = 0,
-    heat = 0,
+    heat = 180,
     cooldown = false
   }
   setmetatable(i, AlternatingFireComponent)
@@ -20,17 +19,17 @@ function AlternatingFireComponent.new(entity)
 end
 
 function AlternatingFireComponent:update(dt)
-  if self.firing and self.gunCooldown <= 0 then
+  if self.cooldown then
+    coroutine.resume(self.co, dt)
+  elseif self.firing then
     self:fire()
-    self.gunCooldown = 1/self.fireRate
-  elseif self.gunCooldown > 0 then
-    self.heat = self.heat - 1
-    self.gunCooldown = self.gunCooldown - dt
-  end
-
-  if not self.firing then
+  else
     self.heat = 0
   end
+end
+
+function angledOffset(rotation, offsetX, offsetY)
+
 end
 
 function AlternatingFireComponent:fire()
@@ -44,16 +43,14 @@ function AlternatingFireComponent:fire()
   local x,y = 0,0
 
   if self.cannon == "right" then
-    x = move.x + (10 * math.sin(move.rotation)) + (8 * math.cos(move.rotation))
-    y = move.y + (10 * -math.cos(move.rotation)) + (8 * math.sin(move.rotation))
+    x,y = move:angledOffset(10, 8)
   elseif self.cannon == "left" then
-    x = move.x + (10 * math.sin(move.rotation)) + (-7 * math.cos(move.rotation))
-    y = move.y + (10 * -math.cos(move.rotation)) + (-7 * math.sin(move.rotation))
+    x,y = move:angledOffset(10, -7)
   end
 
-  local random = love.math.random(200) - 100
+  local random = love.math.random(-50,50)
 
-  local heatOffset = self.heat/100 * math.pi/40 * random/100
+  local heatOffset = self.heat/100 * random/50.0 * math.pi/8
 
   local bullet = Bullet.new(self.entity, x,y,600,move.rotation + heatOffset , self.weaponDamage)
 
@@ -62,14 +59,28 @@ function AlternatingFireComponent:fire()
   shoot:rewind()
   shoot:play()
 
+
   if self.cannon == "right" then
     self.cannon = "left"
   else
     self.cannon = "right"
   end
 
-  self.heat = self.heat + 0.1
-end
+  self.heat = self.heat + 10
+  if self.heat > 100 then
+    self.heat = 100
+  end
 
+  self.cooldown = true
+
+  self.co = coroutine.create(function (dt)
+    time = 0
+    while time < 1/self.fireRate do
+      time = time + dt
+      coroutine.yield()
+    end
+    self.cooldown = false
+  end)
+end
 
 return AlternatingFireComponent

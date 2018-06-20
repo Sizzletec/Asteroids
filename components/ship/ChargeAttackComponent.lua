@@ -89,9 +89,9 @@ function ChargeAttackComponent:fire(dt)
 
   local move = self.entity.components.move
   self.entity.components.score.shots = self.entity.components.score.shots + 1
+  local x,y = move:angledOffset(10, 0)
 
-  local x = move.x + (10 * math.sin(move.rotation)) 
-  local y = move.y + (10 * -math.cos(move.rotation))
+
   bullet = Bullet.new(self.entity, x,y,500,move.rotation, self.weaponDamage,2,2)
   bullet.components.yield = BouncingBulletComponent.new(bullet)
   table.insert(Game.getObjects(), bullet)
@@ -112,7 +112,10 @@ function ChargeAttackComponent:draw()
     end
 
     quad = love.graphics.newQuad(24*frame, 0, 24, 24, 288, 24)
-    love.graphics.draw(chargeImg, quad, move.x-12 + (15 * math.sin(move.rotation)), move.y-12 - (15 * math.cos(move.rotation)))
+
+    local x,y = move:angledOffset(15, 0)
+
+    love.graphics.draw(chargeImg, quad, x-12, y-12)
 
   end
 end

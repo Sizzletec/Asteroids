@@ -142,6 +142,12 @@ function MoveComponent:StageWrap()
 end
 
 
+function MoveComponent:angledOffset(offsetX, offsetY)
+  x = self.x + (offsetX * math.sin(self.rotation)) + (offsetY * math.cos(self.rotation))
+  y = self.y + (offsetX * -math.cos(self.rotation)) + (offsetY * math.sin(self.rotation))
+  return x,y
+end
+
 function MoveComponent:MoveTowards(x,y,dt)
   local angle = math.atan2(x,-y)
 
