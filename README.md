@@ -1,4 +1,4 @@
-# Astroids
+# Some Space Shooter
 
 ## Run on OSX
 To run astroids download the love2d app from love2d.org and put it in your applications folder. You can then exicute the program by navigating to the astroids folder and exicuting the flowing command.
