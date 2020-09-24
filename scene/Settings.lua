@@ -34,7 +34,7 @@ function Settings.draw()
 	scaleFactor = width/1920
 	love.graphics.scale(scaleFactor, scaleFactor)
     love.graphics.print("Settings", width/2, 800)
-	love.graphics.setBackgroundColor(0x20,0x20,0x20)
+	love.graphics.setBackgroundColor(0,0,0)
 end
 
 return Settings

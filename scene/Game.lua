@@ -296,7 +296,7 @@ function Game.drawBase(player)
 	end
 	Bullet.drawBatch()
 	map:drawForeground()
-	love.graphics.setBackgroundColor(0x20,0x20,0x20)
+	love.graphics.setBackgroundColor(0,0,0)
 end
 
 return Game
