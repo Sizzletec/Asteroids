@@ -55,8 +55,6 @@ function AlternatingFireComponent:fire()
   local bullet = Bullet.new(self.entity, x,y,600,move.rotation + heatOffset , self.weaponDamage)
 
   table.insert(Game.getObjects(), bullet)
-
-  shoot:rewind()
   shoot:play()
 
 
